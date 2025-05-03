@@ -1,0 +1,26 @@
+body {
+  height: 100%;
+  margin: 0;
+  font-family: 'MarinesReqular', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  justify-content: center;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+@font-face {
+  font-family: "MarinesReqular";
+  src: url('./fonts/MarinesRegular.woff2') format('woff2'),
+       url('./fonts/MarinesRegular.woff') format('woff');
+}
+
+@font-face {
+  font-family: "MarinesBold";
+  src: url('./fonts/MarinesBold.woff2') format('woff2'),
+       url('./fonts/MarinesBold.woff') format('woff');
+}
