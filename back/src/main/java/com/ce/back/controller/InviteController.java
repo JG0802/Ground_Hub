@@ -1,6 +1,6 @@
 package com.ce.back.controller;
 
-import com.ce.back.service.FileService;
+import com.ce.back.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,12 +14,12 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/invite")
 public class InviteController {
 
-    private final FileService fileService;
+    private final UserService fileService;
     private final String INVITE_CODES_FILE = "inviteCodes.json";
     private final String USERS_FILE = "users.json";
 
     @Autowired
-    public InviteController(FileService fileService) {
+    public InviteController(UserService fileService) {
         this.fileService = fileService;
     }
 

@@ -1,0 +1,31 @@
+package com.ce.back.entity;
+
+import lombok.*;
+
+import jakarta.persistence.*;
+import java.util.List;
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class User {
+
+    @Id
+    private String userid; // 사용자 고유 ID
+
+    private String password; // 비밀번호
+    private String username; // 사용자 이름
+    private String tel; // 전화번호
+    private String mail; // 이메일
+
+    private String first_position;
+    private String second_position;
+    private String third_position;
+
+    // 다대다 관계를 위한 매핑
+    @ManyToMany(mappedBy = "users")
+    private List<Team> teams; // 사용자가 속한 팀 목록
+}
