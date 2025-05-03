@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 정보</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ECF0E1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .userBox {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 220px;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .teamBox {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 900px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .teamInfo {
+            display: flex;
+            justify-content: center;
+            border-top: 2px solid #ced4da;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            margin-top: 10px;
+        }
+
+        .teamBox h2 {
+            margin-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .userBox h2 {
+            margin-top: 0;
+            padding-top: 25px;
+            border-top: 5px solid #d8ddd8;
+        }
+
+        .user {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .user label {
+            width: 100px;
+            font-size: 16px;
+            color: #555;
+        }
+
+        input:disabled {
+            background-color: #e9ecef; /* 비활성화 시 연한 회색 */
+            color: #6c757d; /* 비활성화 시 텍스트 색상 */
+            border: 1px solid #ced4da; /* 비활성화 시 테두리 색상 */
+            cursor: not-allowed; /* 마우스 커서 변경 */
+        }
+
+        select, input {
+            width: calc(100% - 2px); /* 동일한 너비 설정 */
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box; /* 패딩과 테두리를 너비에 포함 */
+            text-align: center;
+        }
+
+        .user input {
+            margin-left: auto;
+            width: calc(100% - 100px);
+            margin-top: 7px;
+            margin-bottom: 7px;
+        }
+
+        .user select {
+            width: calc(100% - 100px);
+        }
+
+        input:focus, select:focus {
+            border-color: #009000;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #009000;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.1s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #007500;
+        }
+
+        .userBox button {
+            margin-top: 20px;
+        }
+
+        #change-positions-btn {
+            margin-top: 30px;
+        }
+
+        .logout-btn {
+            background-color: #FF4C4C;
+        }
+
+        .logout-btn:hover {
+            background-color: #cc3b3b;
+        }
+
+        .invite-section {
+            flex: 1;
+            padding: 15px;
+            border-radius: 12px;
+            background-color: white;
+        }
+
+        #team-section {
+            list-style-type: none;
+            padding: 5px;
+            height: 490px;
+            overflow-y: auto;
+            border-radius: 10px;
+            border: 3px solid #ECF0E1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .team-button {
+            flex-shrink: 0;
+            display: block;
+            width: 100%;
+            padding: 5px 10px;
+            border: none;
+            background-color: #fafafa;
+            color: darkslategray;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: normal;
+            text-align: left;
+        }
+
+        .team-button:hover {
+            background-color: #ECF0E1;
+        }
+
+        /* 내부 컨테이너를 flex로 사용하여 좌우 정렬 */
+        .team-button-content {
+            display: flex;
+            justify-content: space-between; /* 좌우 정렬 */
+            align-items: center;
+            width: 100%;
+        }
+
+        .team-name {
+            text-align: left;
+            flex-grow: 1;
+        }
+
+        .team-formation {
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .create-section {
+            flex: 7; /* 동일한 너비 설정 */
+            padding-bottom: 0;
+        }
+
+        .formation-section {
+            display: flex;
+            gap: 10px;
+            height: 32px;
+            border: 3px solid #ECF0E1;
+            border-radius: 10px;
+            padding: 5px;
+        }
+
+        .formation-section select {
+            width: 120px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .formation-section input {
+            width: 300px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .formation-section button {
+            width: 78px;
+            padding: 0;
+        }
+
+        #private-check {
+            width: 15px;
+            margin-right: -5px;
+        }
+
+        .formation-section label {
+            width: 40px;
+            line-height: 22px;
+        }
+
+        .join-section {
+            flex: 3; /* 동일한 너비 설정 */
+            padding-bottom: 0;
+        }
+
+        .invite-section h3 {
+            text-align: center;
+            margin-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .invite-section label {
+            font-size: 14px;
+            margin: 5px 0;
+            display: block;
+        }
+
+        .team-board {
+            width: 558px;
+            padding: 20px;
+            border: 3px solid #ECF0E1;
+            border-radius: 10px;
+            height: 364px;
+        }
+
+        /* 팀 목록 스타일 */
+        .team-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .team-item-class {
+            padding: 5px 10px;
+            border-top: 1px solid #ddd;
+            font-size: 16px;
+            color: #333;
+            transition: background-color 0.3s ease;
+            background-color: #e9ecef;
+        }
+
+        .search-team-box {
+            display: flex;
+            align-content: center;
+            justify-content: space-between;
+            width: 100%;
+            gap: 10px;
+        }
+
+        .page-search {
+            width: 100px;
+            padding: 5px;
+            margin-bottom: 5px;
+            height: 30px;
+            margin-top: 5px;
+        }
+
+        .page-number {
+            width: 100px;
+            list-style: none; /* 기본 리스트 스타일 제거 */
+            padding: 0 5px;
+            margin: 0 auto;
+            text-align: center; /* 가운데 정렬 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 30px; /* 기본 높이 설정 */
+            gap: 5px;
+        }
+
+        .page-number li {
+            background-color: #fafafa;
+            border-radius: 5px;
+            padding: 5px 10px;
+        }
+
+        .page-number li:hover {
+            cursor: pointer;
+            background-color: #ECF0E1;
+        }
+
+        .search-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .search-team {
+            width: 200px;
+            height: 30px;
+            padding: 5px 35px 5px 10px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        .search-button {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #fafafa;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            width: 30px;
+            text-align: center;
+            padding: 0;
+        }
+
+        .search-button:hover {
+            background-color: #ECF0E1;
+        }
+
+        /* 개별 팀 항목 스타일 */
+        .team-item {
+            padding: 5px 10px;
+            border-top: 1px solid #ddd;
+            font-size: 16px;
+            color: #333;
+            transition: background-color 0.3s ease;
+            background-color: #fafafa;
+        }
+
+        /* 마지막 아이템의 아래 구분선 */
+        .team-item:last-child {
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* 마우스 호버 시 효과 */
+        .team-item:hover {
+            background-color: #ECF0E1;
+            cursor: pointer;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            color: darkslategray;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .footer-content {
+            display: flex;
+        }
+
+        .footer-content p:first-child {
+            width: 50%;
+            text-align: left;
+            padding-left: 125px;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        .footer-content p:last-child {
+            width: 50%;
+            text-align: right;
+            padding-right: 125px;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        .link {
+            display: inline-flex;
+            align-items: center; /* 세로 정렬 */
+            text-decoration: none;
+            font-size: 16px;
+            margin-top: 0;
+            margin-right: 10px;
+        }
+
+        .link:nth-child(2)::before, .link:nth-child(3)::before {
+            content: "|";  /* 앞에 구분선 추가 */
+            margin-right: 15px;  /* 구분선과 텍스트 사이 간격 */
+            color: darkslategray;
+        }
+
+        .link:last-child {
+            margin-right: 0;
+        }
+
+        .link img {
+            width: 15px;
+            height: auto;
+            vertical-align: middle; /* 텍스트와 같은 높이로 정렬 */
+            margin-right: 5px; /* 이미지와 텍스트 사이 간격 */
+        }
+
+        a {
+            display: block;
+            margin-top: 10px;
+            color: darkslategray;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<!--<body onload="openPopup()">-->
+    <div class="container">
+        <!-- 회원 정보 박스 -->
+        <div class="userBox">
+            <h1><i>Online<br>Locker Room</i></h1>
+            <h2>회원 정보</h2>
+            <div class="info">
+                <div class="user">
+                    <label for="memberUsername">사용자명</label>
+                    <input type="text" id="memberUsername" disabled>
+                </div>
+                <div class="user">
+                    <label for="position1">선호 포지션 1</label>
+                    <input type="text" id="position1" disabled>
+                </div>
+                <div class="user">
+                    <label for="position2">선호 포지션 2</label>
+                    <input type="text" id="position2" disabled>
+                </div>
+                <div class="user">
+                    <label for="position3">선호 포지션 3</label>
+                    <input type="text" id="position3" disabled>
+                </div>
+            </div>
+            <button id="change-positions-btn">포지션 변경</button>
+            <button class="logout-btn" onclick="logout()">로그아웃</button>
+        </div>
+
+        <!-- 팀 구성 및 입력 박스 -->
+        <div class="teamBox">
+            <h2>팀 구성</h2>
+            <div class="teamInfo">
+                <div class="invite-section join-section">
+                    <h3>내가 소속된 팀 목록</h3>
+                    <div id="team-section"></div>
+                </div>
+                <div class="invite-section create-section">
+                    <h3>새로 생성할 팀명 (또는 경기명)</h3>
+                    <div class="formation-section">
+                        <select id="formationSelect">
+                            <option value="">[포메이션]</option>
+                            <option value="442">4-4-2</option>
+                            <option value="4231">4-2-3-1</option>
+                            <option value="433">4-3-3</option>
+                            <option value="352">3-5-2</option>
+                            <option value="343">3-4-3</option>
+                        </select>
+                        <input type="text" id="inviteCodeInput" placeholder="생성할 팀 이름을 입력해주세요! (최대 10자)">
+                        <input type="checkbox" id="private-check">
+                        <label for="private-check">비공개</label>
+                        <button onclick="createInviteCode()">팀 생성</button>
+                    </div>
+                    <h3 style="margin-top: 15px;">팀 목록</h3>
+                    <div class="team-board">
+                        <ul class="team-list">
+                            <li class="team-item-class">번호
+                                <span style="margin: 80px;">팀명</span>
+                                <span style="margin: 125px;">설명</span>
+                                선택</li>
+                            <li class="team-item">팀 A</li>
+                            <li class="team-item">팀 B</li>
+                            <li class="team-item">팀 C</li>
+                            <li class="team-item">팀 D</li>
+                            <li class="team-item">팀 E</li>
+                            <li class="team-item">팀 F</li>
+                            <li class="team-item">팀 G</li>
+                            <li class="team-item">팀 H</li>
+                            <li class="team-item">팀 I</li>
+                            <li class="team-item">팀 J</li>
+                        </ul>
+                        <div class="search-team-box">
+                            <input class="page-search" placeholder="페이지 검색">
+                            <ul class="page-number">
+                                <li><</li>
+                                <li>1</li>
+                                <li>2</li>
+                                <li>3</li>
+                                <li>4</li>
+                                <li>5</li>
+                                <li>></li>
+                            </ul>
+                            <div class="search-container">
+                                <input class="search-team" placeholder="검색할 팀명">
+                                <button class="search-button">🔍</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="footer-content">
+            <p>© 2025 Dku Bool-Dozer. All rights reserved.</p>
+            <p>
+                <a href="https://cms.dankook.ac.kr/web/ace" class="link" target="_blank">
+                    <img src="Dku_logo.png" alt="DkuCE"> DKU[CE]</a>
+                <a href="https://www.instagram.com/dku_booldozer/" class="link" target="_blank">
+                    <img src="Instagram_icon.png.webp" alt="Instagram"> Instagram</a>
+                <a href="https://open.kakao.com/o/ssulAJ9g" class="link" target="_blank">
+                    <img src="KakaoTalk_logo.svg.png" alt="Kakaotalk"> KakaoTalk</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // 페이지 로드 후 초기 설정
+        document.addEventListener('DOMContentLoaded', () => {
+            const inviteCodeInput = document.getElementById('inviteCodeInput');
+            inviteCodeInput.focus(); // 자동으로 포커스 설정
+        });
+
+        const userData = JSON.parse(localStorage.getItem('userData'));
+
+        if (!userData) {
+            alert('로그인이 필요합니다.');
+            window.location.href = 'index.html';
+        } else {
+            document.getElementById('memberUsername').value = userData.username;
+            document.getElementById('position1').value = userData.positions[0];
+            document.getElementById('position2').value = userData.positions[1];
+            document.getElementById('position3').value = userData.positions[2];
+        }
+
+        // 팀 새로 만들기
+        function createInviteCode() {
+            const inviteCode = document.getElementById('inviteCodeInput').value;
+            const username = userData.username;
+            const formation = document.getElementById('formationSelect').value;
+            const isPrivate = document.getElementById('private-check').checked;
+
+            if (!formation) {
+                alert('포메이션을 선택하세요.');
+                return;
+            }
+
+            if (!inviteCode) {
+                alert('생성할 팀 이름을 입력하세요.');
+                return;
+            }
+
+            if (inviteCode.length > 10) {
+                alert('팀 이름은 10자 이내로 입력해주세요.');
+                return;
+            }
+
+            userData.inviteCode = inviteCode;
+            localStorage.setItem('userData', JSON.stringify(userData));
+    
+            fetch('http://localhost:8080/api/invite/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ inviteCode, formation, username, isPrivate }),
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert('팀이 생성되었습니다.');
+                        redirectToFormationPage(formation);
+                    } else {
+                        response.text().then(text => {
+                            alert(text);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('팀 생성 중 오류:', error);
+                    alert('팀 생성 중 문제가 발생했습니다.');
+                });
+        }
+
+        // 유저가 속한 팀 목록 출력 & 링크 이동
+        document.addEventListener('DOMContentLoaded', loadUserTeams);
+
+        function loadUserTeams() {
+            const username = userData.username;  // 현재 로그인된 사용자명
+
+            fetch(`http://localhost:8080/api/invite/getTeams?username=${username}`)
+                .then(response => response.json())
+                .then(data => {
+                    const teamSection = document.getElementById('team-section');
+                    teamSection.innerHTML = ''; // 기존 목록 초기화
+
+                    if (!data.success || data.teams.length === 0) {
+                        teamSection.innerHTML = '<p style="text-align: center;">참여 중인 팀이 없습니다.</p>';
+                        return;
+                    }
+
+                    data.teams.forEach(team => {
+                        const formattedFormation = formatFormation(team.formation); // 포메이션 변환
+
+                        const button = document.createElement('button');
+                        button.classList.add('team-button'); // 기존 디자인 유지
+                        button.onclick = () => {
+                            saveInviteData(team.inviteCode, team.formation);
+                            redirectToFormationPage(team.formation);
+                        };
+
+                        // 내부 컨테이너 생성 (팀명 + 포메이션 좌우 정렬)
+                        const contentDiv = document.createElement('div');
+                        contentDiv.classList.add('team-button-content');
+
+                        const teamNameSpan = document.createElement('span');
+                        teamNameSpan.textContent = team.inviteCode;
+                        teamNameSpan.classList.add('team-name');
+
+                        const formationSpan = document.createElement('span');
+                        formationSpan.textContent = `[${formattedFormation}]`;
+                        formationSpan.classList.add('team-formation');
+
+                        contentDiv.appendChild(teamNameSpan);
+                        contentDiv.appendChild(formationSpan);
+                        button.appendChild(contentDiv);
+                        teamSection.appendChild(button);
+                    });
+                })
+                .catch(error => {
+                    console.error('팀 목록을 불러오는 중 오류:', error);
+                    document.getElementById('team-section').innerHTML = '<p>팀 정보를 불러오는 중 오류가 발생했습니다.</p>';
+                });
+        }
+
+        // 포메이션 변환 함수 (예: "442" -> "4-4-2")
+        function formatFormation(formation) {
+            return formation.split("").join("-"); // 숫자 사이에 "-" 추가
+        }
+
+        // 초대코드 및 유저 데이터 저장 함수
+        function saveInviteData(inviteCode, formation) {
+            const userData = JSON.parse(localStorage.getItem('userData')) || {};
+            userData.inviteCode = inviteCode;  // 초대코드 저장
+            userData.formation = formation;    // 포메이션 저장
+            localStorage.setItem('userData', JSON.stringify(userData)); // 로컬 스토리지에 저장
+        }
+
+        function redirectToFormationPage(formation) {
+            window.location.href = `stadium${formation}.html`; // 해당 포메이션 페이지로 이동
+        }
+
+        // 포지션 변경 루틴 //
+        let toggle = false;
+        const positionsList = [ "GK",
+                                "LB", "CB", "LCB", "RCB", "RB",
+                                "LM", "CM", "CDM", "CAM", "RM",
+                                "LW", "ST", "RW" ]; // 선택 가능한 포지션 목록
+        // 포지션 변경 가능한 매커니즘으로 변경하는 함수
+        function ch_positions() {
+            for (let i = 1; i <= 3; i++) {
+                const inputField = document.getElementById(`position${i}`);
+                const currentValue = inputField.value;
+
+                // 기존 input을 select로 변경
+                const select = document.createElement("select");
+                select.id = `position${i}`;
+                select.style.width = "calc(100% - 100px)";
+                select.style.padding = "10px";
+                select.style.border = "1px solid #ddd";
+                select.style.borderRadius = "6px";
+                select.style.fontSize = "15px";
+                select.style.marginTop = "7px";
+                select.style.marginBottom = "7px";
+
+                positionsList.forEach(pos => {
+                    const option = document.createElement("option");
+                    option.value = pos;
+                    option.textContent = pos;
+                    if (pos === currentValue) {
+                        option.selected = true;
+                    }
+                    select.appendChild(option);
+                });
+
+                inputField.replaceWith(select); // 기존 input을 select로 변경
+            }
+        }
+        // 변경한 포지션을 저장하고 표시하는 함수
+        function save_positions() {
+            const username = userData.username; // 현재 로그인한 사용자명
+            const position1 = document.getElementById("position1").value;
+            const position2 = document.getElementById("position2").value;
+            const position3 = document.getElementById("position3").value;
+
+            // 새로운 포지션 정보로 업데이트
+            userData.positions = [position1, position2, position3];
+            localStorage.setItem('userData', JSON.stringify(userData)); // 로컬 스토리지에도 업데이트
+
+            // 서버로 변경된 포지션 정보 전송
+            fetch("http://localhost:8080/api/users/update-positions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    username: username,
+                    positions: [position1, position2, position3]
+                }),
+            }).catch(error => {
+                    console.error("포지션 변경 중 오류 발생:", error);
+                    alert("포지션 변경 중 오류가 발생했습니다.");
+                });
+
+            for (let i = 1; i <= 3; i++) {
+                const selectField = document.getElementById(`position${i}`);
+                const selectedValue = selectField.value;
+
+                // 기존 select를 input으로 변경
+                const input = document.createElement("input");
+                input.type = "text";
+                input.id = `position${i}`;
+                input.value = selectedValue;
+                input.disabled = true;
+                input.style.width = "calc(100% - 100px)";
+                input.style.padding = "10px";
+                input.style.border = "1px solid #ddd";
+                input.style.borderRadius = "6px";
+                input.style.fontSize = "16px";
+                input.style.backgroundColor = "#e9ecef";
+                input.style.color = "#black";
+
+                selectField.replaceWith(input); // 기존 select를 input으로 변경
+            }
+        }
+        // 포지션 변경 <-> 저장 버튼 ui 전환하는 루틴
+        document.getElementById("change-positions-btn").addEventListener("click", function() {
+            if (toggle) {
+                save_positions();
+                this.textContent = "포지션 변경";
+                this.style.backgroundColor = "#009000";
+                this.onmouseover = () => this.style.backgroundColor = "#007500";
+                this.onmouseout = () => this.style.backgroundColor = "#009000";
+            } else {
+                ch_positions();
+                this.textContent = "포지션 저장";
+                this.style.backgroundColor = "#007BFF";
+                this.onmouseover = () => this.style.backgroundColor = "#0056B3";
+                this.onmouseout = () => this.style.backgroundColor = "#007BFF";
+            }
+            toggle = !toggle;
+        });
+
+        // 로그아웃 버튼 루틴
+        function logout() {
+            localStorage.removeItem('userData');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+[ {
+  "inviteCode" : "테스트 팀 1",
+  "users" : [ "a", "b", "c", "d", "e", "f", "g" ],
+  "formation" : "442",
+  "positions" : [ {
+    "position" : 1,
+    "selected" : "none"
+  }, {
+    "position" : 2,
+    "selected" : "none"
+  }, {
+    "position" : 3,
+    "selected" : "none"
+  }, {
+    "position" : 4,
+    "selected" : "none"
+  }, {
+    "position" : 5,
+    "selected" : "none"
+  }, {
+    "position" : 6,
+    "selected" : "none"
+  }, {
+    "position" : 7,
+    "selected" : "none"
+  }, {
+    "position" : 8,
+    "selected" : "none"
+  }, {
+    "position" : 9,
+    "selected" : "none"
+  }, {
+    "position" : 10,
+    "selected" : "none"
+  }, {
+    "position" : 11,
+    "selected" : "none"
+  } ]
+}, {
+  "inviteCode" : "테스트팀 2",
+  "users" : [ "a", "b", "c", "d", "e", "f", "g" ],
+  "formation" : "4231",
+  "positions" : [ {
+    "position" : 1,
+    "selected" : "none"
+  }, {
+    "position" : 2,
+    "selected" : "none"
+  }, {
+    "position" : 3,
+    "selected" : "none"
+  }, {
+    "position" : 4,
+    "selected" : "none"
+  }, {
+    "position" : 5,
+    "selected" : "none"
+  }, {
+    "position" : 6,
+    "selected" : "none"
+  }, {
+    "position" : 7,
+    "selected" : "none"
+  }, {
+    "position" : 8,
+    "selected" : "none"
+  }, {
+    "position" : 9,
+    "selected" : "none"
+  }, {
+    "position" : 10,
+    "selected" : "none"
+  }, {
+    "position" : 11,
+    "selected" : "none"
+  } ]
+}, {
+  "inviteCode" : "테스트팀 3",
+  "users" : [ "a", "b", "c", "d", "e", "f", "g" ],
+  "formation" : "433",
+  "positions" : [ {
+    "position" : 1,
+    "selected" : "none"
+  }, {
+    "position" : 2,
+    "selected" : "none"
+  }, {
+    "position" : 3,
+    "selected" : "none"
+  }, {
+    "position" : 4,
+    "selected" : "none"
+  }, {
+    "position" : 5,
+    "selected" : "none"
+  }, {
+    "position" : 6,
+    "selected" : "none"
+  }, {
+    "position" : 7,
+    "selected" : "none"
+  }, {
+    "position" : 8,
+    "selected" : "none"
+  }, {
+    "position" : 9,
+    "selected" : "none"
+  }, {
+    "position" : 10,
+    "selected" : "none"
+  }, {
+    "position" : 11,
+    "selected" : "none"
+  } ]
+}, {
+  "inviteCode" : "테스트팀 4",
+  "users" : [ "a", "b", "c", "d", "e", "f", "g" ],
+  "formation" : "343",
+  "positions" : [ {
+    "position" : 1,
+    "selected" : "none"
+  }, {
+    "position" : 2,
+    "selected" : "none"
+  }, {
+    "position" : 3,
+    "selected" : "none"
+  }, {
+    "position" : 4,
+    "selected" : "none"
+  }, {
+    "position" : 5,
+    "selected" : "none"
+  }, {
+    "position" : 6,
+    "selected" : "none"
+  }, {
+    "position" : 7,
+    "selected" : "none"
+  }, {
+    "position" : 8,
+    "selected" : "none"
+  }, {
+    "position" : 9,
+    "selected" : "none"
+  }, {
+    "position" : 10,
+    "selected" : "none"
+  }, {
+    "position" : 11,
+    "selected" : "none"
+  } ]
+} ]
