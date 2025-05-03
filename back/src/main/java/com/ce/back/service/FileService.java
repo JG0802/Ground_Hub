@@ -1,4 +1,4 @@
-package com.ce.gh_back.service;
+package com.ce.back.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

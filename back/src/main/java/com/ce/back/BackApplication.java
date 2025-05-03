@@ -1,13 +1,13 @@
-package com.ce.gh_back;
+package com.ce.back;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class GhBackApplication {
+public class BackApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(GhBackApplication.class, args);
+        SpringApplication.run(BackApplication.class, args);
     }
 
 }
