@@ -37,15 +37,15 @@ public class UserController {
     // http://localhost:8080/api/users/login
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody Map<String, String> body) {
-        String userid = body.get("userid");
+        String userMail = body.get("userMail");
         String password = body.get("password");
 
-        if (userid == null || password == null) {
+        if (userMail == null || password == null) {
             return ResponseEntity.badRequest().body("아이디와 비밀번호를 입력하세요.");
         }
 
         // userService.loginUser()에서 로그인한 사용자 객체를 가져옵니다.
-        Optional<User> user = userService.loginUser(userid, password);
+        Optional<User> user = userService.loginUser(userMail, password);
 
         // 사용자 객체가 존재하면 성공 응답을 반환
         if (user.isPresent()) {

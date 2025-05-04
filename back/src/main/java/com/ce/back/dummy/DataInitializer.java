@@ -73,7 +73,7 @@ public class DataInitializer implements CommandLineRunner {
                 .firstColor("red")
                 .secondColor("black")
                 .teamManager(user1)  // 팀 관리자를 유저1로 설정
-                .users(Arrays.asList(user1, user2, user3))  // 세 유저를 팀에 포함
+                .users(Arrays.asList(user1, user2, user3))  //  유저를 팀에 포함
                 .build();
 
         // 팀 저장 (중복 데이터 확인 후 삽입)
