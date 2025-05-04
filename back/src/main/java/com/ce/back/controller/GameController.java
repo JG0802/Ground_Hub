@@ -19,30 +19,31 @@ public class GameController {
         this.gameService = gameService;
     }
 
-    // 특정 팀의 모든 포지션을 조회하는 메서드
+    // 특정 팀의 경기 일정을 조회하는 메서드
     @GetMapping("/team/{teamId}")
-    public ResponseEntity<List<Game>> getgamesByTeam(@PathVariable Long teamId) {
-        List<Game> games = gameService.getgamesByTeam(teamId);
+    public ResponseEntity<List<Game>> getGameByTeamId(@PathVariable String teamId) {
+        List<Game> games = gameService.getGameByTeamId(teamId);
         if (games.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(games);
     }
 
-    // 특정 사용자가 맡고 있는 포지션을 조회하는 메서드
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Game>> getgamesByUser(@PathVariable Long userId) {
-        List<Game> games = gameService.getgamesByUser(userId);
+    // 특정 사용자가 참가하는 경기 목록 출력
+    @GetMapping("/user/{userMail}")
+    public ResponseEntity<List<Game>> getGameByUser(@PathVariable String userMail) {
+        List<Game> games = gameService.getGameByUserMail(userMail);
         if (games.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(games);
     }
 
-    // 새로운 포지션을 추가하는 메서드
-    @PostMapping("/add")
-    public ResponseEntity<Game> addgame(@RequestBody Game game) {
-        Game savedgame = gameService.addgame(game);
-        return ResponseEntity.ok(savedgame);
+    // 경기에서의 포지션을 변경하는 메소드
+    // http://localhost:8080/
+    @PostMapping("/update-game")
+    public ResponseEntity<Game> changePosition(@RequestBody Game game) {
+        Game savedGame = gameService.changePosition(game);
+        return ResponseEntity.ok(savedGame);
     }
 }

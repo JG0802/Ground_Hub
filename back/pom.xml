@@ -35,11 +35,12 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Lombok (코드 간소화) -->
+        <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <optional>true</optional>
+            <version>1.18.30</version> <!-- 최신 버전 사용 권장 -->
+            <scope>provided</scope>
         </dependency>
 
         <!-- Spring Boot Test (테스트 작성용) -->
@@ -77,6 +78,7 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
+                            <version>1.18.30</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
@@ -91,6 +93,7 @@
                         <exclude>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
+                            <version>1.18.30</version>
                         </exclude>
                     </excludes>
                 </configuration>

@@ -21,7 +21,8 @@ public class UserController {
         this.userService = userService;
     }
 
-    // 사용자 등록
+    // 회원가입
+    // http://localhost:8080/api/users/register
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
         boolean isRegistered = userService.registerUser(user);
@@ -33,6 +34,7 @@ public class UserController {
     }
 
     // 로그인
+    // http://localhost:8080/api/users/login
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody Map<String, String> body) {
         String userid = body.get("userid");
@@ -55,6 +57,7 @@ public class UserController {
     }
 
     // 사용자 정보 수정
+    // http://localhost:8080/api/users/update
     @PostMapping("/update")
     public ResponseEntity<String> updateUser(@RequestBody User user) {
         boolean isUpdated = userService.updateUser(user);
@@ -66,7 +69,8 @@ public class UserController {
     }
 
     // 사용자 선호 포지션 업데이트
-    @PostMapping("/update-positions")
+    // http://localhost:8080/api/users/updatePositions
+    @PostMapping("/updatePositions")
     public ResponseEntity<?> updatePositions(@RequestBody Map<String, Object> body) {
         String username = (String) body.get("username");
         List<String> positions = (List<String>) body.get("positions");
@@ -84,8 +88,9 @@ public class UserController {
     }
 
     // 비밀번호 변경
-    @PostMapping("/repassword")
-    public ResponseEntity<?> rePassword(@RequestBody Map<String, String> body) {
+    // http://localhost:8080/api/users/changePassword
+    @PostMapping("/changePassword")
+    public ResponseEntity<?> changePassword(@RequestBody Map<String, String> body) {
         String username = body.get("username");
         String password = body.get("newPassword");
         String passwordCheck = body.get("passwordCheck");
@@ -104,5 +109,19 @@ public class UserController {
         } else {
             return ResponseEntity.status(404).body("사용자를 찾을 수 없습니다.");
         }
+    }
+
+    // 사용자가 속한 팀 조회
+    // http://localhost:8080/api/users/getUserTeams
+    @GetMapping("/{userMail}/teams")
+    public ResponseEntity<?> getUserTeams(@PathVariable String userMail) {
+        Optional<User> userOptional = userService.getTeamsByUserMail(userMail);
+
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        User user = userOptional.get();
+        return ResponseEntity.ok(user.getTeams()); // 사용자에 속한 팀 목록 반환
     }
 }

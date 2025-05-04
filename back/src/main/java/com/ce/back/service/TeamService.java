@@ -23,9 +23,14 @@ public class TeamService {
         return teamRepository.findAll();
     }
 
-    // 특정 팀 조회
-    public Optional<Team> getTeamById(Long teamId) {
-        return teamRepository.findById(teamId);
+    // 특정 팀 이름이 포함된 모든 팀 조회
+    public List<Team> getTeamsByNameContaining(String teamName) {
+        return teamRepository.findByTeamNameContaining(teamName);
+    }
+
+    // 팀 검색 : 팀 이름과 팀 식별자로 조회
+    public Optional<Team> getTeamByTeamNameAndTeamId(String teamName, String teamId) {
+        return teamRepository.findByTeamNameAndTeamId(teamName, teamId);
     }
 
     // 새로운 팀 추가

@@ -1,6 +1,7 @@
 package com.ce.back.service;
 
 import com.ce.back.entity.Game;
+import com.ce.back.entity.Team;
 import com.ce.back.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,18 +18,18 @@ public class GameService {
         this.gameRepository = gameRepository;
     }
 
-    // 팀 ID로 포지션 조회
-    public List<Game> getgamesByTeam(Long teamId) {
-        return gameRepository.findByTeamId(teamId);
+    // 팀으로 포지션 조회
+    public List<Game> getGameByTeamId(String teamId) {
+        return gameRepository.findByTeam_TeamId(teamId);
     }
 
     // 사용자 ID로 포지션 조회
-    public List<Game> getgamesByUser(Long userId) {
-        return gameRepository.findByUserId(userId);
+    public List<Game> getGameByUserMail(String userMail) {
+        return gameRepository.findByPlayers_UserMail(userMail);
     }
 
     // 포지션 추가
-    public Game addgame(Game game) {
+    public Game changePosition(Game game) {
         return gameRepository.save(game);
     }
 }

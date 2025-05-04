@@ -6,7 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    boolean existsByUsername(String username);  // 사용자 이름이 존재하는지 확인
-    Optional<User> findByUsernameAndPassword(String username, String password); // 로그인 시 사용되는 메서드
-    Optional<User> findByUsername(String username);  // 사용자 이름으로 검색
+    boolean existsByUserMail(String userMail);  // 사용자 이메일이 존재하는지 확인
+    Optional<User> findByUserMailAndPassword(String userMail, String password); // 로그인 시 사용되는 메서드
+    Optional<User> findByUserName(String userName);  // 사용자 이름으로 검색
+    Optional<User> findByUserMail(String userMail);
 }

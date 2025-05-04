@@ -745,7 +745,7 @@
             localStorage.setItem('userData', JSON.stringify(userData)); // 로컬 스토리지에도 업데이트
 
             // 서버로 변경된 포지션 정보 전송
-            fetch("http://localhost:8080/api/users/update-positions", {
+            fetch("http://localhost:8080/api/users/updatePositions", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

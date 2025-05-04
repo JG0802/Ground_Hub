@@ -14,13 +14,16 @@ import java.util.List;
 public class Team {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long teamid; // 팀 고유 ID
+    private String teamId; // 팀 고유 ID
 
-    private String teamname; // 팀 이름
+    private String teamName; // 팀 이름
     private String location; // 팀 위치
     private String firstColor; // 팀 첫 번째 색상
     private String secondColor; // 팀 두 번째 색상
+
+    @ManyToOne
+    @JoinColumn(name = "team_manager_id")
+    private User teamManager; // 팀 관리자 이름
 
     // 다대다 관계를 위한 매핑
     @ManyToMany
