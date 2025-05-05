@@ -67,7 +67,6 @@ public class DataInitializer implements CommandLineRunner {
 
         // 더미 팀 생성
         Team team1 = Team.builder()
-                .teamId("bdz")
                 .teamName("불도저")
                 .location("용인")
                 .firstColor("red")
@@ -106,7 +105,7 @@ public class DataInitializer implements CommandLineRunner {
 
     // 유저가 중복되지 않으면 저장
     private void saveUserIfNotExists(User user) {
-        Optional<User> existingUser = userRepository.findByUserMail(user.getUserMail());
+        Optional<User> existingUser = userRepository.findUserByUserMail(user.getUserMail());
         if (existingUser.isEmpty()) {
             userRepository.save(user);
         }
@@ -114,7 +113,7 @@ public class DataInitializer implements CommandLineRunner {
 
     // 팀이 중복되지 않으면 저장
     private void saveTeamIfNotExists(Team team) {
-        Optional<Team> existingTeam = teamRepository.findByTeamId(team.getTeamId());
+        Optional<Team> existingTeam = teamRepository.findTeamByTeamId(team.getTeamId());
         if (existingTeam.isEmpty()) {
             teamRepository.save(team);
         }
@@ -122,7 +121,7 @@ public class DataInitializer implements CommandLineRunner {
 
     // 경기가 중복되지 않으면 저장
     private void saveGameIfNotExists(Game game) {
-        Optional<Game> existingGame = matchRepository.findByGameName(game.getGameName());
+        Optional<Game> existingGame = matchRepository.findGameByGameId(game.getGameId());
         if (existingGame.isEmpty()) {
             matchRepository.save(game);
         }

@@ -34,42 +34,50 @@ public class TeamController {
     // 특정 팀 이름이 포함된 모든 팀 조회
     // http://localhost:8080/api/teams/{teamName}
     @GetMapping("/{teamName}")
-    public ResponseEntity<List<Team>> getTeamsByNameContaining(@PathVariable String teamName) {
-        List<Team> teams = teamService.getTeamsByNameContaining(teamName);
-        if (teams.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<List<Team>> getTeamsByTeamName(@PathVariable String teamName) {
+        List<Team> teams = teamService.getTeamsByTeamName(teamName);
         return ResponseEntity.ok(teams);
     }
 
     // 새로운 팀 추가
     // http://localhost:8080/api/teams/create-team
     @PostMapping("/create-team")
-    public ResponseEntity<Team> addTeam(@RequestBody Team team) {
-        Team savedTeam = teamService.addTeam(team);
-        return ResponseEntity.ok(savedTeam);
+    public ResponseEntity<?> createTeam(@RequestBody Team team) {
+        try {
+            Team newTeam = teamService.createTeam(team);
+            return ResponseEntity.ok(newTeam);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+
     }
 
-    // 팀 이름으로 사용자 리스트 조회
-    // http://localhost:8080/api/teams/users-in-team
-    @PostMapping("/users-in-team")
-    public ResponseEntity<?> getInviteUsers(@RequestBody Map<String, String> body) {
-        String teamName = body.get("teamName");
-        String teamId = body.get("teamId");
-
-        if (teamName == null && teamId == null) {
-            return ResponseEntity.badRequest().body("팀 이름과 팀 식별자가 필요합니다.");
+    // 팀 정보 수정
+    // http://localhost:8080/api/teams/update-team
+    @PostMapping("/update-team")
+    public ResponseEntity<?> updateTeam(@RequestBody Team team) {
+        try {
+            Team updatedTeam = teamService.updateTeam(team);
+            return ResponseEntity.ok(updatedTeam);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
         }
+    }
 
-        Optional<Team> teamOptional = teamService.getTeamByTeamNameAndTeamId(teamName, teamId);
+    // 특정 팀에 속한 사용자들 조회
+    // http://localhost:8080/api/teams/{teamId}/users-in-team
+    @GetMapping("/{teamId}/users")
+    public ResponseEntity<?> getUsers(@PathVariable Long teamId) {
+        try {
+            // 팀을 서비스에서 조회
+            Team team = teamService.getTeamByTeamId(teamId);
 
-        if (teamOptional.isEmpty()) {
-            return ResponseEntity.status(404).body(Map.of("success", false, "message", "팀 이름과 관련된 사용자가 없습니다."));
+            // 팀에 속한 사용자 목록 반환
+            List<User> users = team.getUsers();
+            return ResponseEntity.ok(users); // 사용자 목록 반환
+        } catch (RuntimeException e) {
+            // 팀을 찾지 못한 경우 예외 메시지를 반환
+            return ResponseEntity.status(404).body(e.getMessage());
         }
-
-        Team team = teamOptional.get();
-        List<User> users = team.getUsers(); // 'users' 필드로 팀의 사용자 리스트 반환
-
-        return ResponseEntity.ok(Map.of("success", true, "users", users));
     }
 }

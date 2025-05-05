@@ -1,7 +1,7 @@
 package com.ce.back.repository;
 
 import com.ce.back.entity.Game;
-import com.ce.back.entity.Team;
+import com.ce.back.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -9,11 +9,19 @@ import java.util.Optional;
 
 public interface GameRepository extends JpaRepository<Game, Long> {
 
-    // 팀 ID로 포지션 조회
-    List<Game> findByTeam_TeamId(String teamId);
+    // 팀 이름으로 경기 찾기
+    List<Game> findGamesByTeam_TeamName(String teamName);
 
-    // 사용자 ID로 포지션 조회
-    List<Game> findByPlayers_UserMail(String userMail);
+    // 팀 ID로 경기 찾기
+    List<Game> findGamesByTeam_TeamId(Long teamId);
 
-    Optional<Game> findByGameName(String gameName);
+    // 사용자 이메일로 경기 찾기
+    List<Game> findGamesByPlayers_UserMail(String userMail);
+
+    // 게임 ID로 경기 찾기
+    Optional<Game> findGameByGameId(Long gameId);
+
+    // 게임 이름으로 경기 찾기
+    List<Game> findGamesByGameName(String gameName);
+
 }

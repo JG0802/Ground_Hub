@@ -1,5 +1,6 @@
 package com.ce.back.controller;
 
+import com.ce.back.entity.Team;
 import com.ce.back.entity.User;
 import com.ce.back.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,13 +116,8 @@ public class UserController {
     // http://localhost:8080/api/users/getUserTeams
     @GetMapping("/{userMail}/teams")
     public ResponseEntity<?> getUserTeams(@PathVariable String userMail) {
-        Optional<User> userOptional = userService.getTeamsByUserMail(userMail);
+        List<Team> teams = userService.getTeamsByUserMail(userMail);
 
-        if (userOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        User user = userOptional.get();
-        return ResponseEntity.ok(user.getTeams()); // 사용자에 속한 팀 목록 반환
+        return ResponseEntity.ok(teams); // 사용자에 속한 팀 목록 반환 (빈 리스트 가능)
     }
 }

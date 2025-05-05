@@ -1,5 +1,6 @@
 package com.ce.back.service;
 
+import com.ce.back.entity.Team;
 import com.ce.back.entity.User;
 import com.ce.back.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class UserService {
 
     // 회원가입
     public boolean registerUser(User user) {
-        if (userRepository.existsByUserMail(String.valueOf(user.getUserMail()))) {
+        if (userRepository.existsByUserMail(user.getUserMail())) {
             return false; // 이미 존재하는 사용자
         }
         userRepository.save(user);
@@ -31,21 +32,25 @@ public class UserService {
 
     // 로그인
     public Optional<User> loginUser(String userMail, String password) {
-        return userRepository.findByUserMailAndPassword(userMail, password);
+        return userRepository.findUserByUserMailAndPassword(userMail, password);
     }
 
     // 사용자 정보 수정
     public boolean updateUser(User user) {
-        if (userRepository.existsByUserMail(valueOf(user.getUserMail()))) {
+        Optional<User> userOptional = userRepository.findUserByUserMail(user.getUserMail());
+        if (userOptional.isPresent()) {
             userRepository.save(user);
             return true;
         }
         return false; // 사용자 없음
     }
 
-    // 포지션 수정
+    // 사용자 선호 포지션 수정
     public boolean updateUserPositions(String userMail, List<String> positions) {
-        Optional<User> userOptional = userRepository.findByUserMail(userMail);
+        if (positions.size() != 3) {
+            return false; // 포지션이 3개가 아니면 불가
+        }
+        Optional<User> userOptional = userRepository.findUserByUserMail(userMail);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             user.setFirstPosition(positions.get(0));
@@ -59,7 +64,7 @@ public class UserService {
 
     // 비밀번호 변경
     public boolean changePassword(String userMail, String newPassword) {
-        Optional<User> userOptional = userRepository.findByUserMailAndPassword(userMail, newPassword);
+        Optional<User> userOptional = userRepository.findUserByUserMail(userMail);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             user.setPassword(newPassword);
@@ -70,7 +75,12 @@ public class UserService {
     }
 
     // 사용자 이메일로 사용자가 속한 팀 목록 반환
-    public Optional<User> getTeamsByUserMail(String userMail) {
-        return userRepository.findByUserMail(userMail);
+    public List<Team> getTeamsByUserMail(String userMail) {
+        Optional<User> userOptional = userRepository.findUserByUserMail(userMail);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            return user.getTeams();
+        }
+        return null;
     }
 }
