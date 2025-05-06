@@ -1,20 +1,33 @@
 body {
-  height: 100%;
   margin: 0;
-  font-family: 'MarinesReqular', sans-serif;
+  padding: 0;
+  font-family: 'MarinesRegular', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
   display: flex;
   justify-content: center;
+  background-color: #ffffff; /* 밝은 배경 유지 */
 }
 
+#root {
+  width: 100%;
+  max-width: 430px;  /* 앱처럼 좁은 화면 폭 제한 */
+  min-height: 100vh;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  position: relative;
+  padding-bottom: 56px; /* 하단탭 고정 공간 확보 */
+}
+
+/* 코드 글꼴 */
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
+/* 커스텀 폰트 선언 */
 @font-face {
-  font-family: "MarinesReqular";
+  font-family: "MarinesRegular";
   src: url('./fonts/MarinesRegular.woff2') format('woff2'),
        url('./fonts/MarinesRegular.woff') format('woff');
 }
