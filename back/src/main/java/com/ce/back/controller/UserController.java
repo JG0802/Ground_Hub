@@ -34,6 +34,17 @@ public class UserController {
         }
     }
 
+    // 아이디 중복 확인
+    // http://localhost:8080/api/users/userMail-check
+    @GetMapping("/userMail-check")
+    public ResponseEntity<?> checkUser(@RequestParam String userMail) {
+        if (userService.userMailCheck(userMail)) {
+            return ResponseEntity.ok("사용자가 존재합니다.");
+        } else {
+            return ResponseEntity.status(404).body("사용자를 찾을 수 없습니다.");
+        }
+    }
+
     // 로그인
     // http://localhost:8080/api/users/login
     @PostMapping("/login")

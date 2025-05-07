@@ -5,6 +5,7 @@ import com.ce.back.entity.User;
 import com.ce.back.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +29,11 @@ public class UserService {
         }
         userRepository.save(user);
         return true;
+    }
+
+    // 메일 존재 체크
+    public boolean userMailCheck(@RequestParam String userMail) {
+        return userRepository.existsByUserMail(userMail);
     }
 
     // 로그인
