@@ -1,5 +1,7 @@
 package com.ce.back.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import jakarta.persistence.*;
@@ -20,11 +22,7 @@ public class User {
     private String userName; // 사용자 이름
     private String tel; // 전화번호
 
-    private String firstPosition;
-    private String secondPosition;
-    private String thirdPosition;
-
-    // 다대다 관계를 위한 매핑
-    @ManyToMany(mappedBy = "users")
-    private List<Team> teams; // 사용자가 속한 팀 목록
+    private String firstPosition; // 첫 번째 선호 포지션
+    private String secondPosition; // 두 번째 선호 포지션
+    private String thirdPosition; // 세 번째 선호 포지션
 }

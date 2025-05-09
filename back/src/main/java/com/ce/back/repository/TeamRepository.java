@@ -13,4 +13,8 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
 
     // 팀 ID로 팀을 찾음
     Optional<Team> findTeamByTeamId(Long teamId);
+
+    // 유저 이메일을 기준으로 팀 목록을 조회하는 쿼리 메서드
+    List<Team> findByUsersUserMail(String userMail); // 유저의 이메일을 기준으로 팀 찾기
+
 }

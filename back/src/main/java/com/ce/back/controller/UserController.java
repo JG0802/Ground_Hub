@@ -124,7 +124,7 @@ public class UserController {
     }
 
     // 사용자가 속한 팀 조회
-    // http://localhost:8080/api/users/getUserTeams
+    // http://localhost:8080/api/users/{userMail}/teams
     @GetMapping("/{userMail}/teams")
     public ResponseEntity<?> getUserTeams(@PathVariable String userMail) {
         List<Team> teams = userService.getTeamsByUserMail(userMail);

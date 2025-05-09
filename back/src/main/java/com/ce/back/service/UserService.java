@@ -3,6 +3,7 @@ package com.ce.back.service;
 import com.ce.back.entity.Team;
 import com.ce.back.entity.User;
 import com.ce.back.repository.UserRepository;
+import com.ce.back.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,10 +17,12 @@ import static java.lang.String.valueOf;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final TeamRepository teamRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, TeamRepository teamRepository) {
         this.userRepository = userRepository;
+        this.teamRepository = teamRepository;
     }
 
     // 회원가입
@@ -82,11 +85,7 @@ public class UserService {
 
     // 사용자 이메일로 사용자가 속한 팀 목록 반환
     public List<Team> getTeamsByUserMail(String userMail) {
-        Optional<User> userOptional = userRepository.findUserByUserMail(userMail);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            return user.getTeams();
-        }
-        return null;
+        // 유저 이메일을 기반으로 해당하는 팀들을 찾아 반환
+        return teamRepository.findByUsersUserMail(userMail);
     }
 }
