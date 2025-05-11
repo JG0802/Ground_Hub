@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -47,14 +47,29 @@ const SubmitButton = styled.button`
   color: white;
 `;
 
-const POSITIONS = ['FW', 'MF', 'DF', 'GK', 'LW', 'RW', 'CM', 'CB', 'LB', 'RB', 'ST', 'AM'];
+const POSITIONS = [
+  'FW',
+  'MF',
+  'DF',
+  'GK',
+  'LW',
+  'RW',
+  'CM',
+  'CB',
+  'LB',
+  'RB',
+  'ST',
+  'AM',
+];
 
 const SelectPosition = () => {
   const [selected, setSelected] = useState([]);
-  const location = useLocation();
   const navigate = useNavigate();
 
-  const email = new URLSearchParams(location.search).get('email');
+  const userMail = sessionStorage.getItem('userMail');
+  const password = sessionStorage.getItem('password');
+  const userName = sessionStorage.getItem('userName');
+  const tel = sessionStorage.getItem('tel');
 
   const togglePosition = (position) => {
     if (selected.includes(position)) {
@@ -73,12 +88,17 @@ const SelectPosition = () => {
     }
 
     try {
-      const response = await fetch('http://192.168.55.12:8080/api/users/updatePositions', {
+      const response = await fetch('/api/users/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          username: email,
-          positions: selected,
+          userMail: userMail,
+          password: password,
+          userName: userName,
+          tel: tel,
+          firstPosition: selected[0],
+          secondPosition: selected[1],
+          thirdPosition: selected[2],
         }),
       });
 
