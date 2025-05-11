@@ -1,0 +1,94 @@
+package com.ce.back.service;
+
+import com.ce.back.entity.Game;
+import com.ce.back.entity.User;
+import com.ce.back.repository.GameRepository;
+import com.ce.back.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class GameService {
+
+    private final GameRepository gameRepository;
+    private final UserRepository userRepository;
+
+    @Autowired
+    public GameService(GameRepository gameRepository, UserRepository userRepository) {
+        this.gameRepository = gameRepository;
+        this.userRepository = userRepository;
+    }
+
+    // 팀 이름으로 경기 찾기
+    public List<Game> getGamesByTeamName(String teamName) {
+        return gameRepository.findGamesByTeam_TeamName(teamName);
+    }
+
+    // 팀 ID로 경기 찾기
+    public List<Game> getGamesByTeamId(Long teamId) {
+        return gameRepository.findGamesByTeam_TeamId(teamId);
+    }
+
+    // 사용자 이메일로 포지션 조회
+    public List<Game> getGamesByUserMail(String userMail) {
+        return gameRepository.findGamesByPlayers_UserMail(userMail);
+    }
+
+    // 경기 생성
+    public Game createGame(Game game) {
+        // 경기 중복 체크(게임 이름과 팀을 기준으로)
+        Optional<Game> existingGame = gameRepository.findGamesByGameName(game.getGameName())
+                .stream()
+                .filter(g -> g.getTeam().equals(game.getTeam())) // 같은 팀의 동일한 경기라면 중복 처리
+                .findFirst();
+
+        if (existingGame.isPresent()) {
+            throw new RuntimeException("이미 존재하는 경기입니다.");
+        }
+
+        return gameRepository.save(game);
+    }
+
+    // 경기 업데이트
+    public Game updateGame(Game game) {
+        Optional<Game> existingGame = gameRepository.findGameByGameId(game.getGameId());
+
+        // isEmpty()를 사용하여 값이 없는 경우 처리
+        if (existingGame.isEmpty()) {
+            throw new RuntimeException("경기를 찾을 수 없습니다.");
+        }
+
+        return gameRepository.save(game);
+    }
+
+    // 경기에 참여하는 인원 추가
+    public void insertUserToGame(Long gameId, String userMail) {
+
+        // 게임이 존재하는지 확인
+        Optional<Game> existingGame = gameRepository.findGameByGameId(gameId);
+        Optional<User> existingUser = userRepository.findUserByUserMail(userMail);
+
+        if (existingGame.isEmpty()) {
+            throw new RuntimeException("경기가 존재하지 않습니다."); // 경기가 없으면 예외 처리
+        } if (existingUser.isEmpty()) {
+            throw new RuntimeException("사용자가 존재하지 않습니다.");
+        }
+
+        Game game = existingGame.get(); // 존재하는 경기를 가져옴
+        User user = existingUser.get();
+
+        // 경기 참가 선수 목록에 해당 사용자가 이미 존재하는지 확인
+        if (game.getPlayers().contains(user)) {
+            throw new RuntimeException("이 사용자는 이미 경기에 참여하고 있습니다."); // 이미 참여한 경우 예외 처리
+        }
+
+        // 사용자 추가
+        game.getPlayers().add(user); // 경기 참가 선수 목록에 사용자를 추가
+
+        // 게임 정보 업데이트 (저장)
+        gameRepository.save(game); // 경기 정보 업데이트
+    }
+}

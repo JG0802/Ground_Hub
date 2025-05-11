@@ -575,16 +575,16 @@
             alert('로그인이 필요합니다.');
             window.location.href = 'index.html';
         } else {
-            document.getElementById('memberUsername').value = userData.username;
-            document.getElementById('position1').value = userData.positions[0];
-            document.getElementById('position2').value = userData.positions[1];
-            document.getElementById('position3').value = userData.positions[2];
+            document.getElementById('memberUsername').value = userData.userMail;
+            document.getElementById('position1').value = userData.firstPosition;
+            document.getElementById('position2').value = userData.secondPosition;
+            document.getElementById('position3').value = userData.thirdPosition;
         }
 
         // 팀 새로 만들기
         function createInviteCode() {
             const inviteCode = document.getElementById('inviteCodeInput').value;
-            const username = userData.username;
+            const username = userData.userMail;
             const formation = document.getElementById('formationSelect').value;
             const isPrivate = document.getElementById('private-check').checked;
 
@@ -745,7 +745,7 @@
             localStorage.setItem('userData', JSON.stringify(userData)); // 로컬 스토리지에도 업데이트
 
             // 서버로 변경된 포지션 정보 전송
-            fetch("http://localhost:8080/api/users/update-positions", {
+            fetch("http://localhost:8080/api/users/updatePositions", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

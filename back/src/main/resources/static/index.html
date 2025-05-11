@@ -176,10 +176,10 @@
 
         // 로그인 함수
         function login() {
-            const username = document.getElementById('loginUsername').value;
+            const userMail = document.getElementById('loginUsername').value;
             const password = document.getElementById('loginPassword').value;
 
-            if (!username || !password) {
+            if (!userMail || !password) {
                 alert('아이디와 비밀번호를 입력하세요.');
                 return;
             }
@@ -190,7 +190,7 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username, password }),
+                body: JSON.stringify({ userMail, password }),
             })
                 .then((response) => {
                     if (response.ok) {
