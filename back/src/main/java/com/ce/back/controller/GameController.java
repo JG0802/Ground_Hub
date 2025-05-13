@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/positions")
@@ -60,6 +61,18 @@ public class GameController {
         try {
             Game savedGame = gameService.updateGame(game);
             return ResponseEntity.ok(savedGame);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
+
+    // 경기 Id로 특정 경기 조회
+    // http://localhost:8080/api/positions/saved-formation
+    @GetMapping("/saved-formation/{gameId}")
+    public ResponseEntity<?> getSavedFormation(@PathVariable Long gameId) {
+        try {
+            Optional<Game> game = gameService.getGameByGameId(gameId);
+            return ResponseEntity.ok(game);
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).body(e.getMessage());
         }

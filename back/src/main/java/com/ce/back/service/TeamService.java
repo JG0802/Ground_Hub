@@ -1,5 +1,6 @@
 package com.ce.back.service;
 
+import com.ce.back.entity.Game;
 import com.ce.back.entity.Team;
 import com.ce.back.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +30,15 @@ public class TeamService {
     }
 
     // 팀 검색 : 팀 식별자로 조회
-    public Team getTeamByTeamId(Long teamId) {
-        return teamRepository.findTeamByTeamId(teamId)
-                .orElseThrow(() -> new RuntimeException("팀을 찾을 수 없습니다")); // 예외 처리
+    public Optional<Team> getTeamByTeamId(Long teamId) {
+        Optional<Team> existingTeam = teamRepository.findTeamByTeamId(teamId);
+
+        // isEmpty()를 사용하여 값이 없는 경우 처리
+        if (existingTeam.isEmpty()) {
+            throw new RuntimeException("경기를 찾을 수 없습니다.");
+        }
+
+        return existingTeam;
     }
 
     // 새로운 팀 생성

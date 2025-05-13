@@ -64,6 +64,18 @@ public class GameService {
         return gameRepository.save(game);
     }
 
+    // 경기 조회
+    public Optional<Game> getGameByGameId(Long gameId) {
+        Optional<Game> existingGame = gameRepository.findGameByGameId(gameId);
+
+        // isEmpty()를 사용하여 값이 없는 경우 처리
+        if (existingGame.isEmpty()) {
+            throw new RuntimeException("경기를 찾을 수 없습니다.");
+        }
+
+        return existingGame;
+    }
+
     // 경기에 참여하는 인원 추가
     public void insertUserToGame(Long gameId, String userMail) {
 

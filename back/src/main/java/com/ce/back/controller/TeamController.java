@@ -1,5 +1,6 @@
 package com.ce.back.controller;
 
+import com.ce.back.entity.Game;
 import com.ce.back.entity.Team;
 import com.ce.back.entity.User;
 import com.ce.back.service.TeamService;
@@ -29,6 +30,18 @@ public class TeamController {
     public ResponseEntity<List<Team>> getAllTeams() {
         List<Team> teams = teamService.getAllTeams();
         return ResponseEntity.ok(teams);
+    }
+
+    // 팀 Id로 특정 팀 조회
+    // http://localhost:8080/api/teams/{teamId}
+    @GetMapping("/{teamId}")
+    public ResponseEntity<?> getTeamByTeamId(@PathVariable Long teamId) {
+        try {
+            Optional<Team> team = teamService.getTeamByTeamId(teamId);
+            return ResponseEntity.ok(team);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 
     // 특정 팀 이름이 포함된 모든 팀 조회
