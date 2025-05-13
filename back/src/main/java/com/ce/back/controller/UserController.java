@@ -122,13 +122,4 @@ public class UserController {
             return ResponseEntity.status(404).body("사용자를 찾을 수 없습니다.");
         }
     }
-
-    // 사용자가 속한 팀 조회
-    // http://localhost:8080/api/users/{userMail}/teams
-    @GetMapping("/{userMail}/teams")
-    public ResponseEntity<?> getUserTeams(@PathVariable String userMail) {
-        List<Team> teams = userService.getTeamsByUserMail(userMail);
-
-        return ResponseEntity.ok(teams); // 사용자에 속한 팀 목록 반환 (빈 리스트 가능)
-    }
 }

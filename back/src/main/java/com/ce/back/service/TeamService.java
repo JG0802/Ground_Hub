@@ -41,6 +41,11 @@ public class TeamService {
         return existingTeam;
     }
 
+    // 팀 검색 : 사용자 메일로 조회
+    public List<Team> getTeamsByUserMail(String userMail) {
+        return teamRepository.findByUsersUserMail(userMail);
+    }
+
     // 새로운 팀 생성
     public Team createTeam(Team team) {
         // 동일한 ID를 가진 팀이 존재하는지 확인

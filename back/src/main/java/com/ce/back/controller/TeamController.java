@@ -52,6 +52,17 @@ public class TeamController {
         return ResponseEntity.ok(teams);
     }
 
+    // 특정 사용자 메일로, 사용자가 포함된 모든 팀 조회
+    // http://localhost:8080/api/teams/name/{userMail}
+    @GetMapping("/mail/{userMail}")
+    public ResponseEntity<List<Team>> getTeamsByUserMail(@PathVariable String userMail) {
+        List<Team> teams = teamService.getTeamsByUserMail(userMail);
+        if (teams.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(teams);
+    }
+
     // 새로운 팀 추가
     // http://localhost:8080/api/teams/create-team
     @PostMapping("/create-team")
