@@ -45,8 +45,8 @@ public class TeamController {
     }
 
     // 특정 팀 이름이 포함된 모든 팀 조회
-    // http://localhost:8080/api/teams/{teamName}
-    @GetMapping("/{teamName}")
+    // http://localhost:8080/api/teams/name/{teamName}
+    @GetMapping("/name/{teamName}")
     public ResponseEntity<List<Team>> getTeamsByTeamName(@PathVariable String teamName) {
         List<Team> teams = teamService.getTeamsByTeamName(teamName);
         return ResponseEntity.ok(teams);
@@ -79,17 +79,22 @@ public class TeamController {
 
     // 특정 팀에 속한 사용자들 조회
     // http://localhost:8080/api/teams/{teamId}/users-in-team
-    @GetMapping("/{teamId}/users")
+    @GetMapping("/{teamId}/users-in-team")
     public ResponseEntity<?> getUsers(@PathVariable Long teamId) {
         try {
             // 팀을 서비스에서 조회
-            Team team = teamService.getTeamByTeamId(teamId);
+            Optional<Team> teamOptional = teamService.getTeamByTeamId(teamId);
 
-            // 팀에 속한 사용자 목록 반환
-            List<User> users = team.getUsers();
-            return ResponseEntity.ok(users); // 사용자 목록 반환
+            // Optional에서 Team 객체를 꺼내고, 그 후 getUsers() 호출
+            if (teamOptional.isPresent()) {
+                Team team = teamOptional.get();  // team 객체 추출
+                List<User> users = team.getUsers();  // 이제 team.getUsers() 호출 가능
+                return ResponseEntity.ok(users);  // 사용자 목록 반환
+            } else {
+                return ResponseEntity.status(404).body("팀을 찾을 수 없습니다.");
+            }
         } catch (RuntimeException e) {
-            // 팀을 찾지 못한 경우 예외 메시지를 반환
+            // 예외 발생 시 처리
             return ResponseEntity.status(404).body(e.getMessage());
         }
     }

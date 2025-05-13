@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/positions")
+@RequestMapping("/api/games")
 public class GameController {
 
     private final GameService gameService;
@@ -21,7 +21,7 @@ public class GameController {
     }
 
     // 특정 팀의 경기 일정을 조회하는 메서드
-    // http://localhost:8080/api/positions/team/{teamId}
+    // http://localhost:8080/api/games/team/{teamId}
     @GetMapping("/team/{teamId}")
     public ResponseEntity<List<Game>> getGameByTeamId(@PathVariable Long teamId) {
         List<Game> games = gameService.getGamesByTeamId(teamId);
@@ -32,7 +32,7 @@ public class GameController {
     }
 
     // 특정 사용자가 참가하는 경기 목록 출력
-    // http://localhost:8080/api/positions/team/{teamId}
+    // http://localhost:8080/api/games/team/{teamId}
     @GetMapping("/user/{userMail}")
     public ResponseEntity<List<Game>> getGameByUser(@PathVariable String userMail) {
         List<Game> games = gameService.getGamesByUserMail(userMail);
@@ -43,7 +43,7 @@ public class GameController {
     }
 
     // 경기 생성
-    // http://localhost:8080/api/positions/create-game
+    // http://localhost:8080/api/games/create-game
     @PostMapping("/create-game")
     public ResponseEntity<?> createGame(@RequestBody Game game) {
         try {
@@ -55,7 +55,7 @@ public class GameController {
     }
 
     // 경기에서의 포지션을 변경
-    // http://localhost:8080/api/positions/update-game
+    // http://localhost:8080/api/games/update-game
     @PostMapping("/update-game")
     public ResponseEntity<?> changePosition(@RequestBody Game game) {
         try {
@@ -67,7 +67,7 @@ public class GameController {
     }
 
     // 경기 Id로 특정 경기 조회
-    // http://localhost:8080/api/positions/saved-formation
+    // http://localhost:8080/api/games/saved-formation
     @GetMapping("/saved-formation/{gameId}")
     public ResponseEntity<?> getSavedFormation(@PathVariable Long gameId) {
         try {
@@ -79,7 +79,7 @@ public class GameController {
     }
 
     // 경기에 사용자 추가
-    // http://localhost:8080/api/positions/{userMail}/insert-to-game
+    // http://localhost:8080/api/games/{userMail}/insert-to-game
     @PostMapping("/{userMail}/insert-to-game")
     public ResponseEntity<?> insertUserToGame(@PathVariable String userMail, @RequestBody Game game) {
         try {

@@ -36,6 +36,5 @@ public class Team {
             joinColumns = @JoinColumn(name = "team_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    @JsonManagedReference // 유저의 팀 정보를 직렬화할 때 포함
     private List<User> users; // 팀에 속한 사용자 목록
 }
