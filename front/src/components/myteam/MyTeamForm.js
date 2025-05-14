@@ -30,7 +30,7 @@ const MyTeamForm = () => {
     };
 
     fetchTeams();
-  }, []);
+  }, [userMail]);
 
   return (
     <MyTeamFormContainer>

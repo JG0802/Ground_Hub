@@ -68,6 +68,18 @@ public class UserController {
         }
     }
 
+    // 사용자 정보 확인
+    // http://localhost:8080/api/users/check/{userMail}
+    @GetMapping("/check/{userMail}")
+    public ResponseEntity<?> confirmUser(@PathVariable String userMail) {
+        try {
+            Optional<User> user = userService.getUserByUserMail(userMail);
+            return ResponseEntity.ok(user);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
+
     // 사용자 정보 수정
     // http://localhost:8080/api/users/update
     @PostMapping("/update")

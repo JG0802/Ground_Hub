@@ -22,6 +22,8 @@ public class Team {
 
     private String teamName; // 팀 이름
     private String location; // 팀 활동 지역
+    private String logo; // 팀 로고 파일명
+
     private String firstColor; // 팀 홈 컬러
     private String secondColor; // 팀 원정 컬러
 

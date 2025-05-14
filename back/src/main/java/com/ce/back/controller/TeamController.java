@@ -1,17 +1,16 @@
 package com.ce.back.controller;
 
-import com.ce.back.entity.Game;
 import com.ce.back.entity.Team;
 import com.ce.back.entity.User;
 import com.ce.back.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/teams")
@@ -73,7 +72,6 @@ public class TeamController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).body(e.getMessage());
         }
-
     }
 
     // 팀 정보 수정
@@ -85,6 +83,26 @@ public class TeamController {
             return ResponseEntity.ok(updatedTeam);
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
+
+    // 로고 파일 수정
+    @PostMapping("/{teamId}/upload-logo")
+    public ResponseEntity<?> uploadTeamLogo(@PathVariable Long teamId, @RequestParam("file") MultipartFile file) {
+        try {
+            // 로고 파일 저장
+            String logoFileName = teamService.saveLogoFile(file);
+
+            // 로고 파일 경로를 팀 객체에 저장
+            Team existingTeam = teamService.getTeamByTeamId(teamId).orElseThrow(() -> new RuntimeException("팀을 찾을 수 없습니다."));
+            existingTeam.setLogo(logoFileName);
+
+            // 팀 업데이트
+            teamService.updateTeam(existingTeam);
+
+            return ResponseEntity.ok(existingTeam);
+        } catch (IOException | RuntimeException e) {
+            return ResponseEntity.status(500).body("로고 업로드 실패: " + e.getMessage());
         }
     }
 

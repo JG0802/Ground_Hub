@@ -54,10 +54,11 @@ const ProfilePage = () => {
     const fetchTeams = async () => {
       try {
         // api 주소 사용자 정보 조회하는 걸로 바꾸기
-        const response = await fetch(`/api/teams/mail/${userMail}`);
+        const response = await fetch(`/api/users/check/${userMail}`);
         if (response.ok) {
           const data = await response.json();
           setUserData(data); // 화면에 보여주기 위해 저장
+          console.log(data);
         } else {
           alert(await response.text());
         }
@@ -68,7 +69,11 @@ const ProfilePage = () => {
     };
 
     fetchTeams();
-  }, []);
+  }, [userMail]);
+
+  if (!userData) {
+    return <Container>Loading...</Container>;
+  }
 
   return (
     <Container>
@@ -79,9 +84,9 @@ const ProfilePage = () => {
       <Label>Preferred Position 1</Label>
       <InfoBox>{userData.firstPosition || ''}</InfoBox>
       <Label>Preferred Position 2</Label>
-      <InfoBox>{userData.firstPosition || ''}</InfoBox>
+      <InfoBox>{userData.secondPosition || ''}</InfoBox>
       <Label>Preferred Position 3</Label>
-      <InfoBox>{userData.firstPosition || ''}</InfoBox>
+      <InfoBox>{userData.thirdPosition || ''}</InfoBox>
     </Container>
   );
 };

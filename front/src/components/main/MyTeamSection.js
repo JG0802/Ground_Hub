@@ -55,7 +55,7 @@ const MyTeamSection = () => {
         const response = await fetch(`/api/teams/mail/${userMail}`);
         if (response.ok) {
           const data = await response.json();
-          setTeams(data); // 화면에 보여주기 위해 저장
+          setTeams(data);
         } else {
           alert(await response.text());
         }
@@ -66,7 +66,7 @@ const MyTeamSection = () => {
     };
 
     fetchTeams();
-  }, []);
+  }, [userMail]);
 
   return (
     <SectionWrapper>
@@ -81,12 +81,17 @@ const MyTeamSection = () => {
       </TitleWrapper>
       <TeamList>
         {teams.map((team, index) => (
-          <TeamItem key={index}>
-            <TeamImage src={team.img} alt={team.teamId} />
-            <TeamName>
-              {team.teamName}({team.teamId})
-            </TeamName>
-          </TeamItem>
+          <Link
+            to={`/teams/${team.teamId}`}
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
+            <TeamItem key={index}>
+              <TeamImage src={team.img} alt={team.teamId} />
+              <TeamName>
+                {team.teamName}({team.teamId})
+              </TeamName>
+            </TeamItem>
+          </Link>
         ))}
       </TeamList>
     </SectionWrapper>

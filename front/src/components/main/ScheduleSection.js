@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
+import { Link } from 'react-router-dom';
 
 const Container = styled.div`
   padding: 2vh;
@@ -86,6 +87,7 @@ const ScheduleSection = () => {
   const [currentDate] = useState(dayjs());
   const [teams, setTeams] = useState([]);
   const [games, setGames] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const userMail = sessionStorage.getItem('userMail');
 
   // 캘린더 날짜 생성
@@ -130,7 +132,7 @@ const ScheduleSection = () => {
           const res = await fetch(`/api/games/team/${team.teamId}`);
           if (res.ok) {
             const data = await res.json();
-            allGames.push(...data); // 각 팀의 경기들을 누적
+            allGames.push(...data);
           }
         }
 
@@ -138,6 +140,8 @@ const ScheduleSection = () => {
       } catch (error) {
         console.error(error);
         alert('경기 데이터를 불러오는 중 오류 발생');
+      } finally {
+        setIsLoading(false); // ✅ 무조건 로딩 끝내기
       }
     };
 
@@ -146,6 +150,21 @@ const ScheduleSection = () => {
     }
   }, [teams]);
 
+  // ✅ 로딩 중일 때 별도 UI 출력
+  if (isLoading) {
+    return (
+      <Container>
+        <TitleRow>
+          <Title>Schedule</Title>
+        </TitleRow>
+        <div style={{ textAlign: 'center', padding: '2vh', fontSize: '1.8vh' }}>
+          불러오는 중...
+        </div>
+      </Container>
+    );
+  }
+
+  // ✅ 로딩 끝난 후에만 아래 렌더링
   return (
     <Container>
       <TitleRow>
@@ -155,13 +174,18 @@ const ScheduleSection = () => {
 
       <MatchScroll>
         {games.map((game) => (
-          <MatchCard key={game.gameId}>
-            <div style={{ fontSize: '1.6vh', fontWeight: 'bold' }}>
-              {dayjs(game.date).format('MM/DD ddd')}
-            </div>
-            <MatchImage src="/images/logo.png" alt="team" />
-            <MatchInfo>{game.gameName}</MatchInfo>
-          </MatchCard>
+          <Link
+            to={`/game/${game.gameId}`}
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
+            <MatchCard key={game.gameId}>
+              <div style={{ fontSize: '1.6vh', fontWeight: 'bold' }}>
+                {dayjs(game.date).format('MM/DD ddd')}
+              </div>
+              <MatchImage src="/images/logo.png" alt="team" />
+              <MatchInfo>{game.gameName}</MatchInfo>
+            </MatchCard>
+          </Link>
         ))}
       </MatchScroll>
 
