@@ -129,8 +129,8 @@ const TeamListPage = () => {
             </div>
           </TeamInfo>
           <ColorDots>
-            <Dot color={team.first_color} />
-            <Dot color={team.second_color} />
+            <Dot color={team.firstColor} />
+            <Dot color={team.secondColor} />
           </ColorDots>
         </TeamCard>
       ))}

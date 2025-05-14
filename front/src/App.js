@@ -13,6 +13,7 @@ import BottomTab from './components/BottomTab';
 import MyTeamPage from './pages/MyTeamPage';
 import TeamDetailPage from './pages/TeamDetailPage';
 import PositionPage from './pages/PositionPage';
+import PositionUpdatePage from './pages/PositionUpdatePage';
 
 const App = () => {
   const location = useLocation();
@@ -36,7 +37,8 @@ const App = () => {
         <Route path="/signup/position" element={<SelectPositionPage />} />
         <Route path="/myteam" element={<MyTeamPage />} />
         <Route path="/teams/:id" element={<TeamDetailPage />} />
-        <Route path="/game/:id" element={<PositionPage />} />
+        <Route path="/position/view/:id" element={<PositionPage />} />
+        <Route path="/position/update/:id" element={<PositionUpdatePage />} />
       </Routes>
 
       {shouldShowBottomTab && <BottomTab />}

@@ -5,6 +5,7 @@ const TeamDetailPage = () => {
   const { id } = useParams(); // ← URL에서 ID 추출
   const [team, setTeam] = useState(null);
   const [games, setGames] = useState(null);
+  sessionStorage.setItem('teamId', id);
 
   useEffect(() => {
     const fetchTeam = async () => {
@@ -55,7 +56,7 @@ const TeamDetailPage = () => {
             const game = games[i];
             items.push(
               <li key={game.gameName}>
-                <Link to={`/game/${game.gameId}`}>
+                <Link to={`/position/view/${game.gameId}`}>
                   {game.gameName} ({game.date.slice(0, 10)})
                 </Link>
               </li>,
