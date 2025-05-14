@@ -45,7 +45,8 @@ const TeamName = styled.p`
 `;
 
 const MyTeamSection = () => {
-  const [teams, setTeams] = useState([]);
+  const [teams, setTeams] = useState();
+  const [isLoading, setIsLoading] = useState(true);
   const userMail = sessionStorage.getItem('userMail');
 
   // 데이터 불러오기
@@ -62,11 +63,27 @@ const MyTeamSection = () => {
       } catch (err) {
         console.error(err);
         alert('서버와의 통신 중 오류가 발생했습니다.');
+      } finally {
+        setIsLoading(false); // ✅ 무조건 로딩 끝내기
       }
     };
 
     fetchTeams();
   }, [userMail]);
+
+  // ✅ 로딩 중일 때 별도 UI 출력
+  if (isLoading) {
+    return (
+      <SectionWrapper>
+        <TitleWrapper>
+          <Title>Schedule</Title>
+        </TitleWrapper>
+        <div style={{ textAlign: 'center', padding: '2vh', fontSize: '1.8vh' }}>
+          불러오는 중...
+        </div>
+      </SectionWrapper>
+    );
+  }
 
   return (
     <SectionWrapper>

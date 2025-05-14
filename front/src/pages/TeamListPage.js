@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -83,16 +83,28 @@ const Dot = styled.div`
 `;
 
 const TeamListPage = () => {
-  const [teams] = useState([
-    {
-      name: '불도저 (Bool-Dozer)',
-      members: 51,
-      location: '단국대학교 대운동장',
-      logo: '/images/logo.png',
-      colors: ['#f24b4b', '#000000'],
-    },
-    // 여러 팀 데이터 추가 가능
-  ]);
+  const [teams, setTeams] = useState(null);
+
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const response = await fetch(`/api/teams/`);
+        if (response.ok) {
+          const data = await response.json();
+          setTeams(data);
+        } else {
+          alert(await response.text());
+        }
+      } catch (err) {
+        console.error(err);
+        alert('서버와 통신 중 오류가 발생했습니다.');
+      }
+    };
+
+    fetchTeams();
+  }, []);
+
+  if (!teams) return <div>로딩중</div>;
 
   return (
     <Container>
@@ -105,18 +117,20 @@ const TeamListPage = () => {
         <TeamCard key={i}>
           <TeamLogo src={team.logo} alt="team logo" />
           <TeamInfo>
-            <TeamName>{team.name}</TeamName>
+            <TeamName>{team.teamName}</TeamName>
             <div>
-              <Tag>회원</Tag>{team.members}명
+              <Tag>회원</Tag>
+              {/* 회원 수로 변경해야함 */}
+              {team.teamId}명
             </div>
             <div>
-              <Tag>위치</Tag>{team.location}
+              <Tag>위치</Tag>
+              {team.location}
             </div>
           </TeamInfo>
           <ColorDots>
-            {team.colors.map((c, j) => (
-              <Dot key={j} color={c} />
-            ))}
+            <Dot color={team.first_color} />
+            <Dot color={team.second_color} />
           </ColorDots>
         </TeamCard>
       ))}

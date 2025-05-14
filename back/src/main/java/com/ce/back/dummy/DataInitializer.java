@@ -20,7 +20,8 @@ public class DataInitializer implements CommandLineRunner {
     private final TeamRepository teamRepository;
     private final GameRepository matchRepository;
 
-    public DataInitializer(UserRepository userRepository, TeamRepository teamRepository, GameRepository matchRepository) {
+    public DataInitializer(UserRepository userRepository, TeamRepository teamRepository,
+            GameRepository matchRepository) {
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
         this.matchRepository = matchRepository;
@@ -71,8 +72,8 @@ public class DataInitializer implements CommandLineRunner {
                 .location("용인")
                 .firstColor("red")
                 .secondColor("black")
-                .teamManager(user1)  // 팀 관리자를 유저1로 설정
-                .users(Arrays.asList(user1, user2, user3))  //  유저를 팀에 포함
+                .teamManager(user1) // 팀 관리자를 유저1로 설정
+                .users(Arrays.asList(user1, user2, user3)) // 유저를 팀에 포함
                 .build();
 
         // 팀 저장 (중복 데이터 확인 후 삽입)
@@ -83,8 +84,8 @@ public class DataInitializer implements CommandLineRunner {
                 .gameName("불도저 1쿼터")
                 .date(LocalDateTime.of(2025, 5, 10, 14, 0))
                 .versus("test")
-                .team(team1)  // 불도저 팀
-                .players(Arrays.asList(user1, user2, user3))  // 경기에 참여할 유저들
+                .team(team1) // 불도저 팀
+                .players(Arrays.asList(user1, user2, user3)) // 경기에 참여할 유저들
                 .build();
 
         // 더미 경기 생성
@@ -92,8 +93,8 @@ public class DataInitializer implements CommandLineRunner {
                 .gameName("불도저 2쿼터")
                 .date(LocalDateTime.of(2025, 5, 10, 14, 30))
                 .versus("test")
-                .team(team1)  // 불도저 팀
-                .players(Arrays.asList(user1, user2, user3))  // 경기에 참여할 유저들
+                .team(team1) // 불도저 팀
+                .players(Arrays.asList(user1, user2, user3)) // 경기에 참여할 유저들
                 .build();
 
         // 경기 저장 (중복 데이터 확인 후 삽입)
