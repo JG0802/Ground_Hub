@@ -8,6 +8,7 @@ import ProfilePage from './pages/ProfilePage';
 import SignUpEmailPage from './pages/SignUpEmailPage';
 import SignUpPasswordPage from './pages/SignUpPasswordPage';
 import SelectPositionPage from './pages/SelectPositionPage';
+import FormationDetailPage from './pages/FormationDetailPage';
 import BottomTab from './components/BottomTab';
 
 const App = () => {
@@ -25,6 +26,7 @@ const App = () => {
         <Route path="/teams" element={<TeamListPage />} />
         <Route path="/feed" element={<FeedPage />} />
         <Route path="/formation" element={<FormationPage />} />
+        <Route path="/formation/:id" element={<FormationDetailPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/signup" element={<SignUpEmailPage />} />
         <Route path="/signup/password" element={<SignUpPasswordPage />} />
