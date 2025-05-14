@@ -26,16 +26,18 @@ const PositionBox = styled.div`
   justify-content: center;
   gap: 2vh;
   margin-bottom: 4vh;
+  width: 40vh;
 `;
 
 const PositionItem = styled.button`
-  padding: 1.5vh 3vh;
+  padding: 1.5vh 2vh;
   font-size: 2vh;
   border-radius: 1vh;
   border: 1px solid ${({ selected }) => (selected ? 'black' : '#ccc')};
   background-color: ${({ selected }) => (selected ? 'black' : 'white')};
   color: ${({ selected }) => (selected ? 'white' : 'black')};
   cursor: pointer;
+  width: 8.5vh;
 `;
 
 const SubmitButton = styled.button`
@@ -45,6 +47,7 @@ const SubmitButton = styled.button`
   border-radius: 0.7vh;
   background-color: black;
   color: white;
+  box-sizing: border-box;
 `;
 
 const POSITIONS = [

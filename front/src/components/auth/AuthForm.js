@@ -22,6 +22,7 @@ const StyledInput = styled.input`
   border: 1px solid #b9b9b9;
   padding: 1vh;
   margin-bottom: 2vh;
+  box-sizing: border-box;
 `;
 
 const StyledButton = styled.button`
@@ -32,6 +33,7 @@ const StyledButton = styled.button`
   font-size: 2vh;
   border-radius: 0.7vh;
   margin-bottom: 2vh;
+  box-sizing: border-box;
   &:hover {
     cursor: pointer;
   }

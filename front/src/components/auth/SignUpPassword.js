@@ -28,6 +28,7 @@ const Input = styled.input`
   margin-bottom: 2vh;
   border: 1px solid #b9b9b9;
   border-radius: 0.7vh;
+  box-sizing: border-box;
 `;
 
 const Button = styled.button`
@@ -38,6 +39,7 @@ const Button = styled.button`
   background-color: black;
   color: white;
   margin-bottom: 3vh;
+  box-sizing: border-box;
 `;
 
 const KakaoButton = styled(Button)`
