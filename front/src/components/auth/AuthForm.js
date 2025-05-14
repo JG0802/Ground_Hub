@@ -80,6 +80,7 @@ const AuthForm = () => {
       if (response.ok) {
         const data = await response.json();
         sessionStorage.setItem('userData', JSON.stringify(data));
+        sessionStorage.setItem('userMail', userMail);
         navigate('/main');
       } else {
         const errMsg = await response.text();

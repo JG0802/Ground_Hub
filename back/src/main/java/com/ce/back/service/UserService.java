@@ -82,10 +82,4 @@ public class UserService {
         }
         return false; // 사용자 없음
     }
-
-    // 사용자 이메일로 사용자가 속한 팀 목록 반환
-    public List<Team> getTeamsByUserMail(String userMail) {
-        // 유저 이메일을 기반으로 해당하는 팀들을 찾아 반환
-        return teamRepository.findByUsersUserMail(userMail);
-    }
 }

@@ -8,7 +8,11 @@ import ProfilePage from './pages/ProfilePage';
 import SignUpEmailPage from './pages/SignUpEmailPage';
 import SignUpPasswordPage from './pages/SignUpPasswordPage';
 import SelectPositionPage from './pages/SelectPositionPage';
+import FormationDetailPage from './pages/FormationDetailPage';
 import BottomTab from './components/BottomTab';
+import MyTeamPage from './pages/MyTeamPage';
+import TeamDetailPage from './pages/TeamDetailPage';
+import PositionPage from './pages/PositionPage';
 
 const App = () => {
   const location = useLocation();
@@ -25,10 +29,14 @@ const App = () => {
         <Route path="/teams" element={<TeamListPage />} />
         <Route path="/feed" element={<FeedPage />} />
         <Route path="/formation" element={<FormationPage />} />
+        <Route path="/formation/:id" element={<FormationDetailPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/signup" element={<SignUpEmailPage />} />
         <Route path="/signup/password" element={<SignUpPasswordPage />} />
         <Route path="/signup/position" element={<SelectPositionPage />} />
+        <Route path="/myteam" element={<MyTeamPage />} />
+        <Route path="/teams/:id" element={<TeamDetailPage />} />
+        <Route path="/game/:id" element={<PositionPage />} />
       </Routes>
 
       {shouldShowBottomTab && <BottomTab />}

@@ -8,6 +8,7 @@
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.9.0",
+    "dayjs": "^1.11.13",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.5.3",
@@ -39,5 +40,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy" : "http://192.168.0.11:8080"
+  "proxy": "http://192.168.90.222:8080"
 }
