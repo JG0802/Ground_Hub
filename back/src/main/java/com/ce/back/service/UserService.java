@@ -82,4 +82,8 @@ public class UserService {
         }
         return false; // 사용자 없음
     }
+
+    public Optional<User> getUserByUserMail(String userMail) {
+        return userRepository.findUserByUserMail(userMail);
+    }
 }

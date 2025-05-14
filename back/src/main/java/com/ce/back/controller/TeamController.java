@@ -1,6 +1,5 @@
 package com.ce.back.controller;
 
-import com.ce.back.entity.Game;
 import com.ce.back.entity.Team;
 import com.ce.back.entity.User;
 import com.ce.back.service.TeamService;
@@ -11,9 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/teams")
@@ -89,7 +86,7 @@ public class TeamController {
         }
     }
 
-    // 로고 파일 업로드
+    // 로고 파일 수정
     @PostMapping("/{teamId}/upload-logo")
     public ResponseEntity<?> uploadTeamLogo(@PathVariable Long teamId, @RequestParam("file") MultipartFile file) {
         try {
@@ -108,8 +105,6 @@ public class TeamController {
             return ResponseEntity.status(500).body("로고 업로드 실패: " + e.getMessage());
         }
     }
-
-
 
     // 특정 팀에 속한 사용자들 조회
     // http://localhost:8080/api/teams/{teamId}/users-in-team
