@@ -96,4 +96,21 @@ public class GameController {
         }
     }
 
+    // 경기에 사용자 삭제
+// http://localhost:8080/api/games/{gameId}/remove-from-game
+    @PostMapping("/{gameId}/remove-from-game")
+    public ResponseEntity<?> removeUserFromGame(@PathVariable Long gameId, @RequestBody Map<String, String> body) {
+        try {
+            String userMail = body.get("userMail");
+
+            // 게임 ID로 게임을 찾고, 해당 게임에 유저 삭제
+            gameService.removeUserFromGame(gameId, userMail); // gameId로 게임을 찾고 userMail로 사용자 삭제
+
+            // 성공적으로 삭제된 게임 정보 반환
+            return ResponseEntity.ok("게임에서 사용자가 성공적으로 삭제되었습니다.");
+        } catch (RuntimeException e) {
+            // 예외 발생 시 404 에러 반환 (사용자 또는 경기 관련 예외 처리)
+            return ResponseEntity.status(404).body("게임에서 사용자를 삭제할 수 없습니다: " + e.getMessage());
+        }
+    }
 }

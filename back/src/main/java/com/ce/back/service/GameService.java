@@ -103,4 +103,33 @@ public class GameService {
         // 게임 정보 업데이트 (저장)
         gameRepository.save(game); // 경기 정보 업데이트
     }
+
+    // 경기에 참여하는 선수 삭제
+    public void removeUserFromGame(Long gameId, String userMail) {
+
+        // 게임이 존재하는지 확인
+        Optional<Game> existingGame = gameRepository.findGameByGameId(gameId);
+        Optional<User> existingUser = userRepository.findUserByUserMail(userMail);
+
+        if (existingGame.isEmpty()) {
+            throw new RuntimeException("경기가 존재하지 않습니다.");
+        }
+        if (existingUser.isEmpty()) {
+            throw new RuntimeException("사용자가 존재하지 않습니다.");
+        }
+
+        Game game = existingGame.get();
+        User user = existingUser.get();
+
+        // 경기 참가 선수 목록에서 해당 사용자가 있는지 확인
+        if (!game.getPlayers().contains(user)) {
+            throw new RuntimeException("이 사용자는 해당 경기에서 찾을 수 없습니다.");
+        }
+
+        // 사용자 삭제
+        game.getPlayers().remove(user); // 경기 참가 선수 목록에서 해당 사용자 제거
+
+        // 게임 정보 업데이트 (저장)
+        gameRepository.save(game); // 경기 정보 업데이트
+    }
 }
