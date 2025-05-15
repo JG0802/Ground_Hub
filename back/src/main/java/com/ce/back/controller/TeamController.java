@@ -3,6 +3,7 @@ package com.ce.back.controller;
 import com.ce.back.entity.Team;
 import com.ce.back.entity.User;
 import com.ce.back.service.TeamService;
+import com.ce.back.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -17,10 +19,12 @@ import java.util.Optional;
 public class TeamController {
 
     private final TeamService teamService;
+    private final UserService userService;
 
     @Autowired
-    public TeamController(TeamService teamService) {
+    public TeamController(TeamService teamService, UserService userService) {
         this.teamService = teamService;
+        this.userService = userService;
     }
 
     // 팀 전체 목록 조회
@@ -125,6 +129,56 @@ public class TeamController {
         } catch (RuntimeException e) {
             // 예외 발생 시 처리
             return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
+
+    // 특정 팀에 사용자 추가
+    // http://localhost:8080/api/teams/{teamId}/add-user
+    @PostMapping("/{teamId}/add-user")
+    public ResponseEntity<?> addUserToTeam(@PathVariable Long teamId, @RequestBody Map<String, String> body) {
+        try {
+            String userMail = body.get("userMail");
+
+            // 팀 조회
+            Team team = teamService.getTeamByTeamId(teamId)
+                    .orElseThrow(() -> new RuntimeException("팀을 찾을 수 없습니다."));
+
+            // 사용자 조회 (userMail로)
+            User user = userService.getUserByUserMail(userMail)
+                    .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+            // 팀에 사용자 추가
+            team.getUsers().add(user);
+            teamService.updateTeam(team); // 팀 정보 업데이트
+
+            return ResponseEntity.ok("사용자가 팀에 성공적으로 추가되었습니다.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body("사용자 추가 실패: " + e.getMessage());
+        }
+    }
+
+    // 특정 팀에 속한 사용자 제거
+    // http://localhost:8080/api/teams/{teamId}/remove-user
+    @DeleteMapping("/{teamId}/remove-user")
+    public ResponseEntity<?> removeUserFromTeam(@PathVariable Long teamId, @RequestBody Map<String, String> body) {
+        try {
+            String userMail = body.get("userMail");
+
+            // 팀 조회
+            Team team = teamService.getTeamByTeamId(teamId)
+                    .orElseThrow(() -> new RuntimeException("팀을 찾을 수 없습니다."));
+
+            // 사용자 조회 (userMail로)
+            User user = userService.getUserByUserMail(userMail)
+                    .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+            // 팀에서 사용자 제거
+            team.getUsers().remove(user);
+            teamService.updateTeam(team); // 팀 정보 업데이트
+
+            return ResponseEntity.ok("사용자가 팀에서 성공적으로 제거되었습니다.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body("사용자 제거 실패: " + e.getMessage());
         }
     }
 }

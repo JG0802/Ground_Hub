@@ -97,8 +97,8 @@ public class GameController {
     }
 
     // 경기에 사용자 삭제
-// http://localhost:8080/api/games/{gameId}/remove-from-game
-    @PostMapping("/{gameId}/remove-from-game")
+    // http://localhost:8080/api/games/{gameId}/remove-from-game
+    @DeleteMapping("/{gameId}/remove-from-game")
     public ResponseEntity<?> removeUserFromGame(@PathVariable Long gameId, @RequestBody Map<String, String> body) {
         try {
             String userMail = body.get("userMail");
