@@ -79,18 +79,18 @@ public class GameController {
     }
 
     // 경기에 사용자 추가
-    // http://localhost:8080/api/games/{userMail}/insert-to-game
-    @PostMapping("/{userMail}/insert-to-game")
-    public ResponseEntity<?> insertUserToGame(@PathVariable String userMail, @RequestBody Game game) {
+    // http://localhost:8080/api/games/{gameId}/insert-to-game
+    @PostMapping("/{gameId}/insert-to-game")
+    public ResponseEntity<?> insertUserToGame(@PathVariable Long gameId, @RequestParam String userMail) {
         try {
-            // 경기에 사용자 추가 로직 호출
-            gameService.insertUserToGame(game.getGameId(), userMail); // game.getGameId()로 게임을 찾고 userMail로 사용자 추가
+            // 게임 ID로 게임을 찾고, 해당 게임에 유저 추가
+            gameService.insertUserToGame(gameId, userMail); // gameId로 게임을 찾고 userMail로 사용자 추가
 
             // 성공적으로 추가된 게임 정보 반환
-            return ResponseEntity.ok(game);
+            return ResponseEntity.ok("게임에 사용자가 성공적으로 추가되었습니다.");
         } catch (RuntimeException e) {
-            // 예외 발생 시 400 에러 반환 (사용자 또는 경기 관련 예외 처리)
-            return ResponseEntity.status(404).body(e.getMessage());
+            // 예외 발생 시 404 에러 반환 (사용자 또는 경기 관련 예외 처리)
+            return ResponseEntity.status(404).body("게임에 사용자를 추가할 수 없습니다: " + e.getMessage());
         }
     }
 

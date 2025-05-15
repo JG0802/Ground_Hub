@@ -1,6 +1,5 @@
 package com.ce.back.controller;
 
-import com.ce.back.entity.Team;
 import com.ce.back.entity.User;
 import com.ce.back.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
