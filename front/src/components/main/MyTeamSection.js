@@ -45,7 +45,7 @@ const TeamName = styled.p`
 `;
 
 const MyTeamSection = () => {
-  const [teams, setTeams] = useState();
+  const [teams, setTeams] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const userMail = sessionStorage.getItem('userMail');
 
