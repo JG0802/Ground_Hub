@@ -14,6 +14,9 @@ import MyTeamPage from './pages/MyTeamPage';
 import TeamDetailPage from './pages/TeamDetailPage';
 import PositionPage from './pages/PositionPage';
 import PositionUpdatePage from './pages/PositionUpdatePage';
+import CheckPasswordPage from './pages/CheckPasswordPage';
+import ChangeProfilePage from './pages/ChangeProfilePage';
+import ChangePasswordPage from './pages/ChangePasswordPage';
 
 const App = () => {
   const location = useLocation();
@@ -39,6 +42,9 @@ const App = () => {
         <Route path="/teams/:id" element={<TeamDetailPage />} />
         <Route path="/position/view/:id" element={<PositionPage />} />
         <Route path="/position/update/:id" element={<PositionUpdatePage />} />
+        <Route path="/user/checkpassword" element={<CheckPasswordPage />} />
+        <Route path="/user/change/info" element={<ChangeProfilePage />} />
+        <Route path="/user/change/password" element={<ChangePasswordPage />} />
       </Routes>
 
       {shouldShowBottomTab && <BottomTab />}

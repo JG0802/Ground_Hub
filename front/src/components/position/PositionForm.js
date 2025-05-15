@@ -48,13 +48,14 @@ const PositionForm = () => {
   const [hasPermission, setHasPermission] = useState(false);
   const [checked, setChecked] = useState(false);
   const userMail = sessionStorage.getItem('userMail');
-  const teamId = sessionStorage.getItem('teamId');
+  const [teamId, setTeamId] = useState('');
 
   useEffect(() => {
     const fetchGame = async () => {
       const res = await fetch(`/api/games/saved-formation/${id}`);
       const data = await res.json();
       setGame(data);
+      setTeamId(data.team.teamId);
     };
 
     fetchGame();
@@ -62,7 +63,9 @@ const PositionForm = () => {
 
   useEffect(() => {
     const checkPermission = async () => {
-      if (!userMail || !teamId) return;
+      if (!userMail || !teamId) {
+        return;
+      }
 
       try {
         const response = await fetch(`/api/teams/${teamId}`);
@@ -70,7 +73,7 @@ const PositionForm = () => {
 
         const data = await response.json();
 
-        if (data.teamManager?.userMail === userMail) {
+        if (data.teamManager.userMail === userMail) {
           setHasPermission(true);
         }
       } catch (err) {
@@ -85,6 +88,7 @@ const PositionForm = () => {
 
   if (!game) return <div>로딩 중...</div>;
   if (!checked) return <div>권한 확인 중...</div>;
+
   return (
     <PositionFormContainer>
       <h2>
@@ -108,7 +112,7 @@ const PositionForm = () => {
             CF
           </StyledButton>
           <StyledButton $top="7vh" $left="37.6vh">
-            LW
+            RW
           </StyledButton>
           <StyledButton $top="13vh" $left="11.6vh">
             LAM

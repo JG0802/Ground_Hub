@@ -175,7 +175,7 @@ const ScheduleSection = () => {
       <MatchScroll>
         {games.map((game) => (
           <Link
-            to={`/game/${game.gameId}`}
+            to={`/position/view/${game.gameId}`}
             style={{ textDecoration: 'none', color: 'inherit' }}
           >
             <MatchCard key={game.gameId}>
