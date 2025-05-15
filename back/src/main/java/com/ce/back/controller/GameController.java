@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -81,8 +82,9 @@ public class GameController {
     // 경기에 사용자 추가
     // http://localhost:8080/api/games/{gameId}/insert-to-game
     @PostMapping("/{gameId}/insert-to-game")
-    public ResponseEntity<?> insertUserToGame(@PathVariable Long gameId, @RequestParam String userMail) {
+    public ResponseEntity<?> insertUserToGame(@PathVariable Long gameId, @RequestBody Map<String, String> body) {
         try {
+            String userMail = body.get("userMail");
             // 게임 ID로 게임을 찾고, 해당 게임에 유저 추가
             gameService.insertUserToGame(gameId, userMail); // gameId로 게임을 찾고 userMail로 사용자 추가
 
