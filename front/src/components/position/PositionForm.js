@@ -88,6 +88,11 @@ const PopupButton = styled.button`
   }
 `;
 
+const PopupTitle = styled.h4`
+  margin-top: 0;
+  margin-bottom: 2vh;
+`;
+
 const UsersBox = styled.div`
   display: flex;
 `;
@@ -98,6 +103,11 @@ const UserBox = styled.div`
 const UserPositionBox = styled.div``;
 
 const UserNameBox = styled.div``;
+
+const ControlButtonBox = styled.div`
+  display: flex;
+  gap: 2vh;
+`;
 
 const PositionForm = () => {
   const { id } = useParams();
@@ -164,21 +174,51 @@ const PositionForm = () => {
     }
 
     try {
-      const response = await fetch(`/api/games/${userMail}/insert-to-game`, {
+      const response = await fetch(`/api/games/${id}/insert-to-game`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userMail, id }),
+        body: JSON.stringify({ userMail }),
       });
 
       if (response.ok) {
         alert('경기 참가가 완료되었습니다.');
-
-        // 최신 데이터 반영
-        const updated = await response.json();
-        setUsers(updated.playersMail);
+        window.location.reload();
       } else {
         const errorText = await response.text();
         alert(errorText || '참가 실패');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('서버 오류가 발생했습니다.');
+    }
+  };
+
+  const handleRemoveGame = async () => {
+    if (!users || users.length === 0) {
+      alert('유저 정보를 불러오는 중입니다.');
+      return;
+    }
+
+    const isAlreadyJoined = users.some((user) => user.userMail === userMail);
+
+    if (!isAlreadyJoined) {
+      alert('참가 중이 아닙니다.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/games/${id}/remove-from-game`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userMail }),
+      });
+
+      if (response.ok) {
+        alert('경기 참가 취소가 완료되었습니다.');
+        window.location.reload();
+      } else {
+        const errorText = await response.text();
+        alert(errorText || '참가 취소 실패');
       }
     } catch (error) {
       console.error(error);
@@ -274,17 +314,30 @@ const PositionForm = () => {
         </ButtonBox>
       </FieldWrapper>
       {hasPermission ? (
-        <Link to={`/position/update/${id}`}>
-          <ChangeButton onClick={handleJoinGame} style={{ width: '20vh' }}>
+        <ControlButtonBox>
+          <ChangeButton onClick={handleJoinGame} style={{ width: '15vh' }}>
             경기참가
           </ChangeButton>
-          <ChangeButton>포메이션 수정</ChangeButton>
-        </Link>
+          <ChangeButton onClick={handleRemoveGame} style={{ width: '15vh' }}>
+            경기 참가 취소
+          </ChangeButton>
+          <Link to={`/position/update/${id}`}>
+            <ChangeButton style={{ width: '15vh' }}>포메이션 수정</ChangeButton>
+          </Link>
+        </ControlButtonBox>
       ) : (
-        <ChangeButton onClick={handleJoinGame}>경기참가</ChangeButton>
+        <ControlButtonBox>
+          <ChangeButton onClick={handleJoinGame} style={{ width: '20vh' }}>
+            경기 참가
+          </ChangeButton>
+          <ChangeButton onClick={handleRemoveGame} style={{ width: '20vh' }}>
+            경기 참가 취소
+          </ChangeButton>
+        </ControlButtonBox>
       )}
       <PopupBox $open={isOpen}>
         <PopupButton onClick={togglePopup}>{isOpen ? '▼' : '▲'}</PopupButton>
+        <PopupTitle>참가자 명단</PopupTitle>
         <UsersBox>
           {users.map((user) => (
             <UserBox key={user.userMail}>

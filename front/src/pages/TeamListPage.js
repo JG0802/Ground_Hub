@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -72,6 +73,7 @@ const Tag = styled.span`
 
 const ColorDots = styled.div`
   display: flex;
+  flex-direction: column;
   gap: 1vh;
 `;
 
@@ -114,25 +116,29 @@ const TeamListPage = () => {
         <SearchInput placeholder="Type the Team name" />
       </SearchRow>
       {teams.map((team, i) => (
-        <TeamCard key={i}>
-          <TeamLogo src={team.logo} alt="team logo" />
-          <TeamInfo>
-            <TeamName>{team.teamName}</TeamName>
-            <div>
-              <Tag>회원</Tag>
-              {/* 회원 수로 변경해야함 */}
-              {team.teamId}명
-            </div>
-            <div>
-              <Tag>위치</Tag>
-              {team.location}
-            </div>
-          </TeamInfo>
-          <ColorDots>
-            <Dot color={team.firstColor} />
-            <Dot color={team.secondColor} />
-          </ColorDots>
-        </TeamCard>
+        <Link
+          to={`/teams/${team.teamId}`}
+          style={{ textDecoration: 'none', color: 'inherit' }}
+        >
+          <TeamCard key={i}>
+            <TeamLogo src={team.logo} alt="team logo" />
+            <TeamInfo>
+              <TeamName>{team.teamName}</TeamName>
+              <div>
+                <Tag>회원</Tag>
+                {team.users.length}명
+              </div>
+              <div>
+                <Tag>위치</Tag>
+                {team.location}
+              </div>
+            </TeamInfo>
+            <ColorDots>
+              <Dot color={team.firstColor} />
+              <Dot color={team.secondColor} />
+            </ColorDots>
+          </TeamCard>
+        </Link>
       ))}
     </Container>
   );

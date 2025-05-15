@@ -1,10 +1,13 @@
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import TeamInfo from './TeamInfo';
+import TeamJoin from './TeamJoin';
 
 const TeamDetailPage = () => {
   const { id } = useParams(); // ← URL에서 ID 추출
   const [team, setTeam] = useState(null);
   const [games, setGames] = useState(null);
+  const userMail = sessionStorage.getItem('userMail');
   sessionStorage.setItem('teamId', id);
 
   useEffect(() => {
@@ -27,9 +30,9 @@ const TeamDetailPage = () => {
     fetchGame();
   }, [id]);
 
-  if (!team) return <div>로딩 중...</div>;
-  if (!games) return <div>로딩 중...</div>;
+  if (!team || !games) return <div>로딩 중...</div>;
 
+  const isInTeam = team.some((user) => user.userMail === userMail);
   return (
     <div>
       <h2>팀 명단</h2>
@@ -48,23 +51,7 @@ const TeamDetailPage = () => {
           return items;
         })()}
       </ul>
-      <h2>포메이션 목록</h2>
-      <ul>
-        {(() => {
-          const items = [];
-          for (let i = 0; i < games.length; i++) {
-            const game = games[i];
-            items.push(
-              <li key={game.gameName}>
-                <Link to={`/position/view/${game.gameId}`}>
-                  {game.gameName} ({game.date.slice(0, 10)})
-                </Link>
-              </li>,
-            );
-          }
-          return items;
-        })()}
-      </ul>
+      {isInTeam ? <TeamInfo games={games} /> : <TeamJoin />}
     </div>
   );
 };
