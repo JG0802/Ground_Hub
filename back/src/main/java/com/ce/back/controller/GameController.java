@@ -55,6 +55,24 @@ public class GameController {
         }
     }
 
+    // 경기 삭제
+    // http://localhost:8080/api/games/delete-game
+    @DeleteMapping("/delete-game")
+    public ResponseEntity<?> deleteGame(@RequestBody Map<String, Long> body) {
+        try {
+            Long gameId = body.get("gameId");
+
+            // 경기 ID로 게임을 찾고, 게임 삭제
+            gameService.deleteGame(gameId); // gameService에서 deleteGame 메소드 호출
+
+            // 성공적으로 삭제된 게임 정보 반환
+            return ResponseEntity.ok("경기가 성공적으로 삭제되었습니다.");
+        } catch (RuntimeException e) {
+            // 예외 발생 시 404 에러 반환 (경기 관련 예외 처리)
+            return ResponseEntity.status(404).body("경기를 삭제할 수 없습니다: " + e.getMessage());
+        }
+    }
+
     // 경기에서의 포지션을 변경
     // http://localhost:8080/api/games/update-game
     @PostMapping("/update-game")

@@ -1,6 +1,7 @@
 package com.ce.back.repository;
 
 import com.ce.back.entity.Game;
+import com.ce.back.entity.Team;
 import com.ce.back.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -24,4 +25,6 @@ public interface GameRepository extends JpaRepository<Game, Long> {
     // 게임 이름으로 경기 찾기
     List<Game> findGamesByGameName(String gameName);
 
+    // 팀에 속한 경기 삭제
+    void deleteByTeam(Team team);
 }

@@ -1,8 +1,10 @@
 package com.ce.back.service;
 
 import com.ce.back.entity.Game;
+import com.ce.back.entity.Team;
 import com.ce.back.entity.User;
 import com.ce.back.repository.GameRepository;
+import com.ce.back.repository.TeamRepository;
 import com.ce.back.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,11 +17,13 @@ public class GameService {
 
     private final GameRepository gameRepository;
     private final UserRepository userRepository;
+    private final TeamRepository teamRepository;
 
     @Autowired
-    public GameService(GameRepository gameRepository, UserRepository userRepository) {
+    public GameService(GameRepository gameRepository, UserRepository userRepository, TeamRepository teamRepository) {
         this.gameRepository = gameRepository;
         this.userRepository = userRepository;
+        this.teamRepository = teamRepository;
     }
 
     // 팀 이름으로 경기 찾기
@@ -50,6 +54,26 @@ public class GameService {
         }
 
         return gameRepository.save(game);
+    }
+
+    // 경기 삭제
+    public void deleteGame(Long gameId) {
+        // 경기 ID로 게임을 찾기
+        Optional<Game> existingGame = gameRepository.findGameByGameId(gameId);
+
+        if (existingGame.isEmpty()) {
+            throw new RuntimeException("경기를 찾을 수 없습니다.");
+        }
+
+        // 게임 삭제
+        gameRepository.delete(existingGame.get()); // 게임 삭제
+    }
+
+    // 특정 팀에 속한 모든 게임 삭제
+    public void deleteGamesByTeamId(Long teamId) {
+        Team team = teamRepository.findTeamByTeamId(teamId)
+                        .orElseThrow(() -> new RuntimeException("팀을 찾을 수 없습니다."));
+        gameRepository.deleteByTeam(team);
     }
 
     // 경기 업데이트

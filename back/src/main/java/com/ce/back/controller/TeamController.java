@@ -72,9 +72,28 @@ public class TeamController {
     public ResponseEntity<?> createTeam(@RequestBody Team team) {
         try {
             Team newTeam = teamService.createTeam(team);
+
             return ResponseEntity.ok(newTeam);
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
+
+    // 팀 삭제
+    // http://localhost:8080/api/teams/delete-team
+    @DeleteMapping("/delete-team")
+    public ResponseEntity<?> deleteTeam(@RequestBody Map<String, Long> body) {
+        try {
+            Long teamId = body.get("teamId");
+
+            // 팀 ID로 팀을 찾고, 팀 삭제
+            teamService.deleteTeam(teamId); // teamService에서 deleteTeam 메소드 호출
+
+            // 성공적으로 삭제된 팀 정보 반환
+            return ResponseEntity.ok("팀이 성공적으로 삭제되었습니다.");
+        } catch (RuntimeException e) {
+            // 예외 발생 시 404 에러 반환 (팀 관련 예외 처리)
+            return ResponseEntity.status(404).body("팀을 삭제할 수 없습니다: " + e.getMessage());
         }
     }
 
@@ -149,6 +168,7 @@ public class TeamController {
 
             // 팀에 사용자 추가
             team.getUsers().add(user);
+
             teamService.updateTeam(team); // 팀 정보 업데이트
 
             return ResponseEntity.ok("사용자가 팀에 성공적으로 추가되었습니다.");
@@ -174,6 +194,7 @@ public class TeamController {
 
             // 팀에서 사용자 제거
             team.getUsers().remove(user);
+
             teamService.updateTeam(team); // 팀 정보 업데이트
 
             return ResponseEntity.ok("사용자가 팀에서 성공적으로 제거되었습니다.");

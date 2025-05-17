@@ -39,6 +39,4 @@ public class Team {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> users; // 팀에 속한 사용자 목록
-
-    private Long user_number;
 }
