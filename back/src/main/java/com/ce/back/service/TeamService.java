@@ -78,6 +78,7 @@ public class TeamService {
         return teamRepository.save(team); // 새로운 팀 저장
     }
 
+    // 팀 삭제
     @Transactional
     public void deleteTeam(Long teamId) {
         // 팀 존재 여부 확인

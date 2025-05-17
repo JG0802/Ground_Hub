@@ -7,6 +7,7 @@ import com.ce.back.repository.GameRepository;
 import com.ce.back.repository.TeamRepository;
 import com.ce.back.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +26,10 @@ public class GameService {
     private final GameRepository gameRepository;
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
+
+    // 로고 파일을 저장할 경로 (application.properties에서 설정)
+    @Value("${team.logo.directory}")
+    private String logoDirectory;
 
     @Autowired
     public GameService(GameRepository gameRepository, UserRepository userRepository, TeamRepository teamRepository) {
@@ -48,23 +53,25 @@ public class GameService {
         return gameRepository.findGamesByPlayers_UserMail(userMail);
     }
 
-    // 로고 파일을 저장하는 메소드
+    // 로고 파일 저장 메소드
     public String saveLogoFile(MultipartFile file) throws IOException {
-        // 파일을 로컬 디렉토리에 저장
-        String directory = "back/uploads/logos/";  // 로고 저장할 경로
-        Path dirPath = Paths.get(directory);
-        // 디렉토리가 없으면 생성
-        if (!Files.exists(dirPath)) {
-            Files.createDirectories(dirPath);
+        if (file.isEmpty()) {
+            throw new RuntimeException("로고 파일이 비어 있습니다.");
         }
 
-        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-        Path filePath = Paths.get(directory + fileName);
+        // 파일명 생성 (중복 방지)
+        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
 
-        // 파일 저장
-        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        // 파일을 지정된 경로에 저장
+        Path path = Paths.get(logoDirectory, fileName);
 
-        return fileName; // 저장된 파일명 반환
+        // 디렉토리가 없으면 생성
+        Files.createDirectories(path.getParent());
+
+        // 파일 복사
+        Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+
+        return fileName;  // 파일명 반환
     }
 
     // 경기 생성
