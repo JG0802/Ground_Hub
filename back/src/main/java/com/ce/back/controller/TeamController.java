@@ -212,7 +212,7 @@ public class TeamController {
 
         try {
             Team updatedTeam = teamService.transferTeamManager(teamId, currentManagerMail, newManagerMail);
-            return ResponseEntity.ok("팀 매니저 직함이 성공적으로 양도되었습니다.");
+            return ResponseEntity.ok(updatedTeam);
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).body("팀 매니저 직함 양도 실패: " + e.getMessage());
         }
