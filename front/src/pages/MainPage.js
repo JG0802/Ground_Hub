@@ -14,7 +14,6 @@ const MainPage = () => {
       <FormationCarousel />
       <MyTeamSection />
       <ScheduleSection />
-      {/* <Calendar /> ❌ 제거 */}
     </PageWrapper>
   );
 };

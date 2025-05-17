@@ -2,10 +2,73 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import TeamInfo from './TeamInfo';
 import TeamJoin from './TeamJoin';
+import styled from 'styled-components';
+import altImage from '../../img/alt_image.png';
+
+const Title = styled.h1`
+  font-size: 4vh;
+`;
+const TeamCard = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 1.5vh 0;
+  border-bottom: 1px solid #eee;
+`;
+
+const TeamLogo = styled.img`
+  width: 8vh;
+  height: 8vh;
+  border-radius: 1vh;
+  object-fit: cover;
+  margin-right: 2vh;
+`;
+
+const TeamInfoBox = styled.div`
+  flex: 1;
+`;
+
+const TeamName = styled.div`
+  font-size: 3vh;
+  font-weight: bold;
+  margin-bottom: 1vh;
+`;
+
+const Tag = styled.span`
+  background-color: #ccc;
+  color: #000;
+  border-radius: 0.5vh;
+  font-size: 1.7vh;
+  padding: 0.2vh 1vh;
+  margin-right: 1vh;
+`;
+
+const ColorDots = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+`;
+
+const Dot = styled.div`
+  width: 2vh;
+  height: 2vh;
+  border-radius: 50%;
+  background-color: ${(props) => props.color};
+`;
+
+const MemberList = styled.ul`
+  list-style: none;
+  padding-left: 0;
+`;
+
+const MemberItem = styled.li`
+  font-size: 1.8vh;
+  margin-bottom: 1vh;
+`;
 
 const TeamDetailPage = () => {
   const { id } = useParams(); // ← URL에서 ID 추출
-  const [team, setTeam] = useState(null);
+  const [team, setTeam] = useState({});
+  const [teamUser, setTeamUser] = useState([]);
   const [games, setGames] = useState([]);
   const userMail = sessionStorage.getItem('userMail');
   const [teamManagerMail, setTeamManagerMail] = useState('');
@@ -13,9 +76,23 @@ const TeamDetailPage = () => {
 
   useEffect(() => {
     const fetchTeam = async () => {
+      try {
+        const response = await fetch(`/api/teams/${id}`);
+        if (response.ok) {
+          const data = await response.json();
+          setTeam(data);
+        } else {
+          alert(await response.text());
+        }
+      } catch (err) {
+        console.error(err);
+        alert('서버와 통신 중 오류가 발생했습니다.');
+      }
+    };
+    const fetchTeamUser = async () => {
       const res = await fetch(`/api/teams/${id}/users-in-team`);
       const data = await res.json();
-      setTeam(data);
+      setTeamUser(data);
     };
 
     const fetchTeamInfo = async () => {
@@ -37,31 +114,68 @@ const TeamDetailPage = () => {
     };
 
     fetchTeam();
+    fetchTeamUser();
     fetchTeamInfo();
     fetchGame();
   }, [id]);
 
-  if (!team || !games) return <div>로딩 중...</div>;
+  if (!team || !games || !teamUser) return <div>로딩 중...</div>;
+  const isInTeam = teamUser.some((user) => user.userMail === userMail);
 
-  const isInTeam = team.some((user) => user.userMail === userMail);
   return (
     <div>
-      <h2>팀 명단</h2>
-      <ul>
+      <Title>팀 상세 정보</Title>
+      <TeamCard>
+        <TeamLogo
+          src={`/logos/${team.logo}`}
+          onError={(e) => {
+            e.target.src = altImage;
+          }}
+        />
+        <TeamInfoBox>
+          <TeamName>{team.teamName}</TeamName>
+          <Tag>위치</Tag>
+          {team.location}
+        </TeamInfoBox>
+        <ColorDots>
+          <Dot color={team.firstColor} />
+          <Dot color={team.secondColor} />
+        </ColorDots>
+      </TeamCard>
+      <h2>팀 명단({team.users ? team.users.length : 0}명)</h2>
+      <MemberList>
         {(() => {
           const items = [];
-          for (let i = 0; i < team.length; i++) {
-            const user = team[i];
+
+          // 1. 팀 매니저 먼저 출력
+          const manager = teamUser.find(
+            (user) => user.userMail === teamManagerMail,
+          );
+          if (manager) {
             items.push(
-              <li key={user.userName}>
-                {user.userName} ({user.firstPosition}, {user.secondPosition},{' '}
-                {user.thirdPosition})
-              </li>,
+              <MemberItem key={manager.userMail}>
+                👑 {manager.userName} ({manager.firstPosition},{' '}
+                {manager.secondPosition}, {manager.thirdPosition})
+              </MemberItem>,
             );
           }
+
+          // 2. 매니저를 제외한 나머지 팀원 출력
+          for (let i = 0; i < teamUser.length; i++) {
+            const user = teamUser[i];
+            if (user.userMail !== teamManagerMail) {
+              items.push(
+                <MemberItem key={user.userMail}>
+                  {user.userName} ({user.firstPosition}, {user.secondPosition},{' '}
+                  {user.thirdPosition})
+                </MemberItem>,
+              );
+            }
+          }
+
           return items;
         })()}
-      </ul>
+      </MemberList>
       {isInTeam ? (
         <div>
           <TeamInfo games={games} teamManagerMail={teamManagerMail} />

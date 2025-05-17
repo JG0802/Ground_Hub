@@ -64,16 +64,21 @@ public class TeamService {
         return teamRepository.findByUsersUserMail(userMail);
     }
 
-    // 새로운 팀 생성
-    public Team createTeam(Team team) {
+    // 팀 생성 메소드 수정 (로고 파일 처리 추가)
+    public Team createTeam(Team team, MultipartFile logoFile) throws IOException {
         // 동일한 ID를 가진 팀이 존재하는지 확인
         if (teamRepository.existsById(team.getTeamId())) {
             throw new RuntimeException("팀을 생성할 수 없습니다.");
         }
 
+        // 로고 파일 저장
+        String logoFileName = saveLogoFile(logoFile); // 로고 파일을 저장하고 파일명을 반환
+        team.setLogo(logoFileName); // 팀 객체에 로고 파일명 설정
+
         return teamRepository.save(team); // 새로운 팀 저장
     }
 
+    // 팀 삭제
     @Transactional
     public void deleteTeam(Long teamId) {
         // 팀 존재 여부 확인
@@ -119,6 +124,10 @@ public class TeamService {
 
     // 로고 파일 저장 메소드
     public String saveLogoFile(MultipartFile file) throws IOException {
+        if (file.isEmpty()) {
+            throw new RuntimeException("로고 파일이 비어 있습니다.");
+        }
+
         // 파일명 생성 (중복 방지)
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
 
@@ -131,7 +140,7 @@ public class TeamService {
         // 파일 복사
         Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
-        return fileName;
+        return fileName; // 파일명 반환
     }
 
     // 팀 매니저 직함 양도

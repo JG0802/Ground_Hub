@@ -30,8 +30,14 @@ const FormationCarousel = () => {
   return (
     <CarouselWrapper>
       <CarouselItem>
-        <FormationText>미드필더 5명을 바탕으로 한<br />만능 포메이션 4-2-3-1</FormationText>
-        <FormationImage src="/images/formation_4231.png" alt="포메이션 이미지" />
+        <FormationText>
+          미드필더 5명을 바탕으로 한<br />
+          만능 포메이션 4-2-3-1
+        </FormationText>
+        <FormationImage
+          src="/images/formation_4231.png"
+          alt="포메이션 이미지"
+        />
       </CarouselItem>
     </CarouselWrapper>
   );

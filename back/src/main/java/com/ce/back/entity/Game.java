@@ -21,7 +21,9 @@ public class Game {
 
     private String gameName; // 경기 이름
     private LocalDateTime date; // 경기 일시
+
     private String versus; // 상대 팀
+    private String oppoLogo; // 상대팀 로고 파일명
 
     @ManyToOne
     @JoinColumn(name = "team_id")

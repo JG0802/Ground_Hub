@@ -1,4 +1,4 @@
-import MyTeamTemplate from '../components/myteam/MyTeamListTemplate';
+import MyTeamTemplate from '../components/myteam/MyTeamTemplate';
 
 const MyTeamPage = () => {
   return <MyTeamTemplate />;

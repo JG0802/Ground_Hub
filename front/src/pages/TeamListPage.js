@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import altImage from '../img/alt_image.png';
 
 const Container = styled.div`
   padding: 2vh;
@@ -141,7 +142,12 @@ const TeamListPage = () => {
           style={{ textDecoration: 'none', color: 'inherit' }}
         >
           <TeamCard key={i}>
-            <TeamLogo src={`/logos/${team.logo}`} alt={team.teamId} />
+            <TeamLogo
+              src={`/logos/${team.logo}`}
+              onError={(e) => {
+                e.target.src = altImage;
+              }}
+            />
             <TeamInfo>
               <TeamName>{team.teamName}</TeamName>
               <div>

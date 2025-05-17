@@ -43,7 +43,8 @@ const SubmitButton = styled.button`
 
 const CreateGamePage = () => {
   const [gameName, setGameName] = useState('');
-  const [date, setDate] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [oppoLogo, setOppoLogo] = useState();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -56,19 +57,20 @@ const CreateGamePage = () => {
     }
 
     try {
+      const formData = new FormData();
+      formData.append('gameName', gameName);
+      formData.append('startDate', startDate);
+      formData.append('teamId', teamId);
+      formData.append('oppoLogo', oppoLogo); // 파일 객체 추가
+
       const response = await fetch('/api/games/create-game', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          gameName,
-          date,
-          team: { teamId: Number(teamId) },
-        }),
+        body: formData,
       });
 
       if (response.ok) {
         alert('경기가 성공적으로 추가되었습니다.');
-        navigate(`/teams/${teamId}`); // 팀 상세 페이지로 이동
+        navigate(`/teams/${teamId}`);
       } else {
         const errText = await response.text();
         alert(`생성 실패: ${errText}`);
@@ -94,13 +96,22 @@ const CreateGamePage = () => {
           />
         </InputField>
         <InputField>
-          <Label htmlFor="date">날짜</Label>
+          <Label htmlFor="startDate">날짜</Label>
           <Input
-            type="date"
-            id="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
+            type="datetime-local"
+            id="startDate"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
             required
+          />
+        </InputField>
+        <InputField>
+          <Label htmlFor="img">상대팀 로고(비워둘 시 기본 로고 사용)</Label>
+          <Input
+            type="file"
+            id="img"
+            onChange={(e) => setOppoLogo(e.target.files[0])}
+            accept="image/*"
           />
         </InputField>
         <SubmitButton type="submit">경기 추가</SubmitButton>

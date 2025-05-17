@@ -32,9 +32,9 @@ const StyledButton = styled.button`
   display: flex; /* 내부 정렬 위해 flex 사용 */
   justify-content: center; /* 수평 가운데 */
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.5); /* 반투명 배경 */
+  background-color: rgba(240, 228, 57, 0.7); /* 반투명 배경 */
   color: black;
-  border: 2px solid white;
+  border: 2px solid black;
   border-radius: 20vh;
   cursor: pointer;
   width: 8.2vh;

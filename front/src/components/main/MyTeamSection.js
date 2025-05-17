@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import altImage from '../../img/alt_image.png';
 
 const SectionWrapper = styled.div`
   padding: 2vh;
@@ -103,7 +104,12 @@ const MyTeamSection = () => {
             style={{ textDecoration: 'none', color: 'inherit' }}
           >
             <TeamItem key={index}>
-              <TeamImage src={`/logos/${team.logo}`} alt={team.teamId} />
+              <TeamImage
+                src={`/logos/${team.logo}`}
+                onError={(e) => {
+                  e.target.src = altImage;
+                }}
+              />
               <TeamName>{team.teamName}</TeamName>
             </TeamItem>
           </Link>

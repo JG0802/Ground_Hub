@@ -7,10 +7,18 @@ import com.ce.back.repository.GameRepository;
 import com.ce.back.repository.TeamRepository;
 import com.ce.back.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class GameService {
@@ -18,6 +26,10 @@ public class GameService {
     private final GameRepository gameRepository;
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
+
+    // 로고 파일을 저장할 경로 (application.properties에서 설정)
+    @Value("${team.logo.directory}")
+    private String logoDirectory;
 
     @Autowired
     public GameService(GameRepository gameRepository, UserRepository userRepository, TeamRepository teamRepository) {
@@ -39,6 +51,27 @@ public class GameService {
     // 사용자 이메일로 포지션 조회
     public List<Game> getGamesByUserMail(String userMail) {
         return gameRepository.findGamesByPlayers_UserMail(userMail);
+    }
+
+    // 로고 파일 저장 메소드
+    public String saveLogoFile(MultipartFile file) throws IOException {
+        if (file.isEmpty()) {
+            throw new RuntimeException("로고 파일이 비어 있습니다.");
+        }
+
+        // 파일명 생성 (중복 방지)
+        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+
+        // 파일을 지정된 경로에 저장
+        Path path = Paths.get(logoDirectory, fileName);
+
+        // 디렉토리가 없으면 생성
+        Files.createDirectories(path.getParent());
+
+        // 파일 복사
+        Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+
+        return fileName; // 파일명 반환
     }
 
     // 경기 생성
@@ -72,7 +105,7 @@ public class GameService {
     // 특정 팀에 속한 모든 게임 삭제
     public void deleteGamesByTeamId(Long teamId) {
         Team team = teamRepository.findTeamByTeamId(teamId)
-                        .orElseThrow(() -> new RuntimeException("팀을 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException("팀을 찾을 수 없습니다."));
         gameRepository.deleteByTeam(team);
     }
 
@@ -109,7 +142,8 @@ public class GameService {
 
         if (existingGame.isEmpty()) {
             throw new RuntimeException("경기가 존재하지 않습니다."); // 경기가 없으면 예외 처리
-        } if (existingUser.isEmpty()) {
+        }
+        if (existingUser.isEmpty()) {
             throw new RuntimeException("사용자가 존재하지 않습니다.");
         }
 
