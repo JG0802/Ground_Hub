@@ -202,4 +202,19 @@ public class TeamController {
             return ResponseEntity.status(404).body("사용자 제거 실패: " + e.getMessage());
         }
     }
+
+    // 팀 매니저 양도
+    // http://localhost:8080/api/teams/{teamId}/transfer-manager
+    @PostMapping("/{teamId}/transfer-manager")
+    public ResponseEntity<?> transferTeamManager(@PathVariable Long teamId, @RequestBody Map<String, String> body) {
+        String currentManagerMail = body.get("currentManagerMail");
+        String newManagerMail = body.get("newManagerMail");
+
+        try {
+            Team updatedTeam = teamService.transferTeamManager(teamId, currentManagerMail, newManagerMail);
+            return ResponseEntity.ok("팀 매니저 직함이 성공적으로 양도되었습니다.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body("팀 매니저 직함 양도 실패: " + e.getMessage());
+        }
+    }
 }
