@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 
@@ -84,6 +85,11 @@ const DayCell = styled.div`
 
 const ScheduleSection = () => {
   const [currentDate] = useState(dayjs());
+  const navigate = useNavigate();
+
+  const handleTitleClick = () => {
+    navigate('/schedule');
+  };
 
   const getDaysInMonth = () => {
     const start = currentDate.startOf('month').day();
@@ -98,7 +104,7 @@ const ScheduleSection = () => {
 
   return (
     <Container>
-      <TitleRow>
+      <TitleRow onClick={handleTitleClick} style={{ cursor: 'pointer' }}>
         <Title>Schedule</Title>
         <Arrow>{'>'}</Arrow>
       </TitleRow>
@@ -116,7 +122,7 @@ const ScheduleSection = () => {
       </MatchScroll>
 
       <CalendarContainer>
-        <CalendarHeader>
+        <CalendarHeader onClick={handleTitleClick} style={{ cursor: 'pointer' }}>
           <span>{currentDate.format('MMMM YYYY')}</span>
           <Arrow>{'>'}</Arrow>
         </CalendarHeader>

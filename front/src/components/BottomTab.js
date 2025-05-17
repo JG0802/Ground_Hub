@@ -36,9 +36,9 @@ const BottomTab = () => {
       <TabItem to="/main" $active={(location.pathname === '/main').toString()}>
         <MdStars />
       </TabItem>
-      <TabItem to="/teams" $active={(location.pathname === '/teams').toString()}>
+      <TabItem to="/teams" $active={(location.pathname.startsWith('/teams')).toString()}>
         <MdGroups />
-      </TabItem>
+      </TabItem> {/* /teams 하위경로 모두 포함 */}
       <TabItem to="/feed" $active={(location.pathname === '/feed').toString()}>
         <MdList />
       </TabItem>

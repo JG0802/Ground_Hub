@@ -9,6 +9,8 @@ import SignUpEmailPage from './pages/SignUpEmailPage';
 import SignUpPasswordPage from './pages/SignUpPasswordPage';
 import SelectPositionPage from './pages/SelectPositionPage';
 import FormationDetailPage from './pages/FormationDetailPage';
+import MyTeamsPage from './pages/MyTeamsPage';
+import SchedulePage from './pages/SchedulePage';
 import BottomTab from './components/BottomTab';
 
 const App = () => {
@@ -31,6 +33,8 @@ const App = () => {
         <Route path="/signup" element={<SignUpEmailPage />} />
         <Route path="/signup/password" element={<SignUpPasswordPage />} />
         <Route path="/signup/position" element={<SelectPositionPage />} />
+        <Route path="/teams/myTeams" element={<MyTeamsPage />} />
+        <Route path="/schedule" element={<SchedulePage />} />
       </Routes>
 
       {shouldShowBottomTab && <BottomTab />}

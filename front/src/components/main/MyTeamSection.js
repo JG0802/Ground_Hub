@@ -1,5 +1,6 @@
 // src/components/home/MyTeamSection.js
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const SectionWrapper = styled.div`
   padding: 2vh;
@@ -43,6 +44,8 @@ const TeamName = styled.p`
 `;
 
 const MyTeamSection = () => {
+  const navigate = useNavigate();
+
   const teams = [
     { name: '불도저', img: '/images/team_booldozer.png' },
     { name: '팀 이름 1', img: '/images/team_1.png' },
@@ -50,9 +53,14 @@ const MyTeamSection = () => {
     { name: '팀 이름 3', img: '/images/team_3.png' },
   ];
 
+  //클릭 시 /teams로 이동
+  const handleTitleClick = () => {
+    navigate('/teams/myTeams');
+  };
+
   return (
     <SectionWrapper>
-      <TitleWrapper>
+      <TitleWrapper onClick={handleTitleClick} style={{ cursor: 'pointer' }}>
         <Title>My Team</Title>
         <span style={{ fontSize: '2vh' }}>{'>'}</span>
       </TitleWrapper>

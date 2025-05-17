@@ -82,6 +82,7 @@ const AuthForm = () => {
       if (response.ok) {
         const data = await response.json();
         sessionStorage.setItem('userData', JSON.stringify(data));
+        localStorage.setItem('userMail', data.userMail); // 추가: 이메일만 따로 저장
         navigate('/main');
       } else {
         const errMsg = await response.text();
