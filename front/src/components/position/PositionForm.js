@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import field from '../../img/field.png';
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 const PositionFormContainer = styled.div`
   display: flex;
@@ -66,7 +66,7 @@ const PopupBox = styled.div`
   height: 50vh;
   background: white;
   transition: bottom 0.3s ease-in-out;
-  bottom: ${({ $open }) => ($open ? '0vh' : '-30vh')};
+  bottom: ${({ $open }) => ($open ? '0vh' : '-35vh')};
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
@@ -118,6 +118,7 @@ const PositionForm = () => {
   const userMail = sessionStorage.getItem('userMail');
   const [teamId, setTeamId] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   const togglePopup = () => {
     setIsOpen((prev) => !prev);
@@ -226,6 +227,33 @@ const PositionForm = () => {
     }
   };
 
+  const handleDeleteGame = async () => {
+    const confirmDelete = window.confirm(
+      '정말로 이 경기를 삭제하시겠습니까? 삭제된 경기는 복구할 수 없습니다.',
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      const response = await fetch('/api/games/delete-game', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ gameId: Number(id) }),
+      });
+
+      if (response.ok) {
+        alert('경기가 성공적으로 삭제되었습니다.');
+        navigate(`/teams/${teamId}`);
+      } else {
+        const error = await response.text();
+        alert('삭제 실패: ' + error);
+      }
+    } catch (err) {
+      console.error(err);
+      alert('서버 오류가 발생했습니다.');
+    }
+  };
+
   if (!game) return <div>로딩 중...</div>;
   if (!checked) return <div>권한 확인 중...</div>;
 
@@ -315,15 +343,27 @@ const PositionForm = () => {
       </FieldWrapper>
       {hasPermission ? (
         <ControlButtonBox>
-          <ChangeButton onClick={handleJoinGame} style={{ width: '15vh' }}>
-            경기참가
-          </ChangeButton>
-          <ChangeButton onClick={handleRemoveGame} style={{ width: '15vh' }}>
-            경기 참가 취소
-          </ChangeButton>
-          <Link to={`/position/update/${id}`}>
-            <ChangeButton style={{ width: '15vh' }}>포메이션 수정</ChangeButton>
-          </Link>
+          <div>
+            <ChangeButton onClick={handleJoinGame} style={{ width: '20vh' }}>
+              경기참가
+            </ChangeButton>
+            <ChangeButton onClick={handleRemoveGame} style={{ width: '20vh' }}>
+              경기 참가 취소
+            </ChangeButton>
+          </div>
+          <div>
+            <Link to={`/position/update/${id}`}>
+              <ChangeButton style={{ width: '20vh' }}>
+                포메이션 수정
+              </ChangeButton>
+            </Link>
+            <ChangeButton
+              onClick={handleDeleteGame}
+              style={{ width: '20vh', backgroundColor: '#c0392b' }}
+            >
+              경기 삭제
+            </ChangeButton>
+          </div>
         </ControlButtonBox>
       ) : (
         <ControlButtonBox>

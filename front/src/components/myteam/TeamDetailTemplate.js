@@ -6,8 +6,9 @@ import TeamJoin from './TeamJoin';
 const TeamDetailPage = () => {
   const { id } = useParams(); // ← URL에서 ID 추출
   const [team, setTeam] = useState(null);
-  const [games, setGames] = useState(null);
+  const [games, setGames] = useState([]);
   const userMail = sessionStorage.getItem('userMail');
+  const [teamManagerMail, setTeamManagerMail] = useState('');
   sessionStorage.setItem('teamId', id);
 
   useEffect(() => {
@@ -15,18 +16,28 @@ const TeamDetailPage = () => {
       const res = await fetch(`/api/teams/${id}/users-in-team`);
       const data = await res.json();
       setTeam(data);
-      console.log(data);
+    };
+
+    const fetchTeamInfo = async () => {
+      const res = await fetch(`/api/teams/${id}`);
+      const teamRes = await res.json();
+      setTeamManagerMail(teamRes.teamManager.userMail); // 💡 여기!
     };
 
     const fetchGame = async () => {
       const res = await fetch(`/api/games/team/${id}`);
-      const data = await res.json();
-      setGames(data);
-      console.log(data);
-      console.log(id);
+      if (res.ok) {
+        const text = await res.text();
+        const data = text ? JSON.parse(text) : []; // 또는 null
+        setGames(data);
+      } else {
+        console.error('서버 오류:', res.status);
+        setGames([]);
+      }
     };
 
     fetchTeam();
+    fetchTeamInfo();
     fetchGame();
   }, [id]);
 
@@ -51,7 +62,13 @@ const TeamDetailPage = () => {
           return items;
         })()}
       </ul>
-      {isInTeam ? <TeamInfo games={games} /> : <TeamJoin />}
+      {isInTeam ? (
+        <div>
+          <TeamInfo games={games} teamManagerMail={teamManagerMail} />
+        </div>
+      ) : (
+        <TeamJoin />
+      )}
     </div>
   );
 };

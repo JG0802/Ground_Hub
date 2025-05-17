@@ -31,7 +31,7 @@ const SearchInput = styled.input`
 const AddButton = styled.button`
   width: 4.5vh;
   height: 4.5vh;
-  font-size: 3vh;
+  font-size: 2vh;
   border-radius: 50%;
   background-color: #eee;
   border: none;
@@ -86,6 +86,7 @@ const Dot = styled.div`
 
 const TeamListPage = () => {
   const [teams, setTeams] = useState(null);
+  const [search, setSearch] = useState();
 
   useEffect(() => {
     const fetchTeams = async () => {
@@ -106,14 +107,33 @@ const TeamListPage = () => {
     fetchTeams();
   }, []);
 
+  const searchTeam = async (teamName) => {
+    try {
+      const response = await fetch(`/api/teams/name/${teamName}`);
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        setTeams(data);
+      } else {
+        alert(await response.text());
+      }
+    } catch (err) {
+      console.error(err);
+      alert('서버와 통신 중 오류가 발생했습니다.');
+    }
+  };
+
   if (!teams) return <div>로딩중</div>;
 
   return (
     <Container>
       <Header>Team List</Header>
       <SearchRow>
-        <AddButton>+</AddButton>
-        <SearchInput placeholder="Type the Team name" />
+        <SearchInput
+          placeholder="Search Team name"
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <AddButton onClick={() => searchTeam(search)}>🔎</AddButton>
       </SearchRow>
       {teams.map((team, i) => (
         <Link
@@ -121,7 +141,7 @@ const TeamListPage = () => {
           style={{ textDecoration: 'none', color: 'inherit' }}
         >
           <TeamCard key={i}>
-            <TeamLogo src={team.logo} alt="team logo" />
+            <TeamLogo src={`/logos/${team.logo}`} alt={team.teamId} />
             <TeamInfo>
               <TeamName>{team.teamName}</TeamName>
               <div>

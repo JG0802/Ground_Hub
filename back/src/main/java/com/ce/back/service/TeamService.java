@@ -2,7 +2,10 @@ package com.ce.back.service;
 
 import com.ce.back.entity.Game;
 import com.ce.back.entity.Team;
+import com.ce.back.entity.User;
 import com.ce.back.repository.TeamRepository;
+import com.ce.back.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,14 +23,18 @@ import java.util.Optional;
 public class TeamService {
 
     private final TeamRepository teamRepository;
+    private final UserRepository userRepository;
+    private final GameService gameService;
 
     // 로고 파일을 저장할 경로 (application.properties에서 설정)
     @Value("${team.logo.directory}")
     private String logoDirectory;
 
     @Autowired
-    public TeamService(TeamRepository teamRepository) {
+    public TeamService(TeamRepository teamRepository, UserRepository userRepository, GameService gameService) {
         this.teamRepository = teamRepository;
+        this.userRepository = userRepository;
+        this.gameService = gameService;
     }
 
     // 모든 팀 조회
@@ -63,7 +70,35 @@ public class TeamService {
         if (teamRepository.existsById(team.getTeamId())) {
             throw new RuntimeException("팀을 생성할 수 없습니다.");
         }
+
         return teamRepository.save(team); // 새로운 팀 저장
+    }
+
+    @Transactional
+    public void deleteTeam(Long teamId) {
+        // 팀 존재 여부 확인
+        Optional<Team> existingTeam = teamRepository.findTeamByTeamId(teamId);
+        if (existingTeam.isEmpty()) {
+            throw new RuntimeException("팀을 찾을 수 없습니다.");
+        }
+
+        Team team = existingTeam.get();
+
+        // 팀의 로고 파일 경로 확인 및 삭제
+        if (team.getLogo() != null && !team.getLogo().isEmpty()) {
+            Path logoPath = Paths.get(logoDirectory, team.getLogo());
+            try {
+                Files.deleteIfExists(logoPath); // 로고 파일 삭제
+            } catch (IOException e) {
+                throw new RuntimeException("로고 파일을 삭제할 수 없습니다: " + e.getMessage());
+            }
+        }
+
+        // 해당 팀에 속한 모든 게임 삭제
+        gameService.deleteGamesByTeamId(teamId);
+
+        // 팀 삭제
+        teamRepository.delete(team); // 팀 삭제
     }
 
     // 팀 정보 업데이트
@@ -97,5 +132,33 @@ public class TeamService {
         Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
         return fileName;
+    }
+
+    // 팀 매니저 직함 양도
+    @Transactional
+    public Team transferTeamManager(Long teamId, String currentManagerMail, String newManagerMail) {
+        // 팀 확인
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new RuntimeException("팀을 찾을 수 없습니다."));
+
+        // 현재 매니저 확인
+        if (!team.getTeamManager().getUserMail().equals(currentManagerMail)) {
+            throw new RuntimeException("현재 매니저가 아닙니다.");
+        }
+
+        // 새로운 매니저 확인
+        User newManager = userRepository.findUserByUserMail(newManagerMail)
+                .orElseThrow(() -> new RuntimeException("새로운 매니저를 찾을 수 없습니다."));
+
+        // 새로운 매니저가 해당 팀에 소속되어 있는지 확인
+        if (!team.getUsers().contains(newManager)) {
+            throw new RuntimeException("새로운 매니저는 해당 팀의 일원이 아닙니다.");
+        }
+
+        // 팀 매니저 직함 양도
+        team.setTeamManager(newManager);
+
+        // 변경된 팀 정보 저장
+        return teamRepository.save(team);
     }
 }

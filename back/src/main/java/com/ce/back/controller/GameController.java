@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -54,6 +55,24 @@ public class GameController {
         }
     }
 
+    // 경기 삭제
+    // http://localhost:8080/api/games/delete-game
+    @DeleteMapping("/delete-game")
+    public ResponseEntity<?> deleteGame(@RequestBody Map<String, Long> body) {
+        try {
+            Long gameId = body.get("gameId");
+
+            // 경기 ID로 게임을 찾고, 게임 삭제
+            gameService.deleteGame(gameId); // gameService에서 deleteGame 메소드 호출
+
+            // 성공적으로 삭제된 게임 정보 반환
+            return ResponseEntity.ok("경기가 성공적으로 삭제되었습니다.");
+        } catch (RuntimeException e) {
+            // 예외 발생 시 404 에러 반환 (경기 관련 예외 처리)
+            return ResponseEntity.status(404).body("경기를 삭제할 수 없습니다: " + e.getMessage());
+        }
+    }
+
     // 경기에서의 포지션을 변경
     // http://localhost:8080/api/games/update-game
     @PostMapping("/update-game")
@@ -79,19 +98,37 @@ public class GameController {
     }
 
     // 경기에 사용자 추가
-    // http://localhost:8080/api/games/{userMail}/insert-to-game
-    @PostMapping("/{userMail}/insert-to-game")
-    public ResponseEntity<?> insertUserToGame(@PathVariable String userMail, @RequestBody Game game) {
+    // http://localhost:8080/api/games/{gameId}/insert-to-game
+    @PostMapping("/{gameId}/insert-to-game")
+    public ResponseEntity<?> insertUserToGame(@PathVariable Long gameId, @RequestBody Map<String, String> body) {
         try {
-            // 경기에 사용자 추가 로직 호출
-            gameService.insertUserToGame(game.getGameId(), userMail); // game.getGameId()로 게임을 찾고 userMail로 사용자 추가
+            String userMail = body.get("userMail");
+            // 게임 ID로 게임을 찾고, 해당 게임에 유저 추가
+            gameService.insertUserToGame(gameId, userMail); // gameId로 게임을 찾고 userMail로 사용자 추가
 
             // 성공적으로 추가된 게임 정보 반환
-            return ResponseEntity.ok(game);
+            return ResponseEntity.ok("게임에 사용자가 성공적으로 추가되었습니다.");
         } catch (RuntimeException e) {
-            // 예외 발생 시 400 에러 반환 (사용자 또는 경기 관련 예외 처리)
-            return ResponseEntity.status(404).body(e.getMessage());
+            // 예외 발생 시 404 에러 반환 (사용자 또는 경기 관련 예외 처리)
+            return ResponseEntity.status(404).body("게임에 사용자를 추가할 수 없습니다: " + e.getMessage());
         }
     }
 
+    // 경기에 사용자 삭제
+    // http://localhost:8080/api/games/{gameId}/remove-from-game
+    @DeleteMapping("/{gameId}/remove-from-game")
+    public ResponseEntity<?> removeUserFromGame(@PathVariable Long gameId, @RequestBody Map<String, String> body) {
+        try {
+            String userMail = body.get("userMail");
+
+            // 게임 ID로 게임을 찾고, 해당 게임에 유저 삭제
+            gameService.removeUserFromGame(gameId, userMail); // gameId로 게임을 찾고 userMail로 사용자 삭제
+
+            // 성공적으로 삭제된 게임 정보 반환
+            return ResponseEntity.ok("게임에서 사용자가 성공적으로 삭제되었습니다.");
+        } catch (RuntimeException e) {
+            // 예외 발생 시 404 에러 반환 (사용자 또는 경기 관련 예외 처리)
+            return ResponseEntity.status(404).body("게임에서 사용자를 삭제할 수 없습니다: " + e.getMessage());
+        }
+    }
 }

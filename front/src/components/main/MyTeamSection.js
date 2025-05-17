@@ -103,10 +103,8 @@ const MyTeamSection = () => {
             style={{ textDecoration: 'none', color: 'inherit' }}
           >
             <TeamItem key={index}>
-              <TeamImage src={team.img} alt={team.teamId} />
-              <TeamName>
-                {team.teamName}({team.teamId})
-              </TeamName>
+              <TeamImage src={`/logos/${team.logo}`} alt={team.teamId} />
+              <TeamName>{team.teamName}</TeamName>
             </TeamItem>
           </Link>
         ))}

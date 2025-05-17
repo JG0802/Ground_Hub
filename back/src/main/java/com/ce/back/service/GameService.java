@@ -1,8 +1,10 @@
 package com.ce.back.service;
 
 import com.ce.back.entity.Game;
+import com.ce.back.entity.Team;
 import com.ce.back.entity.User;
 import com.ce.back.repository.GameRepository;
+import com.ce.back.repository.TeamRepository;
 import com.ce.back.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,11 +17,13 @@ public class GameService {
 
     private final GameRepository gameRepository;
     private final UserRepository userRepository;
+    private final TeamRepository teamRepository;
 
     @Autowired
-    public GameService(GameRepository gameRepository, UserRepository userRepository) {
+    public GameService(GameRepository gameRepository, UserRepository userRepository, TeamRepository teamRepository) {
         this.gameRepository = gameRepository;
         this.userRepository = userRepository;
+        this.teamRepository = teamRepository;
     }
 
     // 팀 이름으로 경기 찾기
@@ -50,6 +54,26 @@ public class GameService {
         }
 
         return gameRepository.save(game);
+    }
+
+    // 경기 삭제
+    public void deleteGame(Long gameId) {
+        // 경기 ID로 게임을 찾기
+        Optional<Game> existingGame = gameRepository.findGameByGameId(gameId);
+
+        if (existingGame.isEmpty()) {
+            throw new RuntimeException("경기를 찾을 수 없습니다.");
+        }
+
+        // 게임 삭제
+        gameRepository.delete(existingGame.get()); // 게임 삭제
+    }
+
+    // 특정 팀에 속한 모든 게임 삭제
+    public void deleteGamesByTeamId(Long teamId) {
+        Team team = teamRepository.findTeamByTeamId(teamId)
+                        .orElseThrow(() -> new RuntimeException("팀을 찾을 수 없습니다."));
+        gameRepository.deleteByTeam(team);
     }
 
     // 경기 업데이트
@@ -99,6 +123,35 @@ public class GameService {
 
         // 사용자 추가
         game.getPlayers().add(user); // 경기 참가 선수 목록에 사용자를 추가
+
+        // 게임 정보 업데이트 (저장)
+        gameRepository.save(game); // 경기 정보 업데이트
+    }
+
+    // 경기에 참여하는 선수 삭제
+    public void removeUserFromGame(Long gameId, String userMail) {
+
+        // 게임이 존재하는지 확인
+        Optional<Game> existingGame = gameRepository.findGameByGameId(gameId);
+        Optional<User> existingUser = userRepository.findUserByUserMail(userMail);
+
+        if (existingGame.isEmpty()) {
+            throw new RuntimeException("경기가 존재하지 않습니다.");
+        }
+        if (existingUser.isEmpty()) {
+            throw new RuntimeException("사용자가 존재하지 않습니다.");
+        }
+
+        Game game = existingGame.get();
+        User user = existingUser.get();
+
+        // 경기 참가 선수 목록에서 해당 사용자가 있는지 확인
+        if (!game.getPlayers().contains(user)) {
+            throw new RuntimeException("이 사용자는 해당 경기에서 찾을 수 없습니다.");
+        }
+
+        // 사용자 삭제
+        game.getPlayers().remove(user); // 경기 참가 선수 목록에서 해당 사용자 제거
 
         // 게임 정보 업데이트 (저장)
         gameRepository.save(game); // 경기 정보 업데이트

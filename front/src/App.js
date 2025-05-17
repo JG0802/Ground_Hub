@@ -17,6 +17,8 @@ import PositionUpdatePage from './pages/PositionUpdatePage';
 import CheckPasswordPage from './pages/CheckPasswordPage';
 import ChangeProfilePage from './pages/ChangeProfilePage';
 import ChangePasswordPage from './pages/ChangePasswordPage';
+import TeamUpdatePage from './pages/TeamUpdatePage';
+import CreateGamePage from './pages/CreateGamePage';
 
 const App = () => {
   const location = useLocation();
@@ -45,6 +47,8 @@ const App = () => {
         <Route path="/user/checkpassword" element={<CheckPasswordPage />} />
         <Route path="/user/change/info" element={<ChangeProfilePage />} />
         <Route path="/user/change/password" element={<ChangePasswordPage />} />
+        <Route path="/team/update/:id" element={<TeamUpdatePage />} />
+        <Route path="/game/create" element={<CreateGamePage />} />
       </Routes>
 
       {shouldShowBottomTab && <BottomTab />}
