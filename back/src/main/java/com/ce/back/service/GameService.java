@@ -8,9 +8,16 @@ import com.ce.back.repository.TeamRepository;
 import com.ce.back.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class GameService {
@@ -39,6 +46,25 @@ public class GameService {
     // 사용자 이메일로 포지션 조회
     public List<Game> getGamesByUserMail(String userMail) {
         return gameRepository.findGamesByPlayers_UserMail(userMail);
+    }
+
+    // 로고 파일을 저장하는 메소드
+    public String saveLogoFile(MultipartFile file) throws IOException {
+        // 파일을 로컬 디렉토리에 저장
+        String directory = "back/uploads/logos/";  // 로고 저장할 경로
+        Path dirPath = Paths.get(directory);
+        // 디렉토리가 없으면 생성
+        if (!Files.exists(dirPath)) {
+            Files.createDirectories(dirPath);
+        }
+
+        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+        Path filePath = Paths.get(directory + fileName);
+
+        // 파일 저장
+        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        return fileName; // 저장된 파일명 반환
     }
 
     // 경기 생성

@@ -69,13 +69,13 @@ public class TeamController {
     // 새로운 팀 추가
     // http://localhost:8080/api/teams/create-team
     @PostMapping("/create-team")
-    public ResponseEntity<?> createTeam(@RequestBody Team team) {
+    public ResponseEntity<?> createTeam(@RequestPart("team") Team team, @RequestPart("logo") MultipartFile logo) {
         try {
-            Team newTeam = teamService.createTeam(team);
-
+            // 로고 파일을 함께 저장하고 팀 생성
+            Team newTeam = teamService.createTeam(team, logo);
             return ResponseEntity.ok(newTeam);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
+        } catch (IOException e) {
+            return ResponseEntity.status(500).body("로고 업로드 실패: " + e.getMessage());
         }
     }
 

@@ -1,11 +1,16 @@
 package com.ce.back.controller;
 
 import com.ce.back.entity.Game;
+import com.ce.back.entity.Team;
 import com.ce.back.service.GameService;
+import com.ce.back.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,10 +20,12 @@ import java.util.Optional;
 public class GameController {
 
     private final GameService gameService;
+    private final TeamService teamService;
 
     @Autowired
-    public GameController(GameService gameService) {
+    public GameController(GameService gameService, TeamService teamService) {
         this.gameService = gameService;
+        this.teamService = teamService;
     }
 
     // 특정 팀의 경기 일정을 조회하는 메서드
@@ -46,12 +53,33 @@ public class GameController {
     // 경기 생성
     // http://localhost:8080/api/games/create-game
     @PostMapping("/create-game")
-    public ResponseEntity<?> createGame(@RequestBody Game game) {
+    public ResponseEntity<?> createGame(@RequestParam("gameName") String gameName,
+                                        @RequestParam("startDate") String startDate,
+                                        @RequestParam("teamId") Long teamId,
+                                        @RequestParam("oppoLogo") MultipartFile oppoLogo) {
         try {
+            // 상대 팀 로고 파일 저장
+            String logoFileName = gameService.saveLogoFile(oppoLogo);
+
+            // Team 객체를 팀 ID로 조회
+            Team team = teamService.getTeamByTeamId(teamId).orElseThrow(() -> new RuntimeException("팀을 찾을 수 없습니다."));
+
+            // Game 객체 생성
+            Game game = Game.builder()
+                    .gameName(gameName)
+                    .date(LocalDateTime.parse(startDate)) // startDate를 LocalDateTime으로 변환
+                    .team(team)
+                    .oppoLogo(logoFileName) // 상대팀 로고 파일명
+                    .build();
+
+            // 게임 생성 서비스 호출
             Game savedGame = gameService.createGame(game);
+
             return ResponseEntity.ok(savedGame);
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).body(e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
