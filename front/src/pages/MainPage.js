@@ -10,11 +10,9 @@ const PageWrapper = styled.div`
 const MainPage = () => {
   return (
     <PageWrapper>
-      <h2>Ground Hub</h2>
       <FormationCarousel />
       <MyTeamSection />
       <ScheduleSection />
-      {/* <Calendar /> ❌ 제거 */}
     </PageWrapper>
   );
 };

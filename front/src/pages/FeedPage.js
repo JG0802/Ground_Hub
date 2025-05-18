@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import useTeamStore from '../stores/useTeamStore'; // Zustand 연결
 
+// ✅ styled-components 정의
 const Container = styled.div`
   padding: 2vh;
   position: relative;
@@ -78,8 +80,8 @@ const CommentList = styled.ul`
 
 const WriteButton = styled.button`
   position: fixed;
-  bottom: 10vh;
-  right: 2vh;
+  bottom: 66px;
+  right: calc(50% - 430px / 2 + 2vh);
   width: 6vh;
   height: 6vh;
   border-radius: 50%;
@@ -90,6 +92,7 @@ const WriteButton = styled.button`
   cursor: pointer;
   z-index: 200;
 `;
+
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -107,7 +110,9 @@ const Modal = styled.div`
   background-color: white;
   padding: 3vh;
   border-radius: 1vh;
-  width: 90%;
+  width: 100%;
+  max-width: 380px;
+  margin: 0 auto;
 `;
 
 const Input = styled.textarea`
@@ -134,12 +139,31 @@ const Submit = styled.button`
 `;
 
 const FeedPage = () => {
+  const { teams } = useTeamStore(); // Zustand 전역 상태
   const [activeTab, setActiveTab] = useState('팀');
   const [posts, setPosts] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [newContent, setNewContent] = useState('');
   const [newImages, setNewImages] = useState([]);
   const [commentInputs, setCommentInputs] = useState({});
+
+  // ✅ Zustand에서 공개 팀만 필터링해 피드용 객체 생성
+  const teamFeedPosts =
+    activeTab === '팀'
+      ? teams
+          .filter((team) => !team.isPrivate)
+          .map((team) => ({
+            user: team.name,
+            time: '방금 전',
+            content: `📍 ${team.location} 팀 모집 중!`,
+            images: [team.logo],
+            likes: 0,
+            comments: [],
+            liked: false,
+          }))
+      : [];
+
+  const combinedPosts = [...teamFeedPosts, ...posts];
 
   const handleCreatePost = () => {
     if (!newContent.trim() && newImages.length === 0) return;
@@ -160,26 +184,23 @@ const FeedPage = () => {
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
-    const readers = files.map(file => {
+    const readers = files.map((file) => {
       return new Promise((resolve) => {
         const reader = new FileReader();
         reader.onloadend = () => resolve(reader.result);
         reader.readAsDataURL(file);
       });
     });
-    Promise.all(readers).then(images => {
+    Promise.all(readers).then((images) => {
       setNewImages(images);
     });
   };
 
   const toggleLike = (index) => {
-    setPosts((prev) => {
-      const updated = [...prev];
-      const post = updated[index];
-      post.liked = !post.liked;
-      post.likes += post.liked ? 1 : -1;
-      return updated;
-    });
+    const updated = [...combinedPosts];
+    const post = updated[index];
+    post.liked = !post.liked;
+    post.likes += post.liked ? 1 : -1;
   };
 
   const handleCommentChange = (index, value) => {
@@ -189,16 +210,18 @@ const FeedPage = () => {
   const handleCommentSubmit = (index) => {
     const comment = commentInputs[index];
     if (!comment || comment.trim() === '') return;
-    setPosts((prev) => {
-      const updated = [...prev];
-      updated[index].comments.push(comment.trim());
-      return updated;
-    });
+    const updated = [...posts];
+    if (index < teamFeedPosts.length) return;
+    const realIndex = index - teamFeedPosts.length;
+    updated[realIndex].comments.push(comment.trim());
+    setPosts(updated);
     setCommentInputs((prev) => ({ ...prev, [index]: '' }));
   };
 
   const handleDeletePost = (index) => {
-    setPosts((prev) => prev.filter((_, i) => i !== index));
+    if (index < teamFeedPosts.length) return;
+    const realIndex = index - teamFeedPosts.length;
+    setPosts((prev) => prev.filter((_, i) => i !== realIndex));
   };
 
   return (
@@ -215,10 +238,10 @@ const FeedPage = () => {
         ))}
       </NavTabs>
 
-      {posts.map((post, index) => (
+      {combinedPosts.map((post, index) => (
         <Post key={index}>
           <PostHeader>
-            <span>{post.user} in Group Name · {post.time}</span>
+            <span>{post.user} · {post.time}</span>
             <span style={{ cursor: 'pointer' }} onClick={() => handleDeletePost(index)}>🗑</span>
           </PostHeader>
           {post.content && <PostContent>{post.content}</PostContent>}
