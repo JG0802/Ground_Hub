@@ -50,7 +50,7 @@ const MatchImage = styled.img`
 `;
 
 const MatchInfo = styled.div`
-  font-size: 1.6vh;
+  font-size: clamp(1vh, 1.6vh, 2vh);
 `;
 
 const CalendarContainer = styled.div`

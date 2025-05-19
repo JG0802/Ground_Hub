@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import altImage from '../img/alt_image.png';
 
 const FormContainer = styled.div`
   max-width: 400px;
@@ -56,12 +57,28 @@ const CreateGamePage = () => {
       return;
     }
 
+    let finalLogoFile = oppoLogo;
+
+    if (!oppoLogo) {
+      try {
+        const response = await fetch(altImage);
+        const blob = await response.blob();
+        finalLogoFile = new File([blob], 'default-logo.png', {
+          type: blob.type,
+        });
+      } catch (err) {
+        console.error('기본 로고 로딩 실패:', err);
+        alert('기본 로고 파일을 불러오는 데 실패했습니다.');
+        return;
+      }
+    }
+
     try {
       const formData = new FormData();
       formData.append('gameName', gameName);
       formData.append('startDate', startDate);
       formData.append('teamId', teamId);
-      formData.append('oppoLogo', oppoLogo); // 파일 객체 추가
+      formData.append('oppoLogo', finalLogoFile); // 파일 객체 추가
 
       const response = await fetch('/api/games/create-game', {
         method: 'POST',

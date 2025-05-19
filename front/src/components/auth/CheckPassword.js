@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const AuthFormContainer = styled.form`
@@ -41,19 +41,6 @@ const StyledButton = styled.button`
     background-color: #999;
     cursor: not-allowed;
   }
-`;
-
-const LinkContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 40vh;
-  font-size: 1.6vh;
-  margin-bottom: 3vh;
-`;
-
-const StyledLink = styled(Link)`
-  color: #8f8f8f;
-  text-decoration: none;
 `;
 
 const CheckPassword = () => {

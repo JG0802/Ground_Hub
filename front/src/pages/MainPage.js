@@ -10,7 +10,6 @@ const PageWrapper = styled.div`
 const MainPage = () => {
   return (
     <PageWrapper>
-      <h2>Ground Hub</h2>
       <FormationCarousel />
       <MyTeamSection />
       <ScheduleSection />

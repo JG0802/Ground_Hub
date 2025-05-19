@@ -32,6 +32,12 @@ const TeamName = styled.div`
   font-weight: bold;
 `;
 
+const ButtonBox = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 2vh;
+`;
+
 const StyledButton = styled.button`
   background-color: black;
   color: white;
@@ -90,7 +96,7 @@ const TeamInfo = ({ games, teamManagerMail }) => {
 
   return (
     <div>
-      <h2>포메이션 목록</h2>
+      <h2>📅 경기 일정</h2>
       {games.length === 0 ? (
         <div>예정된 경기가 없습니다.</div>
       ) : (
@@ -130,10 +136,16 @@ const TeamInfo = ({ games, teamManagerMail }) => {
 
       {userMail === teamManagerMail ? (
         <div>
-          <Link to="/game/create">경기 추가</Link>
-          <Link to={`/team/update/${teamId}`}>
-            <StyledButton>팀 정보 수정</StyledButton>
-          </Link>
+          <ButtonBox>
+            <Link to="/game/create">
+              <StyledButton style={{ width: '20vh' }}>경기 추가</StyledButton>
+            </Link>
+            <Link to={`/team/update/${teamId}`}>
+              <StyledButton style={{ width: '20vh' }}>
+                팀 정보 수정
+              </StyledButton>
+            </Link>
+          </ButtonBox>
         </div>
       ) : (
         <StyledButton onClick={handleLeave}>팀 탈퇴하기</StyledButton>

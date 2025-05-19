@@ -72,6 +72,7 @@ const TeamDetailPage = () => {
   const [games, setGames] = useState([]);
   const userMail = sessionStorage.getItem('userMail');
   const [teamManagerMail, setTeamManagerMail] = useState('');
+  const [showMembers, setShowMembers] = useState(false);
   sessionStorage.setItem('teamId', id);
 
   useEffect(() => {
@@ -134,48 +135,53 @@ const TeamDetailPage = () => {
         />
         <TeamInfoBox>
           <TeamName>{team.teamName}</TeamName>
-          <Tag>위치</Tag>
-          {team.location}
+          <Tag>📍 위치: {team.location}</Tag>
         </TeamInfoBox>
         <ColorDots>
           <Dot color={team.firstColor} />
           <Dot color={team.secondColor} />
         </ColorDots>
       </TeamCard>
-      <h2>팀 명단({team.users ? team.users.length : 0}명)</h2>
-      <MemberList>
-        {(() => {
-          const items = [];
-
-          // 1. 팀 매니저 먼저 출력
-          const manager = teamUser.find(
-            (user) => user.userMail === teamManagerMail,
-          );
-          if (manager) {
-            items.push(
-              <MemberItem key={manager.userMail}>
-                👑 {manager.userName} ({manager.firstPosition},{' '}
-                {manager.secondPosition}, {manager.thirdPosition})
-              </MemberItem>,
+      <h2
+        style={{
+          cursor: 'pointer',
+        }}
+        onClick={() => setShowMembers((prev) => !prev)}
+      >
+        {showMembers
+          ? `👥 팀 명단(${team.users ? team.users.length : 0}명) ▼`
+          : `👥 팀 명단(${team.users ? team.users.length : 0}명) ▲`}
+      </h2>
+      {showMembers && (
+        <MemberList>
+          {(() => {
+            const items = [];
+            const manager = teamUser.find(
+              (user) => user.userMail === teamManagerMail,
             );
-          }
-
-          // 2. 매니저를 제외한 나머지 팀원 출력
-          for (let i = 0; i < teamUser.length; i++) {
-            const user = teamUser[i];
-            if (user.userMail !== teamManagerMail) {
+            if (manager) {
               items.push(
-                <MemberItem key={user.userMail}>
-                  {user.userName} ({user.firstPosition}, {user.secondPosition},{' '}
-                  {user.thirdPosition})
+                <MemberItem key={manager.userMail}>
+                  👑 {manager.userName} ({manager.firstPosition},{' '}
+                  {manager.secondPosition}, {manager.thirdPosition})
                 </MemberItem>,
               );
             }
-          }
-
-          return items;
-        })()}
-      </MemberList>
+            for (let i = 0; i < teamUser.length; i++) {
+              const user = teamUser[i];
+              if (user.userMail !== teamManagerMail) {
+                items.push(
+                  <MemberItem key={user.userMail}>
+                    {user.userName} ({user.firstPosition}, {user.secondPosition}
+                    , {user.thirdPosition})
+                  </MemberItem>,
+                );
+              }
+            }
+            return items;
+          })()}
+        </MemberList>
+      )}
       {isInTeam ? (
         <div>
           <TeamInfo games={games} teamManagerMail={teamManagerMail} />

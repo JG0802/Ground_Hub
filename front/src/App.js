@@ -21,21 +21,34 @@ import TeamUpdatePage from './pages/TeamUpdatePage';
 import CreateGamePage from './pages/CreateGamePage';
 import SchedulePage from './pages/SchedulePage';
 import MySchedulePage from './pages/MySchedulePage';
+import Header from './components/common/Header';
+import { useState } from 'react';
 
 const App = () => {
   const location = useLocation();
 
+  // 게시판 자동 업로드용 상태
+  const [teamFeedPosts, setTeamFeedPosts] = useState([]);
+
   // 로그인/회원가입 관련 경로에서는 BottomTab 숨기기
   const hideTabPaths = ['/', '/signup', '/signup/password', '/signup/position'];
   const shouldShowBottomTab = !hideTabPaths.includes(location.pathname);
+  const shouldShowHeader = !hideTabPaths.includes(location.pathname);
 
   return (
     <>
+      {shouldShowHeader && <Header />} {/* ✅ Header 출력 */}
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/main" element={<MainPage />} />
-        <Route path="/teams" element={<TeamListPage />} />
-        <Route path="/feed" element={<FeedPage />} />
+        <Route
+          path="/teams"
+          element={<TeamListPage setTeamFeedPosts={setTeamFeedPosts} />}
+        />
+        <Route
+          path="/feed"
+          element={<FeedPage teamFeedPosts={teamFeedPosts} />}
+        />
         <Route path="/formation" element={<FormationPage />} />
         <Route path="/formation/:id" element={<FormationDetailPage />} />
         <Route path="/profile" element={<ProfilePage />} />
@@ -54,7 +67,6 @@ const App = () => {
         <Route path="/schedule" element={<SchedulePage />} />
         <Route path="/my-schedule" element={<MySchedulePage />} />
       </Routes>
-
       {shouldShowBottomTab && <BottomTab />}
     </>
   );

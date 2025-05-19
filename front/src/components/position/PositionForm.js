@@ -17,6 +17,7 @@ const FieldWrapper = styled.div`
   background-size: 100% 100%; // ✅ 강제로 꽉 채움 (비율 무시)
   background-repeat: no-repeat;
   background-position: center;
+  margin-bottom: 2vh;
 `;
 
 const ButtonBox = styled.div`
@@ -66,7 +67,7 @@ const PopupBox = styled.div`
   height: 50vh;
   background: white;
   transition: bottom 0.3s ease-in-out;
-  bottom: ${({ $open }) => ($open ? '0vh' : '-35vh')};
+  bottom: ${({ $open }) => ($open ? '0vh' : '-45vh')};
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
@@ -95,14 +96,28 @@ const PopupTitle = styled.h4`
 
 const UsersBox = styled.div`
   display: flex;
+  flex-wrap: wrap; /* 줄바꿈 허용 */
+  gap: 1.5vh; /* 아이템 간 간격 */
+  justify-content: flex-start;
 `;
+
 const UserBox = styled.div`
-  width: 10vh;
+  width: calc(33.333% - 1vh); /* 3개씩 한 줄에 정렬 */
+  background-color: rgba(240, 228, 57);
+  border-radius: 6px;
+  border: 2px solid black;
+  box-sizing: border-box;
+  padding: 1vh;
+  text-align: center;
 `;
 
-const UserPositionBox = styled.div``;
+const UserPositionBox = styled.div`
+  font-size: 1.5vh;
+`;
 
-const UserNameBox = styled.div``;
+const UserNameBox = styled.div`
+  font-size: 2.3vh;
+`;
 
 const ControlButtonBox = styled.div`
   display: flex;
@@ -111,7 +126,7 @@ const ControlButtonBox = styled.div`
 
 const PositionForm = () => {
   const { id } = useParams();
-  const [game, setGame] = useState(null);
+  const [game, setGame] = useState('');
   const [users, setUsers] = useState(null);
   const [hasPermission, setHasPermission] = useState(false);
   const [checked, setChecked] = useState(false);
@@ -223,7 +238,44 @@ const PositionForm = () => {
       }
     } catch (error) {
       console.error(error);
-      alert('서버 오류가 발생했습니다.');
+      alert('경기 취소 중 서버 오류가 발생했습니다.');
+    }
+  };
+
+  const handleRemovePosition = async () => {
+    if (!users || users.length === 0) {
+      alert('유저 정보를 불러오는 중입니다.');
+      return;
+    }
+
+    const isAlreadyJoined = users.some((user) => user.userMail === userMail);
+
+    if (!isAlreadyJoined) {
+      alert('참가 중이 아닙니다.');
+      return;
+    }
+
+    try {
+      const filteredGame = Object.fromEntries(
+        Object.entries(game).map(([key, value]) =>
+          value?.userMail === userMail ? [key, null] : [key, value],
+        ),
+      );
+
+      const response = await fetch('/api/games/update-game', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(filteredGame),
+      });
+      if (response.ok) {
+        return;
+      } else {
+        const errorText = await response.text();
+        alert(errorText || '참가 취소 실패');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('포메이션 업데이트 중 서버 오류가 발생했습니다.');
     }
   };
 
@@ -254,6 +306,18 @@ const PositionForm = () => {
     }
   };
 
+  const assignedUserMails = new Set(
+    game
+      ? Object.values(game)
+          .filter((value) => value && value.userMail)
+          .map((user) => user.userMail)
+      : [],
+  );
+
+  // 필터링된 참가자 명단
+  const filteredUsers = users
+    ? users.filter((user) => !assignedUserMails.has(user.userMail))
+    : [];
   if (!game) return <div>로딩 중...</div>;
   if (!checked) return <div>권한 확인 중...</div>;
 
@@ -264,81 +328,131 @@ const PositionForm = () => {
       </h2>
       <FieldWrapper>
         <ButtonBox>
-          <StyledButton $top="1vh" $left="20.3vh">
-            {game.stId ? game.stId.userName : 'ST'}
-          </StyledButton>
-          <StyledButton $top="4vh" $left="11.6vh">
-            {game.lsId ? game.lsId.userName : 'LS'}
-          </StyledButton>
-          <StyledButton $top="4vh" $left="29vh">
-            {game.rsId ? game.rsId.userName : 'RS'}
-          </StyledButton>
-          <StyledButton $top="7vh" $left="3.6vh">
-            {game.lwId ? game.lwId.userName : 'LW'}
-          </StyledButton>
-          <StyledButton $top="7vh" $left="20.3vh">
-            {game.cfId ? game.cfId.userName : 'CF'}
-          </StyledButton>
-          <StyledButton $top="7vh" $left="37.6vh">
-            {game.rwId ? game.rwId.userName : 'RW'}
-          </StyledButton>
-          <StyledButton $top="13vh" $left="11.6vh">
-            {game.lamId ? game.lamId.userName : 'LAM'}
-          </StyledButton>
-          <StyledButton $top="13vh" $left="20.3vh">
-            {game.camId ? game.camId.userName : 'CAM'}
-          </StyledButton>
-          <StyledButton $top="13vh" $left="29vh">
-            {game.ramId ? game.ramId.userName : 'RAM'}
-          </StyledButton>
-          <StyledButton $top="19vh" $left="3vh">
-            {game.lmId ? game.lmId.userName : 'LM'}
-          </StyledButton>
-          <StyledButton $top="19vh" $left="11.6vh">
-            {game.lcmId ? game.lcmId.userName : 'LCM'}
-          </StyledButton>
-          <StyledButton $top="19vh" $left="20.3vh">
-            {game.cmId ? game.cmId.userName : 'CM'}
-          </StyledButton>
-          <StyledButton $top="19vh" $left="29vh">
-            {game.rcmId ? game.rcmId.userName : 'RCM'}
-          </StyledButton>
-          <StyledButton $top="19vh" $left="37.6vh">
-            {game.rmId ? game.rmId.userName : 'RM'}
-          </StyledButton>
-          <StyledButton $top="25vh" $left="3vh">
-            {game.lwmId ? game.lwmId.userName : 'LWB'}
-          </StyledButton>
-          <StyledButton $top="25vh" $left="11.6vh">
-            {game.ldmId ? game.ldmId.userName : 'LDM'}
-          </StyledButton>
-          <StyledButton $top="25vh" $left="20.3vh">
-            {game.cdmId ? game.cdmId.userName : 'CDM'}
-          </StyledButton>
-          <StyledButton $top="25vh" $left="29vh">
-            {game.rdmId ? game.rdmId.userName : 'RDM'}
-          </StyledButton>
-          <StyledButton $top="25vh" $left="37.6vh">
-            {game.rwmId ? game.rwmId.userName : 'RWB'}
-          </StyledButton>
-          <StyledButton $top="31vh" $left="3vh">
-            {game.lbId ? game.lbId.userName : 'LB'}
-          </StyledButton>
-          <StyledButton $top="31vh" $left="11.6vh">
-            {game.lcbId ? game.lcbId.userName : 'LCB'}
-          </StyledButton>
-          <StyledButton $top="31vh" $left="20.3vh">
-            {game.swId ? game.swId.userName : 'SW'}
-          </StyledButton>
-          <StyledButton $top="31vh" $left="29vh">
-            {game.rcbId ? game.rcbId.userName : 'RCB'}
-          </StyledButton>
-          <StyledButton $top="31vh" $left="37.6vh">
-            {game.rbId ? game.rbId.userName : 'RB'}
-          </StyledButton>
-          <StyledButton $top="37vh" $left="20.3vh">
-            {game.gkId ? game.gkId.userName : 'GK'}
-          </StyledButton>
+          {game.stId && (
+            <StyledButton $top="1vh" $left="20.3vh">
+              {game.stId.userName}
+            </StyledButton>
+          )}
+          {game.lsId && (
+            <StyledButton $top="4vh" $left="11.6vh">
+              {game.lsId.userName}
+            </StyledButton>
+          )}
+          {game.rsId && (
+            <StyledButton $top="4vh" $left="29vh">
+              {game.rsId.userName}
+            </StyledButton>
+          )}
+          {game.lwId && (
+            <StyledButton $top="7vh" $left="3.6vh">
+              {game.lwId.userName}
+            </StyledButton>
+          )}
+          {game.cfId && (
+            <StyledButton $top="7vh" $left="20.3vh">
+              {game.cfId.userName}
+            </StyledButton>
+          )}
+          {game.rwId && (
+            <StyledButton $top="7vh" $left="37.6vh">
+              {game.rwId.userName}
+            </StyledButton>
+          )}
+          {game.lamId && (
+            <StyledButton $top="13vh" $left="11.6vh">
+              {game.lamId.userName}
+            </StyledButton>
+          )}
+          {game.camId && (
+            <StyledButton $top="13vh" $left="20.3vh">
+              {game.camId.userName}
+            </StyledButton>
+          )}
+          {game.ramId && (
+            <StyledButton $top="13vh" $left="29vh">
+              {game.ramId.userName}
+            </StyledButton>
+          )}
+          {game.lmId && (
+            <StyledButton $top="19vh" $left="3vh">
+              {game.lmId.userName}
+            </StyledButton>
+          )}
+          {game.lcmId && (
+            <StyledButton $top="19vh" $left="11.6vh">
+              {game.lcmId.userName}
+            </StyledButton>
+          )}
+          {game.cmId && (
+            <StyledButton $top="19vh" $left="20.3vh">
+              {game.cmId.userName}
+            </StyledButton>
+          )}
+          {game.rcmId && (
+            <StyledButton $top="19vh" $left="29vh">
+              {game.rcmId.userName}
+            </StyledButton>
+          )}
+          {game.rmId && (
+            <StyledButton $top="19vh" $left="37.6vh">
+              {game.rmId.userName}
+            </StyledButton>
+          )}
+          {game.lwmId && (
+            <StyledButton $top="25vh" $left="3vh">
+              {game.lwmId.userName}
+            </StyledButton>
+          )}
+          {game.ldmId && (
+            <StyledButton $top="25vh" $left="11.6vh">
+              {game.ldmId.userName}
+            </StyledButton>
+          )}
+          {game.cdmId && (
+            <StyledButton $top="25vh" $left="20.3vh">
+              {game.cdmId.userName}
+            </StyledButton>
+          )}
+          {game.rdmId && (
+            <StyledButton $top="25vh" $left="29vh">
+              {game.rdmId.userName}
+            </StyledButton>
+          )}
+          {game.rwmId && (
+            <StyledButton $top="25vh" $left="37.6vh">
+              {game.rwmId.userName}
+            </StyledButton>
+          )}
+          {game.lbId && (
+            <StyledButton $top="31vh" $left="3vh">
+              {game.lbId.userName}
+            </StyledButton>
+          )}
+          {game.lcbId && (
+            <StyledButton $top="31vh" $left="11.6vh">
+              {game.lcbId.userName}
+            </StyledButton>
+          )}
+          {game.swId && (
+            <StyledButton $top="31vh" $left="20.3vh">
+              {game.swId.userName}
+            </StyledButton>
+          )}
+          {game.rcbId && (
+            <StyledButton $top="31vh" $left="29vh">
+              {game.rcbId.userName}
+            </StyledButton>
+          )}
+          {game.rbId && (
+            <StyledButton $top="31vh" $left="37.6vh">
+              {game.rbId.userName}
+            </StyledButton>
+          )}
+          {game.gkId && (
+            <StyledButton $top="37vh" $left="20.3vh">
+              {game.gkId.userName}
+            </StyledButton>
+          )}
         </ButtonBox>
       </FieldWrapper>
       {hasPermission ? (
@@ -347,7 +461,13 @@ const PositionForm = () => {
             <ChangeButton onClick={handleJoinGame} style={{ width: '20vh' }}>
               경기참가
             </ChangeButton>
-            <ChangeButton onClick={handleRemoveGame} style={{ width: '20vh' }}>
+            <ChangeButton
+              onClick={async () => {
+                await handleRemovePosition(); // ✅ 완료될 때까지 기다림
+                handleRemoveGame(); // ✅ 그 이후 실행
+              }}
+              style={{ width: '20vh' }}
+            >
               경기 참가 취소
             </ChangeButton>
           </div>
@@ -379,12 +499,21 @@ const PositionForm = () => {
         <PopupButton onClick={togglePopup}>{isOpen ? '▼' : '▲'}</PopupButton>
         <PopupTitle>참가자 명단</PopupTitle>
         <UsersBox>
-          {users.map((user) => (
-            <UserBox key={user.userMail}>
-              <UserPositionBox>{user.firstPosition}</UserPositionBox>
-              <UserNameBox>{user.userName}</UserNameBox>
-            </UserBox>
-          ))}
+          {filteredUsers.length > 0 ? (
+            filteredUsers.map((user) => (
+              <UserBox key={user.userMail}>
+                <UserPositionBox>
+                  {user.firstPosition}, {user.secondPosition},{' '}
+                  {user.thirdPosition}
+                </UserPositionBox>
+                <UserNameBox>{user.userName}</UserNameBox>
+              </UserBox>
+            ))
+          ) : (
+            <div style={{ fontSize: '1.5vh', color: '#666' }}>
+              표시할 참가자가 없습니다.
+            </div>
+          )}
         </UsersBox>
       </PopupBox>
     </PositionFormContainer>

@@ -7,6 +7,7 @@ const PositionFormContainer = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
+  justify-content: center;
 `;
 
 const FieldWrapper = styled.div`
@@ -17,6 +18,7 @@ const FieldWrapper = styled.div`
   background-size: 100% 100%; // ✅ 강제로 꽉 채움 (비율 무시)
   background-repeat: no-repeat;
   background-position: center;
+  margin-bottom: 2vh;
 `;
 
 const ButtonBox = styled.div`
@@ -32,9 +34,9 @@ const StyledButton = styled.button`
   display: flex; /* 내부 정렬 위해 flex 사용 */
   justify-content: center; /* 수평 가운데 */
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.5); /* 반투명 배경 */
+  background-color: rgba(240, 228, 57, 0.5); /* 반투명 배경 */
   color: black;
-  border: 2px solid white;
+  border: 2px solid black;
   border-radius: 20vh;
   cursor: pointer;
   width: 8.2vh;
@@ -95,14 +97,28 @@ const PopupTitle = styled.h4`
 
 const UsersBox = styled.div`
   display: flex;
+  flex-wrap: wrap; /* 줄바꿈 허용 */
+  gap: 1.5vh; /* 아이템 간 간격 */
+  justify-content: flex-start;
 `;
+
 const UserBox = styled.div`
-  width: 10vh;
+  width: calc(33.333% - 1vh); /* 3개씩 한 줄에 정렬 */
+  background-color: rgba(240, 228, 57);
+  border-radius: 6px;
+  border: 2px solid black;
+  box-sizing: border-box;
+  padding: 1vh;
+  text-align: center;
 `;
 
-const UserPositionBox = styled.div``;
+const UserPositionBox = styled.div`
+  font-size: 1.5vh;
+`;
 
-const UserNameBox = styled.div``;
+const UserNameBox = styled.div`
+  font-size: 2.3vh;
+`;
 
 const PositionUpdate = () => {
   const { id } = useParams();
@@ -172,6 +188,7 @@ const PositionUpdate = () => {
     }));
 
     setSelectedPositionKey(null); // 선택 초기화
+    setIsOpen(false);
   };
 
   const handleSubmit = async () => {
@@ -447,7 +464,10 @@ const PositionUpdate = () => {
                     key={user.userMail}
                     onClick={() => handleUserSelect(user)}
                   >
-                    <UserPositionBox>{user.firstPosition}</UserPositionBox>
+                    <UserPositionBox>
+                      {user.firstPosition}, {user.secondPosition},{' '}
+                      {user.thirdPosition}
+                    </UserPositionBox>
                     <UserNameBox>{user.userName}</UserNameBox>
                   </UserBox>
                 ))}
@@ -468,7 +488,10 @@ const PositionUpdate = () => {
                 key={user.userMail}
                 onClick={() => handleUserSelect(user)}
               >
-                <UserPositionBox>{user.firstPosition}</UserPositionBox>
+                <UserPositionBox>
+                  {user.firstPosition}, {user.secondPosition},{' '}
+                  {user.thirdPosition}
+                </UserPositionBox>
                 <UserNameBox>{user.userName}</UserNameBox>
               </UserBox>
             ))}
@@ -479,10 +502,19 @@ const PositionUpdate = () => {
           </p>
         )}
         {selectedPositionKey && (
-          <ChangeButton onClick={handleRemovePlayer}>선수 제거</ChangeButton>
+          <ChangeButton
+            onClick={handleRemovePlayer}
+            style={{
+              marginTop: '2vh',
+              width: '100%',
+              backgroundColor: '#c0392b',
+            }}
+          >
+            선수 제거
+          </ChangeButton>
         )}
       </PopupBox>
-      <ChangeButton onClick={handleSubmit}>확인</ChangeButton>
+      <ChangeButton onClick={handleSubmit}>저장</ChangeButton>
     </PositionFormContainer>
   );
 };

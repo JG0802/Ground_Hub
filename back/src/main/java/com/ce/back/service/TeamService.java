@@ -67,9 +67,9 @@ public class TeamService {
     // 팀 생성 메소드 수정 (로고 파일 처리 추가)
     public Team createTeam(Team team, MultipartFile logoFile) throws IOException {
         // 동일한 ID를 가진 팀이 존재하는지 확인
-        if (teamRepository.existsById(team.getTeamId())) {
-            throw new RuntimeException("팀을 생성할 수 없습니다.");
-        }
+        // if (teamRepository.existsById(team.getTeamId())) {
+        // throw new RuntimeException("팀을 생성할 수 없습니다.");
+        // }
 
         // 로고 파일 저장
         String logoFileName = saveLogoFile(logoFile); // 로고 파일을 저장하고 파일명을 반환

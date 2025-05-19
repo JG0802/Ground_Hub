@@ -3,24 +3,39 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import altImage from '../img/alt_image.png';
+import StyledLine from '../components/common/Line';
 
 const Container = styled.div`
-  padding: 2vh;
-  width: 80%;
+  width: 100%;
 `;
 
 const StyledTitle = styled.h1`
-  margin-top: 3vh;
-  margin-bottom: 1vh;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
   font-size: 2.7vh;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
 `;
+
+const GameCard = styled.div`
+  margin: 1vh;
+  padding: 1vh;
+  background-color: #eee;
+  border-radius: 6px;
+`;
+
 const MatchCard = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1.5vh 0;
-  border-bottom: 1px solid #eee;
   width: 100%;
+`;
+
+const MatchTitle = styled.h3`
+  margin: 0;
+  padding: 0;
+  font-size: 3vh;
 `;
 
 const TeamCard = styled.div`
@@ -28,18 +43,19 @@ const TeamCard = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 1.5vh 0;
   margin: 1vh;
 `;
 
 const TeamLogo = styled.img`
-  width: 8vh;
-  height: 8vh;
+  width: 13vh;
+  height: 13vh;
   border-radius: 1vh;
+  object-fit: cover; /* ✅ 이미지가 찌그러지지 않고 꽉 차도록 */
+  object-position: center; /* ✅ 이미지 중심 정렬 */
 `;
 
 const TeamName = styled.div`
-  font-size: 2vh;
+  font-size: 2.2vh;
   font-weight: bold;
 `;
 
@@ -120,36 +136,43 @@ const MySchedulePage = () => {
         <div>예정된 경기가 없습니다.</div>
       ) : (
         sortedGames.map((game, i) => (
-          <Link
-            key={game.gameId}
-            to={`/position/view/${game.gameId}`}
-            style={{ textDecoration: 'none', color: 'inherit' }}
-          >
-            <MatchCard>
-              <TeamCard key={i}>
-                <TeamLogo
-                  src={`/logos/${game.team.oppoLogo}`}
-                  onError={(e) => {
-                    e.target.src = altImage;
-                  }}
-                />
-                <TeamName>{game.team.teamName}</TeamName>
-              </TeamCard>
-              <TeamCard key={i}>
-                <TeamName>{game.date.slice(0, 10)}</TeamName>
-                <TeamName style={{ fontSize: '5vh' }}>VS</TeamName>
-              </TeamCard>
-              <TeamCard key={i}>
-                <TeamLogo
-                  src={`/logos/${game.oppoLogo}`}
-                  onError={(e) => {
-                    e.target.src = altImage;
-                  }}
-                />
-                <TeamName>{game.gameName}</TeamName>
-              </TeamCard>
-            </MatchCard>
-          </Link>
+          <>
+            <GameCard>
+              <Link
+                key={game.gameId}
+                to={`/position/view/${game.gameId}`}
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                <MatchTitle>{game.gameName}</MatchTitle>
+                <TeamName>
+                  {game.team.teamName} | {game.date.slice(0, 10)}
+                </TeamName>
+                <MatchCard>
+                  <TeamCard key={i}>
+                    <TeamLogo
+                      src={`/logos/${game.team.oppoLogo}`}
+                      onError={(e) => {
+                        e.target.src = altImage;
+                      }}
+                    />
+                  </TeamCard>
+                  <TeamCard key={i}>
+                    <TeamName></TeamName>
+                    <TeamName style={{ fontSize: '5vh' }}>VS</TeamName>
+                  </TeamCard>
+                  <TeamCard key={i}>
+                    <TeamLogo
+                      src={`/logos/${game.oppoLogo}`}
+                      onError={(e) => {
+                        e.target.src = altImage;
+                      }}
+                    />
+                  </TeamCard>
+                </MatchCard>
+              </Link>
+            </GameCard>
+            <StyledLine />
+          </>
         ))
       )}
     </Container>
