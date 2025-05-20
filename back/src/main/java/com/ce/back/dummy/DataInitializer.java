@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -281,7 +282,7 @@ public class DataInitializer implements CommandLineRunner {
 
     // 팀이 중복되지 않으면 저장
     private void saveTeamIfNotExists(Team team) {
-        Optional<Team> existingTeam = teamRepository.findTeamByTeamId(team.getTeamId());
+        List<Team> existingTeam = teamRepository.findTeamsByTeamName(team.getTeamName());
         if (existingTeam.isEmpty()) {
             teamRepository.save(team);
         }
@@ -289,7 +290,7 @@ public class DataInitializer implements CommandLineRunner {
 
     // 경기가 중복되지 않으면 저장
     private void saveGameIfNotExists(Game game) {
-        Optional<Game> existingGame = matchRepository.findGameByGameId(game.getGameId());
+        List<Game> existingGame = matchRepository.findGamesByGameName(game.getGameName());
         if (existingGame.isEmpty()) {
             matchRepository.save(game);
         }
