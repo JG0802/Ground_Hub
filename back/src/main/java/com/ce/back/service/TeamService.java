@@ -156,7 +156,7 @@ public class TeamService {
 
         // 새로운 매니저가 해당 팀에 소속되어 있는지 확인
         if (!team.getUsers().contains(newManager)) {
-            throw new RuntimeException("새로운 매니저는 해당 팀의 일원이 아닙니다.");
+            team.getUsers().add(newManager);
         }
 
         // 팀 매니저 직함 양도
