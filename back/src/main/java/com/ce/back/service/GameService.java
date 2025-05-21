@@ -71,7 +71,7 @@ public class GameService {
         // 파일 복사
         Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
-        return fileName; // 파일명 반환
+        return fileName;  // 파일명 반환
     }
 
     // 경기 생성
@@ -105,7 +105,7 @@ public class GameService {
     // 특정 팀에 속한 모든 게임 삭제
     public void deleteGamesByTeamId(Long teamId) {
         Team team = teamRepository.findTeamByTeamId(teamId)
-                .orElseThrow(() -> new RuntimeException("팀을 찾을 수 없습니다."));
+                        .orElseThrow(() -> new RuntimeException("팀을 찾을 수 없습니다."));
         gameRepository.deleteByTeam(team);
     }
 
@@ -142,8 +142,7 @@ public class GameService {
 
         if (existingGame.isEmpty()) {
             throw new RuntimeException("경기가 존재하지 않습니다."); // 경기가 없으면 예외 처리
-        }
-        if (existingUser.isEmpty()) {
+        } if (existingUser.isEmpty()) {
             throw new RuntimeException("사용자가 존재하지 않습니다.");
         }
 

@@ -398,9 +398,9 @@ const PositionForm = () => {
               {game.rmId.userName}
             </StyledButton>
           )}
-          {game.lwmId && (
+          {game.lwbId && (
             <StyledButton $top="25vh" $left="3vh">
-              {game.lwmId.userName}
+              {game.lwbId.userName}
             </StyledButton>
           )}
           {game.ldmId && (
@@ -418,9 +418,9 @@ const PositionForm = () => {
               {game.rdmId.userName}
             </StyledButton>
           )}
-          {game.rwmId && (
+          {game.rwbId && (
             <StyledButton $top="25vh" $left="37.6vh">
-              {game.rwmId.userName}
+              {game.rwbId.userName}
             </StyledButton>
           )}
           {game.lbId && (

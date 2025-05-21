@@ -5,14 +5,14 @@ import styled from 'styled-components';
 import altImage from '../../img/alt_image.png';
 
 const SectionWrapper = styled.div`
-  padding: 2vh;
+  padding: 0.5vh 2vh;
+  padding-bottom: 2vh;
 `;
 
 const TitleWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2vh;
 `;
 
 const Title = styled.h2`
@@ -30,6 +30,9 @@ const TeamItem = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: #eee;
+  padding: 1vh;
+  border-radius: 6px;
 `;
 
 const TeamImage = styled.img`
@@ -43,6 +46,7 @@ const TeamImage = styled.img`
 const TeamName = styled.p`
   font-size: 1.6vh;
   text-align: center;
+  margin-bottom: 0;
 `;
 
 const MyTeamSection = () => {

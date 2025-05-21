@@ -140,11 +140,6 @@ const TeamInfo = ({ games, teamManagerMail }) => {
             <Link to="/game/create">
               <StyledButton style={{ width: '20vh' }}>경기 추가</StyledButton>
             </Link>
-            <Link to={`/team/update/${teamId}`}>
-              <StyledButton style={{ width: '20vh' }}>
-                팀 정보 수정
-              </StyledButton>
-            </Link>
           </ButtonBox>
         </div>
       ) : (

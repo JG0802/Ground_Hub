@@ -5,14 +5,14 @@ import { Link } from 'react-router-dom';
 import altImage from '../../img/alt_image.png';
 
 const Container = styled.div`
-  padding: 2vh;
+  padding: 0.5vh 2vh;
+  padding-bottom: 2vh;
 `;
 
 const TitleRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2vh;
 `;
 
 const Title = styled.h2`
@@ -244,7 +244,8 @@ const ScheduleSection = () => {
                 <MatchInfo style={{ fontSize: '2vh' }}>
                   {game.team.teamName}
                 </MatchInfo>
-                <MatchInfo>VS {game.gameName}</MatchInfo>
+                <MatchInfo>VS {game.versus}</MatchInfo>
+                <MatchInfo>{game.gameName}</MatchInfo>
               </MatchCard>
             </Link>
           ))

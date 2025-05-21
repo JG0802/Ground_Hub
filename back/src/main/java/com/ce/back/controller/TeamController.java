@@ -117,8 +117,7 @@ public class TeamController {
             String logoFileName = teamService.saveLogoFile(file);
 
             // 로고 파일 경로를 팀 객체에 저장
-            Team existingTeam = teamService.getTeamByTeamId(teamId)
-                    .orElseThrow(() -> new RuntimeException("팀을 찾을 수 없습니다."));
+            Team existingTeam = teamService.getTeamByTeamId(teamId).orElseThrow(() -> new RuntimeException("팀을 찾을 수 없습니다."));
             existingTeam.setLogo(logoFileName);
 
             // 팀 업데이트
@@ -140,9 +139,9 @@ public class TeamController {
 
             // Optional에서 Team 객체를 꺼내고, 그 후 getUsers() 호출
             if (teamOptional.isPresent()) {
-                Team team = teamOptional.get(); // team 객체 추출
-                List<User> users = team.getUsers(); // 이제 team.getUsers() 호출 가능
-                return ResponseEntity.ok(users); // 사용자 목록 반환
+                Team team = teamOptional.get();  // team 객체 추출
+                List<User> users = team.getUsers();  // 이제 team.getUsers() 호출 가능
+                return ResponseEntity.ok(users);  // 사용자 목록 반환
             } else {
                 return ResponseEntity.status(404).body("팀을 찾을 수 없습니다.");
             }

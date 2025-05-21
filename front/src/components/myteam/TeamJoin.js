@@ -1,3 +1,24 @@
+import styled from 'styled-components';
+
+const StyledButton = styled.button`
+  background-color: black;
+  color: white;
+  width: 100%;
+  height: 6vh;
+  font-size: 2vh;
+  border-radius: 0.7vh;
+  margin-bottom: 2vh;
+  box-sizing: border-box;
+  margin-top: 2vh;
+  &:hover {
+    cursor: pointer;
+  }
+  &:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+  }
+`;
+
 const TeamJoin = () => {
   const handleJoin = async () => {
     const teamId = sessionStorage.getItem('teamId');
@@ -30,7 +51,7 @@ const TeamJoin = () => {
     }
   };
 
-  return <button onClick={handleJoin}>팀 가입하기</button>;
+  return <StyledButton onClick={handleJoin}>팀 가입하기</StyledButton>;
 };
 
 export default TeamJoin;

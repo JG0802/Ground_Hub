@@ -1,9 +1,10 @@
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import TeamInfo from './TeamInfo';
 import TeamJoin from './TeamJoin';
 import styled from 'styled-components';
 import altImage from '../../img/alt_image.png';
+import setting from '../../img/setting.png';
 
 const Title = styled.h1`
   font-size: 4vh;
@@ -12,7 +13,7 @@ const TeamCard = styled.div`
   display: flex;
   align-items: center;
   padding: 1.5vh 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #ddd;
 `;
 
 const TeamLogo = styled.img`
@@ -46,6 +47,19 @@ const ColorDots = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1vh;
+  margin-right: 2vh;
+`;
+
+const DotBox = styled.div`
+  display: flex;
+  align-items: center; /* 수직 가운데 정렬 */
+  gap: 1vh; /* 요소 간 간격 */
+`;
+
+const StyledText = styled.p`
+  font-size: 2vh;
+  margin: 0; /* 여백 제거 */
+  width: 6.5vh;
 `;
 
 const Dot = styled.div`
@@ -53,6 +67,24 @@ const Dot = styled.div`
   height: 2vh;
   border-radius: 50%;
   background-color: ${(props) => props.color};
+  border: ${(props) =>
+    props.color === 'white' ? '1px solid black' : `1px solid ${props.color}`};
+`;
+
+const StyledButton = styled.button`
+  width: 5vh;
+  height: 5vh;
+  background-color: #ddd;
+  border: none;
+  border-radius: 50%;
+  font-size: 3vh;
+  padding: 0.5vh;
+  margin-right: 2vh;
+`;
+
+const SettingImg = styled.img`
+  width: 4vh;
+  height: 4vh;
 `;
 
 const MemberList = styled.ul`
@@ -138,9 +170,26 @@ const TeamDetailPage = () => {
           <Tag>📍 위치: {team.location}</Tag>
         </TeamInfoBox>
         <ColorDots>
-          <Dot color={team.firstColor} />
-          <Dot color={team.secondColor} />
+          <DotBox>
+            <StyledText>HOME</StyledText>
+            <Dot color={team.firstColor} />
+          </DotBox>
+          <DotBox>
+            <StyledText>AWAY</StyledText>
+            <Dot color={team.secondColor} />
+          </DotBox>
         </ColorDots>
+        {userMail === teamManagerMail ? (
+          <>
+            <Link to={`/team/update/${id}`}>
+              <StyledButton>
+                <SettingImg src={setting} alt="설정" />
+              </StyledButton>
+            </Link>
+          </>
+        ) : (
+          <></>
+        )}
       </TeamCard>
       <h2
         style={{

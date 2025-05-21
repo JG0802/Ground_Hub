@@ -33,6 +33,10 @@ public class Team {
 
     // 다대다 관계를 위한 매핑
     @ManyToMany
-    @JoinTable(name = "team_user", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @JoinTable(
+            name = "team_user",
+            joinColumns = @JoinColumn(name = "team_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     private List<User> users; // 팀에 속한 사용자 목록
 }

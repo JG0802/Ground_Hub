@@ -49,7 +49,7 @@ const TeamCard = styled.div`
 const TeamLogo = styled.img`
   width: 8vh;
   height: 8vh;
-  border-radius: 1vh;
+  border-radius: 50%;
   object-fit: cover;
   margin-right: 2vh;
 `;
@@ -88,6 +88,8 @@ const DotBox = styled.div`
 const StyledText = styled.p`
   font-size: 2vh;
   margin: 0; /* 여백 제거 */
+  text-align: center;
+  width: 6.5vh;
 `;
 
 const Dot = styled.div`
@@ -95,6 +97,8 @@ const Dot = styled.div`
   height: 2vh;
   border-radius: 50%;
   background-color: ${(props) => props.color};
+  border: ${(props) =>
+    props.color === 'white' ? '1px solid black' : `1px solid ${props.color}`};
 `;
 
 const TeamListPage = () => {

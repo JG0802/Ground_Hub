@@ -145,6 +145,8 @@ const PositionUpdate = () => {
     cdmId: 'CDM',
     ldmId: 'LDM',
     rdmId: 'RDM',
+    lwbId: 'LWB',
+    rwbId: 'RWB',
     lbId: 'LB',
     rbId: 'RB',
     lcbId: 'LCB',
@@ -377,7 +379,7 @@ const PositionUpdate = () => {
             $left="3vh"
             onClick={() => handlePositionClick('lwbId')}
           >
-            {game.lwmId ? game.lwmId.userName : 'LWB'}
+            {game.lwbId ? game.lwbId.userName : 'LWB'}
           </StyledButton>
           <StyledButton
             $top="25vh"
@@ -405,7 +407,7 @@ const PositionUpdate = () => {
             $left="37.6vh"
             onClick={() => handlePositionClick('rwbId')}
           >
-            {game.rwmId ? game.rwmId.userName : 'RWB'}
+            {game.rwbId ? game.rwbId.userName : 'RWB'}
           </StyledButton>
           <StyledButton
             $top="31vh"

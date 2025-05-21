@@ -15,6 +15,7 @@ const StyledTitle = styled.h1`
   font-size: 2.7vh;
   border-bottom: 1px solid #ddd;
   text-align: center;
+  padding-bottom: 2vh;
 `;
 
 const GameCard = styled.div`
@@ -49,7 +50,7 @@ const TeamCard = styled.div`
 const TeamLogo = styled.img`
   width: 13vh;
   height: 13vh;
-  border-radius: 1vh;
+  border-radius: 50%;
   object-fit: cover; /* ✅ 이미지가 찌그러지지 않고 꽉 차도록 */
   object-position: center; /* ✅ 이미지 중심 정렬 */
 `;
@@ -143,14 +144,16 @@ const MySchedulePage = () => {
                 to={`/position/view/${game.gameId}`}
                 style={{ textDecoration: 'none', color: 'inherit' }}
               >
-                <MatchTitle>{game.gameName}</MatchTitle>
+                <MatchTitle>
+                  VS {game.versus} | {game.gameName}
+                </MatchTitle>
                 <TeamName>
                   {game.team.teamName} | {game.date.slice(0, 10)}
                 </TeamName>
                 <MatchCard>
                   <TeamCard key={i}>
                     <TeamLogo
-                      src={`/logos/${game.team.oppoLogo}`}
+                      src={`/logos/${game.team.logo}`}
                       onError={(e) => {
                         e.target.src = altImage;
                       }}

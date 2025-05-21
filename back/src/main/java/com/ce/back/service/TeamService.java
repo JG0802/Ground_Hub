@@ -66,11 +66,6 @@ public class TeamService {
 
     // 팀 생성 메소드 수정 (로고 파일 처리 추가)
     public Team createTeam(Team team, MultipartFile logoFile) throws IOException {
-        // 동일한 ID를 가진 팀이 존재하는지 확인
-        // if (teamRepository.existsById(team.getTeamId())) {
-        // throw new RuntimeException("팀을 생성할 수 없습니다.");
-        // }
-
         // 로고 파일 저장
         String logoFileName = saveLogoFile(logoFile); // 로고 파일을 저장하고 파일명을 반환
         team.setLogo(logoFileName); // 팀 객체에 로고 파일명 설정
@@ -161,7 +156,7 @@ public class TeamService {
 
         // 새로운 매니저가 해당 팀에 소속되어 있는지 확인
         if (!team.getUsers().contains(newManager)) {
-            throw new RuntimeException("새로운 매니저는 해당 팀의 일원이 아닙니다.");
+            team.getUsers().add(newManager);
         }
 
         // 팀 매니저 직함 양도

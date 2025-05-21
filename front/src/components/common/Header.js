@@ -1,4 +1,5 @@
 // components/common/Header.js
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const HeaderWrapper = styled.header`
@@ -9,10 +10,19 @@ const HeaderWrapper = styled.header`
   width: 100%;
   max-width: 430px;
   border-bottom: 1px solid #ddd;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const Header = () => {
-  return <HeaderWrapper>Ground Hub</HeaderWrapper>;
+  const navigate = useNavigate();
+
+  const hanbleMove = () => {
+    navigate('/main');
+  };
+
+  return <HeaderWrapper onClick={hanbleMove}>Ground Hub</HeaderWrapper>;
 };
 
 export default Header;
