@@ -2,7 +2,6 @@ package com.ce.back.repository;
 
 import com.ce.back.entity.Game;
 import com.ce.back.entity.Team;
-import com.ce.back.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

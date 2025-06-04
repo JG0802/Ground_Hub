@@ -18,7 +18,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class GameService {
@@ -26,16 +25,18 @@ public class GameService {
     private final GameRepository gameRepository;
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
+    private final PRGameService prGameService;
 
     // 로고 파일을 저장할 경로 (application.properties에서 설정)
     @Value("${team.logo.directory}")
     private String logoDirectory;
 
     @Autowired
-    public GameService(GameRepository gameRepository, UserRepository userRepository, TeamRepository teamRepository) {
+    public GameService(GameRepository gameRepository, UserRepository userRepository, TeamRepository teamRepository, PRGameService prGameService) {
         this.gameRepository = gameRepository;
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
+        this.prGameService = prGameService;
     }
 
     // 팀 이름으로 경기 찾기
@@ -91,15 +92,15 @@ public class GameService {
 
     // 경기 삭제
     public void deleteGame(Long gameId) {
-        // 경기 ID로 게임을 찾기
         Optional<Game> existingGame = gameRepository.findGameByGameId(gameId);
-
         if (existingGame.isEmpty()) {
             throw new RuntimeException("경기를 찾을 수 없습니다.");
         }
 
-        // 게임 삭제
-        gameRepository.delete(existingGame.get()); // 게임 삭제
+        // 관련된 PRGame 먼저 삭제
+        prGameService.deletePRGamesByGameId(gameId);
+
+        gameRepository.delete(existingGame.get());
     }
 
     // 특정 팀에 속한 모든 게임 삭제

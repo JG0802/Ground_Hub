@@ -1,8 +1,10 @@
 package com.ce.back.controller;
 
 import com.ce.back.entity.Game;
+import com.ce.back.entity.PRGame;
 import com.ce.back.entity.Team;
 import com.ce.back.service.GameService;
+import com.ce.back.service.PRGameService;
 import com.ce.back.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +23,13 @@ public class GameController {
 
     private final GameService gameService;
     private final TeamService teamService;
+    private final PRGameService prGameService;
 
     @Autowired
-    public GameController(GameService gameService, TeamService teamService) {
+    public GameController(GameService gameService, TeamService teamService, PRGameService prGameService) {
         this.gameService = gameService;
         this.teamService = teamService;
+        this.prGameService = prGameService;
     }
 
     // 특정 팀의 경기 일정을 조회하는 메서드
@@ -89,6 +93,9 @@ public class GameController {
     public ResponseEntity<?> deleteGame(@RequestBody Map<String, Long> body) {
         try {
             Long gameId = body.get("gameId");
+
+            // PRGame에서 해당 Game을 참조하는 데이터 먼저 삭제
+            prGameService.deletePRGamesByGameId(gameId);
 
             // 경기 ID로 게임을 찾고, 게임 삭제
             gameService.deleteGame(gameId); // gameService에서 deleteGame 메소드 호출
@@ -157,6 +164,50 @@ public class GameController {
         } catch (RuntimeException e) {
             // 예외 발생 시 404 에러 반환 (사용자 또는 경기 관련 예외 처리)
             return ResponseEntity.status(404).body("게임에서 사용자를 삭제할 수 없습니다: " + e.getMessage());
+        }
+    }
+
+    // PRGame → Game 포지션 업데이트
+    // http://localhost:8080/api/games/change-from-pr-to-game
+    @PostMapping("/change-from-pr-to-game")
+    public ResponseEntity<?> changeToPr(@RequestBody Map<String, String> body) {
+        try {
+            Long prGameId = Long.parseLong(body.get("prGameId"));
+
+            PRGame prGame = prGameService.getPRGameById(prGameId)
+                .orElseThrow(() -> new RuntimeException("PR 포지션 데이터를 찾을 수 없습니다."));
+            Game game = prGame.getGame();
+
+            game.setGk(prGame.getGk());
+            game.setLb(prGame.getLb());
+            game.setLcb(prGame.getLcb());
+            game.setSw(prGame.getSw());
+            game.setRcb(prGame.getRcb());
+            game.setRb(prGame.getRb());
+            game.setLwb(prGame.getLwb());
+            game.setLdm(prGame.getLdm());
+            game.setCdm(prGame.getCdm());
+            game.setRdm(prGame.getRdm());
+            game.setRwb(prGame.getRwb());
+            game.setLm(prGame.getLm());
+            game.setLcm(prGame.getLcm());
+            game.setCm(prGame.getCm());
+            game.setRcm(prGame.getRcm());
+            game.setRm(prGame.getRm());
+            game.setLam(prGame.getLam());
+            game.setCam(prGame.getCam());
+            game.setRam(prGame.getRam());
+            game.setLw(prGame.getLw());
+            game.setCf(prGame.getCf());
+            game.setRw(prGame.getRw());
+            game.setLs(prGame.getLs());
+            game.setRs(prGame.getRs());
+            game.setSt(prGame.getSt());
+
+            Game updated = gameService.updateGame(game);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body("PRGame → Game 변환 실패: " + e.getMessage());
         }
     }
 }
