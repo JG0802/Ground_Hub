@@ -6,6 +6,7 @@ import com.ce.back.entity.Team;
 import com.ce.back.service.GameService;
 import com.ce.back.service.PRGameService;
 import com.ce.back.service.TeamService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -89,14 +90,16 @@ public class GameController {
 
     // 경기 삭제
     // http://localhost:8080/api/games/delete-game
+    @Transactional
     @DeleteMapping("/delete-game")
     public ResponseEntity<?> deleteGame(@RequestBody Map<String, Long> body) {
         try {
             Long gameId = body.get("gameId");
 
-            // PRGame에서 해당 Game을 참조하는 데이터 먼저 삭제
-            prGameService.deletePRGamesByGameId(gameId);
-
+            // 먼저 관련된 PRGame들 삭제
+            Game game = gameService.getGameByGameId(gameId)
+                    .orElseThrow(() -> new RuntimeException("게임을 찾을 수 없습니다."));
+            prGameService.deletePRGamesByGame(game);
             // 경기 ID로 게임을 찾고, 게임 삭제
             gameService.deleteGame(gameId); // gameService에서 deleteGame 메소드 호출
 
@@ -174,8 +177,11 @@ public class GameController {
         try {
             Long prGameId = Long.parseLong(body.get("prGameId"));
 
-            PRGame prGame = prGameService.getPRGameById(prGameId)
-                .orElseThrow(() -> new RuntimeException("PR 포지션 데이터를 찾을 수 없습니다."));
+            Optional<PRGame> prGameOpt = prGameService.getPRGameById(prGameId);
+            if (prGameOpt.isEmpty()) {
+                return ResponseEntity.status(404).body("해당 PRGame ID는 존재하지 않습니다.");
+            }
+            PRGame prGame = prGameOpt.get();
             Game game = prGame.getGame();
 
             game.setGk(prGame.getGk());

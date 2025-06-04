@@ -92,15 +92,11 @@ public class GameService {
 
     // 경기 삭제
     public void deleteGame(Long gameId) {
-        Optional<Game> existingGame = gameRepository.findGameByGameId(gameId);
-        if (existingGame.isEmpty()) {
-            throw new RuntimeException("경기를 찾을 수 없습니다.");
-        }
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new RuntimeException("Game not found"));
 
-        // 관련된 PRGame 먼저 삭제
-        prGameService.deletePRGamesByGameId(gameId);
-
-        gameRepository.delete(existingGame.get());
+        prGameService.deletePRGamesByGame(game); // 🔥 영속된 Game 객체 전달
+        gameRepository.delete(game); // 이제 안전하게 삭제
     }
 
     // 특정 팀에 속한 모든 게임 삭제

@@ -2,8 +2,8 @@ package com.ce.back.service;
 
 import com.ce.back.entity.PRGame;
 import com.ce.back.entity.Game;
-import com.ce.back.repository.GameRepository;
 import com.ce.back.repository.PRGameRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,12 +27,12 @@ public class PRGameService {
 
     // userMail로 PRGame 찾기
     public List<PRGame> findByUserMail(String userMail) {
-        return prGameRepository.findByUserMail(userMail);
+        return prGameRepository.findByUser_UserMail(userMail);
     }
 
     // gameId로 PRGame 찾기
     public List<PRGame> findByGameId(Long gameId) {
-        return prGameRepository.findByGameId(gameId);
+        return prGameRepository.findByGame_GameId(gameId);
     }
 
     // PRGame 수정
@@ -51,8 +51,8 @@ public class PRGameService {
     }
 
     // Game과 관련된 PRGame들 모두 삭제
-    public void deletePRGamesByGameId(Long gameId) {
-        Game game = Game.builder().gameId(gameId).build();
+    @Transactional
+    public void deletePRGamesByGame(Game game) {
         prGameRepository.deleteByGame(game);
     }
 }

@@ -1,9 +1,11 @@
 package com.ce.back.dummy;
 
 import com.ce.back.entity.Game;
+import com.ce.back.entity.PRGame;
 import com.ce.back.entity.Team;
 import com.ce.back.entity.User;
 import com.ce.back.repository.GameRepository;
+import com.ce.back.repository.PRGameRepository;
 import com.ce.back.repository.TeamRepository;
 import com.ce.back.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -20,11 +22,13 @@ public class DataInitializer implements CommandLineRunner {
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
     private final GameRepository matchRepository;
+    private final PRGameRepository prGameRepository;
 
-    public DataInitializer(UserRepository userRepository, TeamRepository teamRepository, GameRepository matchRepository) {
+    public DataInitializer(UserRepository userRepository, TeamRepository teamRepository, GameRepository matchRepository, PRGameRepository prGameRepository) {
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
         this.matchRepository = matchRepository;
+        this.prGameRepository = prGameRepository;
     }
 
     @Override
@@ -268,6 +272,21 @@ public class DataInitializer implements CommandLineRunner {
         saveGameIfNotExists(match2);
         saveGameIfNotExists(match3);
         saveGameIfNotExists(match4);
+
+        // 더미 PRGame 생성 예시
+        PRGame pr1 = PRGame.builder()
+                .user(user2)
+                .game(match1)
+                .cam(user3)
+                .build();
+
+        PRGame pr2 = PRGame.builder()
+                .user(user3)
+                .game(match1)
+                .gk(user1)
+                .build();
+
+        prGameRepository.saveAll(List.of(pr1, pr2));
 
         System.out.println("더미 데이터가 성공적으로 생성되었습니다.");
     }

@@ -2,24 +2,26 @@ package com.ce.back.repository;
 
 import com.ce.back.entity.Game;
 import com.ce.back.entity.PRGame;
-import com.ce.back.entity.User;
-import com.ce.back.entity.Team;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface PRGameRepository extends JpaRepository<PRGame, Long> {
 
-    // PRGame 엔티티를 Game으로 조회
-    List<PRGame> findByGameId(Long gameId);
+    // Game 객체의 ID로 조회
+    List<PRGame> findByGame_GameId(Long gameId); // ✅ 수정
 
-    // PRGame 엔티티를 User로 모두 조회
-    List<PRGame> findByUserMail(String userMail);
+    // User 객체의 이메일로 조회
+    List<PRGame> findByUser_UserMail(String userMail); // ✅ 수정
 
-    // Game과 User로 PRGame 조회
-    Optional<PRGame> findByGameAndUser(Game game, com.ce.back.entity.User user);
-
-    // Game으로 PRGame 삭제
-    void deleteByGame(Game game);
+    // 특정 Game에 해당하는 PRGame 삭제
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM PRGame p WHERE p.game = :game")
+    void deleteByGame(@Param("game") Game game);
 }
