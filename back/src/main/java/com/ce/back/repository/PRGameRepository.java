@@ -13,11 +13,17 @@ import java.util.Optional;
 
 public interface PRGameRepository extends JpaRepository<PRGame, Long> {
 
+    // PRGameId로 조회
+    Optional<PRGame> findByPrGameId(Long prGameId);
+
     // Game 객체의 ID로 조회
     List<PRGame> findByGame_GameId(Long gameId); // ✅ 수정
 
     // User 객체의 이메일로 조회
     List<PRGame> findByUser_UserMail(String userMail); // ✅ 수정
+
+    // 게임 이름으로 경기 찾기
+    List<PRGame> findByPrGameName(String prGameName);
 
     // 특정 Game에 해당하는 PRGame 삭제
     @Modifying

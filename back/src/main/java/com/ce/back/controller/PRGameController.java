@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/pr-games")
@@ -26,6 +27,14 @@ public class PRGameController {
     @PostMapping("/create")
     public ResponseEntity<PRGame> createPRGame(@RequestBody PRGame prGame) {
         return new ResponseEntity<>(prGameService.save(prGame), HttpStatus.CREATED);
+    }
+
+
+    // PRGameId로 PRGame 조회
+    // GET /api/pr-games/findByPRGameId/{prGameId}
+    @GetMapping("/findByPRGameId/{prGameId}")
+    public ResponseEntity<Optional<PRGame>> findByPrGameId(@PathVariable Long prGameId) {
+        return new ResponseEntity<>(prGameService.findByPrGameId(prGameId), HttpStatus.OK);
     }
 
     // 사용자 이메일로 PRGame 목록 조회

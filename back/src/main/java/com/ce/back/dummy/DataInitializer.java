@@ -275,18 +275,22 @@ public class DataInitializer implements CommandLineRunner {
 
         // 더미 PRGame 생성 예시
         PRGame pr1 = PRGame.builder()
+                .prGameName("prGame1")
                 .user(user2)
                 .game(match1)
                 .cam(user3)
                 .build();
 
         PRGame pr2 = PRGame.builder()
+                .prGameName("prGame2")
                 .user(user3)
                 .game(match1)
                 .gk(user1)
                 .build();
 
-        prGameRepository.saveAll(List.of(pr1, pr2));
+        // pr경기 저장 (중복 데이터 확인 후 삽입)
+        savePRGameIfNotExists(pr1);
+        savePRGameIfNotExists(pr2);
 
         System.out.println("더미 데이터가 성공적으로 생성되었습니다.");
     }
@@ -312,6 +316,14 @@ public class DataInitializer implements CommandLineRunner {
         List<Game> existingGame = matchRepository.findGamesByGameName(game.getGameName());
         if (existingGame.isEmpty()) {
             matchRepository.save(game);
+        }
+    }
+
+    // pr경기가 중복되지 않으면 저장
+    private void savePRGameIfNotExists(PRGame prGame) {
+        List<PRGame> existingPRGame = prGameRepository.findByPrGameName(prGame.getPrGameName());
+        if (existingPRGame.isEmpty()) {
+            prGameRepository.save(prGame);
         }
     }
 }

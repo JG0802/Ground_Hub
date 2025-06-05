@@ -25,6 +25,11 @@ public class PRGameService {
         return prGameRepository.save(prGame);
     }
 
+    // prGameId로 PRGame 찾기
+    public Optional<PRGame> findByPrGameId(Long prGameId) {
+        return prGameRepository.findByPrGameId(prGameId);
+    }
+
     // userMail로 PRGame 찾기
     public List<PRGame> findByUserMail(String userMail) {
         return prGameRepository.findByUser_UserMail(userMail);

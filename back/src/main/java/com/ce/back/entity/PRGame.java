@@ -17,6 +17,8 @@ public class PRGame {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long prGameId; // 경기 고유 ID
 
+    private String prGameName;
+
     @ManyToOne
     @JoinColumn(name = "game_id")
     private Game game;
