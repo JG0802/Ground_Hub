@@ -15,10 +15,10 @@ const StyledTitle = styled.p`
 `;
 
 const StyledInput = styled.input`
-  width: 40vh;
+  width: 90%;
   height: 6vh;
   font-size: 2vh;
-  border-radius: 0.7vh;
+  border-radius: 6px;
   border: 1px solid #b9b9b9;
   padding: 1vh;
   margin-bottom: 2vh;
@@ -28,32 +28,31 @@ const StyledInput = styled.input`
 const StyledButton = styled.button`
   background-color: black;
   color: white;
-  width: 40vh;
+  width: 90%;
   height: 6vh;
   font-size: 2vh;
-  border-radius: 0.7vh;
+  border-radius: 6px;
   margin-bottom: 2vh;
   box-sizing: border-box;
+  border: none;
   &:hover {
     cursor: pointer;
-  }
-  &:disabled {
-    background-color: #999;
-    cursor: not-allowed;
   }
 `;
 
 const LinkContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 40vh;
+  width: 90%;
   font-size: 1.6vh;
-  margin-bottom: 3vh;
 `;
 
 const StyledLink = styled(Link)`
   color: #8f8f8f;
   text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const AuthForm = () => {
@@ -115,7 +114,7 @@ const AuthForm = () => {
 
       <LinkContainer>
         <StyledLink to="/signup">회원가입</StyledLink>
-        <StyledLink to="/find">아이디 비밀번호 찾기</StyledLink>
+        <StyledLink to="/">아이디 비밀번호 찾기</StyledLink>
       </LinkContainer>
     </AuthFormContainer>
   );

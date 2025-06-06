@@ -12,15 +12,14 @@ import styled from 'styled-components';
 const TabBar = styled.nav`
   position: fixed;
   bottom: 0;
-  width: 100%;
-  max-width: 430px;
+  width: 50vh;
+  max-width: 100vw;
   background-color: #ffffff;
-  height: 56px;
+  height: 5vh;
   display: flex;
   justify-content: space-around;
   align-items: center;
   border-top: 1px solid #ddd;
-  z-index: 999;
   left: 50%;
   transform: translateX(-50%); /* 화면 가운데 고정 */
   z-index: 1001;
@@ -28,7 +27,7 @@ const TabBar = styled.nav`
 
 const TabItem = styled(Link)`
   color: ${(props) => (props.$active === 'true' ? '#000' : '#ccc')};
-  font-size: 24px;
+  font-size: 2.5vh;
   display: flex;
   flex-direction: column;
   align-items: center;

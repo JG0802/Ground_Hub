@@ -9,16 +9,17 @@ const Container = styled.div`
   align-items: center;
 `;
 
-const Title = styled.h1`
+const StyledLogo = styled.h1`
   margin-top: 10vh;
-  font-size: 3vh;
+  margin-bottom: 8vh;
   font-family: 'MarinesBold', sans-serif;
+  font-size: 4.5vh;
 `;
 
-const Subtitle = styled.p`
-  margin: 4vh 0 2vh;
-  font-size: 2.2vh;
+const StyledTitle = styled.h1`
+  font-size: 2.4vh;
   font-weight: bold;
+  margin-bottom: 4vh;
 `;
 
 const FieldWrapper = styled.div`
@@ -26,7 +27,7 @@ const FieldWrapper = styled.div`
   width: 49vh;
   height: 42vh;
   background-image: url(${field});
-  background-size: 100% 100%; // ✅ 강제로 꽉 채움 (비율 무시)
+  background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center;
   margin-bottom: 2vh;
@@ -57,13 +58,18 @@ const StyledButton = styled.button`
 `;
 
 const SubmitButton = styled.button`
-  width: 40vh;
-  height: 6vh;
-  font-size: 2vh;
-  border-radius: 0.7vh;
   background-color: black;
   color: white;
+  width: 90%;
+  height: 6vh;
+  font-size: 2vh;
+  border-radius: 6px;
+  margin-bottom: 2vh;
   box-sizing: border-box;
+  border: none;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const SelectPosition = () => {
@@ -121,8 +127,8 @@ const SelectPosition = () => {
 
   return (
     <Container>
-      <Title>Ground Hub</Title>
-      <Subtitle>선호 포지션을 3개 선택하세요</Subtitle>
+      <StyledLogo>Ground Hub</StyledLogo>
+      <StyledTitle>선호 포지션을 3개 선택하세요</StyledTitle>
       <FieldWrapper>
         <ButtonBox>
           <StyledButton

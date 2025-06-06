@@ -8,7 +8,6 @@ const HeaderWrapper = styled.header`
   font-family: 'MarinesBold', sans-serif;
   padding: 2vh 0;
   width: 100%;
-  max-width: 430px;
   border-bottom: 1px solid #ddd;
   &:hover {
     cursor: pointer;

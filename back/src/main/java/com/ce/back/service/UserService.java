@@ -1,9 +1,8 @@
 package com.ce.back.service;
 
-import com.ce.back.entity.Team;
+
 import com.ce.back.entity.User;
 import com.ce.back.repository.UserRepository;
-import com.ce.back.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,18 +10,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 import java.util.Optional;
 
-import static java.lang.String.valueOf;
-
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
-    private final TeamRepository teamRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, TeamRepository teamRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.teamRepository = teamRepository;
     }
 
     // 회원가입

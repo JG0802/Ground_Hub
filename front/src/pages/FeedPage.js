@@ -6,11 +6,10 @@ import useTeamStore from '../stores/useTeamStore'; // Zustand 연결
 const Container = styled.div`
   padding: 2vh;
   position: relative;
-  max-width: 430px;
   margin: 0 auto;
   background-color: white;
-  min-height: 100vh;
   overflow-x: hidden;
+  width: 100%;
 `;
 
 const NavTabs = styled.div`
@@ -80,8 +79,8 @@ const CommentList = styled.ul`
 
 const WriteButton = styled.button`
   position: fixed;
-  bottom: 66px;
-  right: calc(50% - 430px / 2 + 2vh);
+  bottom: 6vh;
+  right: max(3vh, calc((100vw - 47vh) / 2));
   width: 6vh;
   height: 6vh;
   border-radius: 50%;

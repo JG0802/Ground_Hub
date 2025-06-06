@@ -1,11 +1,8 @@
 package com.ce.back.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
 @Getter

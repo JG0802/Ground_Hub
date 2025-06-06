@@ -13,21 +13,20 @@ const CarouselWrapper = styled.div`
 
 const CarouselItem = styled.div`
   background-color: #eee;
-  border-radius: 2vh;
+  border-radius: 6px;
   padding: 2vh;
-  max-width: 430px;
+  width: 90%;
   margin: auto;
   cursor: pointer;
 `;
 
 const FormationImage = styled.img`
   width: 100%;
-  max-width: 300px;
-  border-radius: 1vh;
+  border-radius: 6px;
 `;
 
 const FormationText = styled.div`
-  font-size: 2.2vh;
+  font-size: 1.5vh;
   font-weight: bold;
   margin-top: 1vh;
 `;
@@ -48,7 +47,7 @@ const ArrowButton = styled.div`
   font-size: 5vh;
   cursor: pointer;
   z-index: 1;
-  background-color: #eee;
+  background-color: none;
   &:hover {
     color: rgba(150, 150, 150, 0.7);
   }

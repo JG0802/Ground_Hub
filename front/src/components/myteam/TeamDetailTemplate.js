@@ -153,7 +153,9 @@ const TeamDetailPage = () => {
   }, [id]);
 
   if (!team || !games || !teamUser) return <div>로딩 중...</div>;
-  const isInTeam = teamUser.some((user) => user.userMail === userMail);
+  const isInTeam = teamUser.some(
+    (user) => user.userMail?.toLowerCase() === userMail?.toLowerCase(),
+  );
 
   return (
     <div>

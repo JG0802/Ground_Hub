@@ -8,51 +8,59 @@ const Container = styled.div`
   align-items: center;
 `;
 
-const Title = styled.h1`
+const StyledLogo = styled.h1`
   margin-top: 10vh;
-  font-size: 3vh;
+  margin-bottom: 8vh;
   font-family: 'MarinesBold', sans-serif;
+  font-size: 4.5vh;
 `;
 
-const Subtitle = styled.p`
-  margin: 4vh 0 2vh;
-  font-size: 2.2vh;
+const StyledTitle = styled.h1`
+  font-size: 2.4vh;
   font-weight: bold;
+  margin-bottom: 4vh;
 `;
 
-const Input = styled.input`
-  width: 40vh;
+const StyledInput = styled.input`
+  width: 90%;
   height: 6vh;
   font-size: 2vh;
+  border-radius: 6px;
+  border: 1px solid #b9b9b9;
   padding: 1vh;
   margin-bottom: 2vh;
-  border: 1px solid #b9b9b9;
-  border-radius: 0.7vh;
   box-sizing: border-box;
 `;
 
-const Button = styled.button`
-  width: 40vh;
-  height: 6vh;
-  font-size: 2vh;
-  border-radius: 0.7vh;
+const StyledButton = styled.button`
   background-color: black;
   color: white;
-  margin-bottom: 3vh;
+  width: 90%;
+  height: 6vh;
+  font-size: 2vh;
+  border-radius: 6px;
+  margin-bottom: 2vh;
   box-sizing: border-box;
+  border: none;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
-const KakaoButton = styled(Button)`
+const KakaoButton = styled(StyledButton)`
   background-color: #fee500;
   color: #000;
+  border: 2px solid black;
 `;
 
 const StyledLink = styled.p`
   font-size: 1.6vh;
   color: #8f8f8f;
-  margin-top: 1vh;
-  text-decoration: underline;
+  text-decoration: none;
   cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const SignUpPassword = () => {
@@ -82,30 +90,33 @@ const SignUpPassword = () => {
 
   return (
     <Container>
-      <Title>Ground Hub</Title>
-      <Subtitle>Sign Up</Subtitle>
-      <Input
+      <StyledLogo>Ground Hub</StyledLogo>
+      <StyledTitle>Sign Up</StyledTitle>
+      <StyledInput
         type="password"
         placeholder="비밀번호 입력"
         onChange={(e) => setPassword(e.target.value)}
       />
-      <Input
+      <StyledInput
         type="password"
         placeholder="비밀번호 확인"
         onChange={(e) => setPasswordCheck(e.target.value)}
       />
-      <Input placeholder="이름" onChange={(e) => setUserName(e.target.value)} />
-      <Input
+      <StyledInput
+        placeholder="이름"
+        onChange={(e) => setUserName(e.target.value)}
+      />
+      <StyledInput
         type="tel"
         placeholder="010-1234-5678"
         onChange={(e) => setTel(e.target.value)}
       />
-      <Button onClick={handleContinue}>Continue</Button>
+      <StyledButton onClick={handleContinue}>Continue</StyledButton>
       <StyledLink onClick={() => navigate('/')}>
         로그인 페이지로 이동
       </StyledLink>
       <KakaoButton>카카오 계정으로 로그인</KakaoButton>
-      <StyledLink>
+      <StyledLink style={{ width: '90%', textDecoration: 'underline' }}>
         By clicking continue, you agree to our Terms of Service and Privacy
         Policy
       </StyledLink>

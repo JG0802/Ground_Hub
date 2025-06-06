@@ -1,6 +1,5 @@
 package com.ce.back.service;
 
-import com.ce.back.entity.Game;
 import com.ce.back.entity.Team;
 import com.ce.back.entity.User;
 import com.ce.back.repository.TeamRepository;
@@ -135,7 +134,7 @@ public class TeamService {
         // 파일 복사
         Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
-        return fileName; // 파일명 반환
+        return fileName;  // 파일명 반환
     }
 
     // 팀 매니저 직함 양도

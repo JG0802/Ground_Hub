@@ -22,7 +22,13 @@ import CreateGamePage from './pages/CreateGamePage';
 import SchedulePage from './pages/SchedulePage';
 import MySchedulePage from './pages/MySchedulePage';
 import Header from './components/common/Header';
+import PRGameCheckPage from './pages/PRGameCheckPage';
+import PRGameCreatePage from './pages/PRGameCreatePage';
+import PRGamesListPage from './pages/PRGamesListPage';
 import { useState } from 'react';
+import PRGamesPage from './pages/PRGamesPage';
+import PRGamePage from './pages/PRGamePage';
+import PRGameUpdatePage from './pages/PRGameUpdatePage';
 
 const App = () => {
   const location = useLocation();
@@ -40,6 +46,8 @@ const App = () => {
       {shouldShowHeader && <Header />} {/* ✅ Header 출력 */}
       <Routes>
         <Route path="/" element={<LoginPage />} />
+        <Route path="/signup/password" element={<SignUpPasswordPage />} />
+        <Route path="/signup/position" element={<SelectPositionPage />} />
         <Route path="/main" element={<MainPage />} />
         <Route
           path="/teams"
@@ -53,8 +61,6 @@ const App = () => {
         <Route path="/formation/:id" element={<FormationDetailPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/signup" element={<SignUpEmailPage />} />
-        <Route path="/signup/password" element={<SignUpPasswordPage />} />
-        <Route path="/signup/position" element={<SelectPositionPage />} />
         <Route path="/myteam" element={<MyTeamPage />} />
         <Route path="/teams/:id" element={<TeamDetailPage />} />
         <Route path="/position/view/:id" element={<PositionPage />} />
@@ -66,6 +72,12 @@ const App = () => {
         <Route path="/game/create" element={<CreateGamePage />} />
         <Route path="/schedule" element={<SchedulePage />} />
         <Route path="/my-schedule" element={<MySchedulePage />} />
+        <Route path="/pr/check/:prGameId" element={<PRGameCheckPage />} />
+        <Route path="/pr/create" element={<PRGameCreatePage />} />
+        <Route path="/pr/list/:gameId" element={<PRGamesListPage />} />
+        <Route path="/user/pr/list/:prGameId" element={<PRGamesPage />} />
+        <Route path="/user/pr/:prGameId" element={<PRGamePage />} />
+        <Route path="/pr/update/:prGameId" element={<PRGameUpdatePage />} />
       </Routes>
       {shouldShowBottomTab && <BottomTab />}
     </>

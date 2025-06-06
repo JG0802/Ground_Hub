@@ -126,6 +126,7 @@ const ControlButtonBox = styled.div`
 
 const PositionForm = () => {
   const { id } = useParams();
+  sessionStorage.setItem('gameId', id);
   const [game, setGame] = useState('');
   const [users, setUsers] = useState(null);
   const [hasPermission, setHasPermission] = useState(false);
@@ -457,42 +458,65 @@ const PositionForm = () => {
       </FieldWrapper>
       {hasPermission ? (
         <ControlButtonBox>
-          <div>
-            <ChangeButton onClick={handleJoinGame} style={{ width: '20vh' }}>
-              경기참가
-            </ChangeButton>
-            <ChangeButton
-              onClick={async () => {
-                await handleRemovePosition(); // ✅ 완료될 때까지 기다림
-                handleRemoveGame(); // ✅ 그 이후 실행
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div
+              style={{
+                width: '45vh',
+                display: 'flex',
+                justifyContent: 'space-between',
               }}
-              style={{ width: '20vh' }}
             >
-              경기 참가 취소
-            </ChangeButton>
-          </div>
-          <div>
-            <Link to={`/position/update/${id}`}>
-              <ChangeButton style={{ width: '20vh' }}>
-                포메이션 수정
+              <ChangeButton onClick={handleJoinGame} style={{ width: '20vh' }}>
+                경기참가
               </ChangeButton>
-            </Link>
-            <ChangeButton
-              onClick={handleDeleteGame}
-              style={{ width: '20vh', backgroundColor: '#c0392b' }}
+              <ChangeButton
+                onClick={async () => {
+                  await handleRemovePosition(); // ✅ 완료될 때까지 기다림
+                  handleRemoveGame(); // ✅ 그 이후 실행
+                }}
+                style={{ width: '20vh' }}
+              >
+                경기 참가 취소
+              </ChangeButton>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+              }}
             >
-              경기 삭제
-            </ChangeButton>
+              <Link to={`/position/update/${id}`}>
+                <ChangeButton style={{ width: '13vh' }}>수정</ChangeButton>
+              </Link>
+              <ChangeButton
+                onClick={handleDeleteGame}
+                style={{ width: '13vh', backgroundColor: '#c0392b' }}
+              >
+                경기 삭제
+              </ChangeButton>
+              <Link to={`/pr/list/${id}`}>
+                <ChangeButton style={{ width: '13vh' }}>요청 확인</ChangeButton>
+              </Link>
+            </div>
           </div>
         </ControlButtonBox>
       ) : (
         <ControlButtonBox>
-          <ChangeButton onClick={handleJoinGame} style={{ width: '20vh' }}>
+          <ChangeButton onClick={handleJoinGame} style={{ width: '15vh' }}>
             경기 참가
           </ChangeButton>
-          <ChangeButton onClick={handleRemoveGame} style={{ width: '20vh' }}>
+          <ChangeButton onClick={handleRemoveGame} style={{ width: '15vh' }}>
             경기 참가 취소
           </ChangeButton>
+          <Link to={`/user/pr/list/${id}`}>
+            <ChangeButton style={{ width: '15vh' }}>포메이션 요청</ChangeButton>
+          </Link>
         </ControlButtonBox>
       )}
       <PopupBox $open={isOpen}>
