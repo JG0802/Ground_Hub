@@ -1,3 +1,4 @@
+import Line from '../components/common/Line';
 import FormationCarousel from '../components/main/FormationCarousel';
 import MyTeamSection from '../components/main/MyTeamSection';
 import ScheduleSection from '../components/main/ScheduleSection';
@@ -10,11 +11,11 @@ const PageWrapper = styled.div`
 const MainPage = () => {
   return (
     <PageWrapper>
-      <h2>Ground Hub</h2>
       <FormationCarousel />
+      <Line />
       <MyTeamSection />
+      <Line />
       <ScheduleSection />
-      {/* <Calendar /> ❌ 제거 */}
     </PageWrapper>
   );
 };

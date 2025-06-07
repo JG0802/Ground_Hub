@@ -28,6 +28,7 @@ const Input = styled.input`
   margin-bottom: 2vh;
   border: 1px solid #b9b9b9;
   border-radius: 0.7vh;
+  box-sizing: border-box;
 `;
 
 const Button = styled.button`
@@ -38,6 +39,7 @@ const Button = styled.button`
   background-color: black;
   color: white;
   margin-bottom: 3vh;
+  box-sizing: border-box;
 `;
 
 const KakaoButton = styled(Button)`
@@ -54,15 +56,33 @@ const StyledLink = styled.p`
 `;
 
 const SignUpEmail = () => {
-  const [email, setEmail] = useState('');
+  const [userMail, setUserMail] = useState('');
   const navigate = useNavigate();
 
-  const handleContinue = () => {
-    if (!email.includes('@')) {
+  const handleContinue = async () => {
+    if (!userMail.includes('@')) {
       alert('이메일 형식이 올바르지 않습니다.');
       return;
     }
-    navigate(`/signup/password?email=${encodeURIComponent(email)}`);
+    try {
+      const response = await fetch(
+        `/api/users/userMail-check?userMail=${encodeURIComponent(userMail)}`,
+        {
+          method: 'GET',
+        },
+      );
+
+      if (response.ok) {
+        alert('사용자가 존재합니다.');
+        navigate('/signup');
+      } else {
+        sessionStorage.setItem('userMail', userMail);
+        navigate(`/signup/password`);
+      }
+    } catch (error) {
+      console.error('서버 요청 중 오류:', error);
+      alert('서버 요청 중 문제가 발생했습니다.');
+    }
   };
 
   return (
@@ -72,13 +92,18 @@ const SignUpEmail = () => {
       <Input
         type="email"
         placeholder="email@domain.com"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        value={userMail}
+        onChange={(e) => setUserMail(e.target.value)}
       />
       <Button onClick={handleContinue}>Continue</Button>
-      <StyledLink onClick={() => navigate('/')}>로그인 페이지로 이동</StyledLink>
+      <StyledLink onClick={() => navigate('/')}>
+        로그인 페이지로 이동
+      </StyledLink>
       <KakaoButton>카카오 계정으로 로그인</KakaoButton>
-      <StyledLink>By clicking continue, you agree to our Terms of Service and Privacy Policy</StyledLink>
+      <StyledLink>
+        By clicking continue, you agree to our Terms of Service and Privacy
+        Policy
+      </StyledLink>
     </Container>
   );
 };

@@ -1,5 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import altImage from '../img/alt_image.png';
+import TeamCreateModal from '../components/team/TeamCreateModal';
 
 const Container = styled.div`
   padding: 2vh;
@@ -30,7 +33,7 @@ const SearchInput = styled.input`
 const AddButton = styled.button`
   width: 4.5vh;
   height: 4.5vh;
-  font-size: 3vh;
+  font-size: 2vh;
   border-radius: 50%;
   background-color: #eee;
   border: none;
@@ -46,7 +49,7 @@ const TeamCard = styled.div`
 const TeamLogo = styled.img`
   width: 8vh;
   height: 8vh;
-  border-radius: 1vh;
+  border-radius: 50%;
   object-fit: cover;
   margin-right: 2vh;
 `;
@@ -72,7 +75,21 @@ const Tag = styled.span`
 
 const ColorDots = styled.div`
   display: flex;
+  flex-direction: column;
   gap: 1vh;
+`;
+
+const DotBox = styled.div`
+  display: flex;
+  align-items: center; /* 수직 가운데 정렬 */
+  gap: 1vh; /* 요소 간 간격 */
+`;
+
+const StyledText = styled.p`
+  font-size: 2vh;
+  margin: 0; /* 여백 제거 */
+  text-align: center;
+  width: 6.5vh;
 `;
 
 const Dot = styled.div`
@@ -80,46 +97,134 @@ const Dot = styled.div`
   height: 2vh;
   border-radius: 50%;
   background-color: ${(props) => props.color};
+  border: ${(props) =>
+    props.color === 'white' ? '1px solid black' : `1px solid ${props.color}`};
 `;
 
 const TeamListPage = () => {
-  const [teams] = useState([
-    {
-      name: '불도저 (Bool-Dozer)',
-      members: 51,
-      location: '단국대학교 대운동장',
-      logo: '/images/logo.png',
-      colors: ['#f24b4b', '#000000'],
-    },
-    // 여러 팀 데이터 추가 가능
-  ]);
+  const [teams, setTeams] = useState(null);
+  const [search, setSearch] = useState();
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const response = await fetch(`/api/teams/`);
+        if (response.ok) {
+          const data = await response.json();
+          setTeams(data);
+        } else {
+          alert(await response.text());
+        }
+      } catch (err) {
+        console.error(err);
+        alert('서버와 통신 중 오류가 발생했습니다.');
+      }
+    };
+
+    fetchTeams();
+  }, []);
+
+  const searchTeam = async (teamName) => {
+    try {
+      const response = await fetch(`/api/teams/name/${teamName}`);
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        setTeams(data);
+      } else {
+        alert(await response.text());
+      }
+    } catch (err) {
+      console.error(err);
+      alert('서버와 통신 중 오류가 발생했습니다.');
+    }
+  };
+
+  const handleAddTeam = async (newTeam, finalLogoFile) => {
+    try {
+      const formData = new FormData();
+      formData.append(
+        'team',
+        new Blob([JSON.stringify(newTeam)], { type: 'application/json' }),
+      );
+      formData.append('logo', finalLogoFile); // File 객체
+
+      const response = await fetch('/api/teams/create-team', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        alert('팀 생성 완료!');
+        window.location.reload();
+      } else {
+        const err = await response.text();
+        console.log(err);
+        alert(err || '팀 생성 실패');
+      }
+    } catch (error) {
+      console.error('서버 요청 중 오류:', error);
+      alert('서버 요청 중 문제가 발생했습니다.');
+    }
+    setShowModal(false);
+  };
+
+  if (!teams) return <div>로딩중</div>;
 
   return (
     <Container>
       <Header>Team List</Header>
       <SearchRow>
-        <AddButton>+</AddButton>
-        <SearchInput placeholder="Type the Team name" />
+        <AddButton onClick={() => setShowModal(true)}>+</AddButton>
+        <SearchInput
+          placeholder="Search Team name"
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <AddButton onClick={() => searchTeam(search)}>🔎</AddButton>
       </SearchRow>
       {teams.map((team, i) => (
-        <TeamCard key={i}>
-          <TeamLogo src={team.logo} alt="team logo" />
-          <TeamInfo>
-            <TeamName>{team.name}</TeamName>
-            <div>
-              <Tag>회원</Tag>{team.members}명
-            </div>
-            <div>
-              <Tag>위치</Tag>{team.location}
-            </div>
-          </TeamInfo>
-          <ColorDots>
-            {team.colors.map((c, j) => (
-              <Dot key={j} color={c} />
-            ))}
-          </ColorDots>
-        </TeamCard>
+        <Link
+          to={`/teams/${team.teamId}`}
+          style={{ textDecoration: 'none', color: 'inherit' }}
+        >
+          <TeamCard key={i}>
+            <TeamLogo
+              src={`/logos/${team.logo}`}
+              onError={(e) => {
+                e.target.src = altImage;
+              }}
+            />
+            <TeamInfo>
+              <TeamName>{team.teamName}</TeamName>
+              <div>
+                <Tag>회원</Tag>
+                {team.users.length}명
+              </div>
+              <div>
+                <Tag>위치</Tag>
+                {team.location}
+              </div>
+            </TeamInfo>
+            <ColorDots>
+              <DotBox>
+                <StyledText>HOME</StyledText>
+                <Dot color={team.firstColor} />
+              </DotBox>
+              <DotBox>
+                <StyledText>AWAY</StyledText>
+                <Dot color={team.secondColor} />
+              </DotBox>
+            </ColorDots>
+          </TeamCard>
+        </Link>
       ))}
+      {showModal && (
+        <TeamCreateModal
+          onClose={() => setShowModal(false)}
+          onCreate={handleAddTeam}
+        />
+      )}
     </Container>
   );
 };

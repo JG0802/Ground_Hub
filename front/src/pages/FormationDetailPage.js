@@ -1,26 +1,74 @@
 import { useParams } from 'react-router-dom';
-
-const formations = {
-  1: { title: '4-2-3-1', description: '미드필더 5명을 바탕으로 한 만능 포메이션' },
-  2: { title: '4-4-2', description: '전통적인 수비 안정형 포메이션' },
-  3: { title: '3-5-2', description: '미드필더 활용 극대화 포메이션' },
-};
+import formations from '../data/formation.json';
+import tactics from '../data/tactic.json';
 
 const FormationDetailPage = () => {
-  const { id } = useParams();
-  const data = formations[id];
+  const { type, id } = useParams();
+  const data =
+    type === 'formation'
+      ? formations.find((f) => String(f.id) === id)
+      : tactics.find((t) => String(t.id) === id);
 
-  if (!data) return <div style={{ padding: '2vh' }}>포메이션 정보를 찾을 수 없습니다.</div>;
+  if (!data)
+    return (
+      <div style={{ padding: '2vh' }}>
+        {type === 'formation' ? '포메이션 정보를 찾을 수 없습니다.' : '전술 정보를 찾을 수 없습니다.'}
+      </div>
+    );
+
+  const renderMedia = () => {
+    if (!data.img) return null;
+    // mp4 동영상
+    if (data.img.endsWith('.mp4')) {
+      return (
+        <video
+          src={`/library/${data.img}`}
+          controls
+          style={{ width: '100%', borderRadius: '1vh', marginTop: '2vh' }}
+        />
+      );
+    }
+    // 이미지
+    if (
+      data.img.endsWith('.jpg') ||
+      data.img.endsWith('.png') ||
+      data.img.endsWith('.jpeg') ||
+      data.img.endsWith('.gif')
+    ) {
+      return (
+        <img
+          src={`/library/${data.img}`}
+          alt={data.title}
+          style={{ width: '100%', borderRadius: '1vh', marginTop: '2vh' }}
+        />
+      );
+    }
+    // html 파일
+    if (data.img.endsWith('.html')) {
+      return (
+        <iframe
+          src={`/library/${data.img}`}
+          title={data.title}
+          style={{
+            width: '100%',
+            minHeight: '400px',
+            border: 'none',
+            borderRadius: '1vh',
+            marginTop: '2vh',
+          }}
+        />
+      );
+    }
+    return null;
+  };
 
   return (
     <div style={{ padding: '2vh' }}>
       <h2>{data.title}</h2>
-      <p>{data.description}</p>
-      <img
-        src="/images/formation.png"
-        alt={data.title}
-        style={{ width: '100%', borderRadius: '1vh', marginTop: '2vh' }}
-      />
+      <p>{data.summation}</p>
+      <p>{data.description1}</p>
+      {renderMedia()}
+      <p>{data.description2}</p>
     </div>
   );
 };

@@ -22,6 +22,7 @@ const StyledInput = styled.input`
   border: 1px solid #b9b9b9;
   padding: 1vh;
   margin-bottom: 2vh;
+  box-sizing: border-box;
 `;
 
 const StyledButton = styled.button`
@@ -32,6 +33,7 @@ const StyledButton = styled.button`
   font-size: 2vh;
   border-radius: 0.7vh;
   margin-bottom: 2vh;
+  box-sizing: border-box;
   &:hover {
     cursor: pointer;
   }
@@ -71,18 +73,16 @@ const AuthForm = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('http://192.168.55.12:8080/api/users/login', {
+      const response = await fetch('/api/users/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userMail, password }),
       });
 
       if (response.ok) {
         const data = await response.json();
         sessionStorage.setItem('userData', JSON.stringify(data));
-        localStorage.setItem('userMail', data.userMail); // 추가: 이메일만 따로 저장
+        sessionStorage.setItem('userMail', userMail);
         navigate('/main');
       } else {
         const errMsg = await response.text();

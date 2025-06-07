@@ -1,6 +1,12 @@
 // src/components/BottomTab.js
 import { Link, useLocation } from 'react-router-dom';
-import { MdStars, MdGroups, MdList, MdInbox, MdAccountCircle } from 'react-icons/md';
+import {
+  MdStars,
+  MdGroups,
+  MdList,
+  MdInbox,
+  MdAccountCircle,
+} from 'react-icons/md';
 import styled from 'styled-components';
 
 const TabBar = styled.nav`
@@ -17,6 +23,7 @@ const TabBar = styled.nav`
   z-index: 999;
   left: 50%;
   transform: translateX(-50%); /* 화면 가운데 고정 */
+  z-index: 1001;
 `;
 
 const TabItem = styled(Link)`
@@ -36,16 +43,25 @@ const BottomTab = () => {
       <TabItem to="/main" $active={(location.pathname === '/main').toString()}>
         <MdStars />
       </TabItem>
-      <TabItem to="/teams" $active={(location.pathname.startsWith('/teams')).toString()}>
+      <TabItem
+        to="/teams"
+        $active={(location.pathname === '/teams').toString()}
+      >
         <MdGroups />
-      </TabItem> {/* /teams 하위경로 모두 포함 */}
+      </TabItem>
       <TabItem to="/feed" $active={(location.pathname === '/feed').toString()}>
         <MdList />
       </TabItem>
-      <TabItem to="/formation" $active={(location.pathname === '/formation').toString()}>
+      <TabItem
+        to="/formation"
+        $active={(location.pathname === '/formation').toString()}
+      >
         <MdInbox />
       </TabItem>
-      <TabItem to="/profile" $active={(location.pathname === '/profile').toString()}>
+      <TabItem
+        to="/profile"
+        $active={(location.pathname === '/profile').toString()}
+      >
         <MdAccountCircle />
       </TabItem>
     </TabBar>

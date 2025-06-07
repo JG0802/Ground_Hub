@@ -1,16 +1,18 @@
 // src/components/home/MyTeamSection.js
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import altImage from '../../img/alt_image.png';
 
 const SectionWrapper = styled.div`
-  padding: 2vh;
+  padding: 0.5vh 2vh;
+  padding-bottom: 2vh;
 `;
 
 const TitleWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2vh;
 `;
 
 const Title = styled.h2`
@@ -28,6 +30,9 @@ const TeamItem = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: #eee;
+  padding: 1vh;
+  border-radius: 6px;
 `;
 
 const TeamImage = styled.img`
@@ -41,35 +46,77 @@ const TeamImage = styled.img`
 const TeamName = styled.p`
   font-size: 1.6vh;
   text-align: center;
+  margin-bottom: 0;
 `;
 
 const MyTeamSection = () => {
-  const navigate = useNavigate();
+  const [teams, setTeams] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const userMail = sessionStorage.getItem('userMail');
 
-  const teams = [
-    { name: '불도저', img: '/images/team_booldozer.png' },
-    { name: '팀 이름 1', img: '/images/team_1.png' },
-    { name: '팀 이름 2', img: '/images/team_2.png' },
-    { name: '팀 이름 3', img: '/images/team_3.png' },
-  ];
+  // 데이터 불러오기
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const response = await fetch(`/api/teams/mail/${userMail}`);
+        if (response.ok) {
+          const data = await response.json();
+          setTeams(data);
+        } else {
+          alert(await response.text());
+        }
+      } catch (err) {
+        console.error(err);
+        alert('서버와의 통신 중 오류가 발생했습니다.');
+      } finally {
+        setIsLoading(false); // ✅ 무조건 로딩 끝내기
+      }
+    };
 
-  //클릭 시 /teams로 이동
-  const handleTitleClick = () => {
-    navigate('/teams/myTeams');
-  };
+    fetchTeams();
+  }, [userMail]);
+
+  // ✅ 로딩 중일 때 별도 UI 출력
+  if (isLoading) {
+    return (
+      <SectionWrapper>
+        <TitleWrapper>
+          <Title>Schedule</Title>
+        </TitleWrapper>
+        <div style={{ textAlign: 'center', padding: '2vh', fontSize: '1.8vh' }}>
+          불러오는 중...
+        </div>
+      </SectionWrapper>
+    );
+  }
 
   return (
     <SectionWrapper>
-      <TitleWrapper onClick={handleTitleClick} style={{ cursor: 'pointer' }}>
+      <TitleWrapper>
         <Title>My Team</Title>
-        <span style={{ fontSize: '2vh' }}>{'>'}</span>
+        <Link
+          to="/myteam"
+          style={{ fontSize: '2vh', textDecoration: 'none', color: 'inherit' }}
+        >
+          {'>'}
+        </Link>
       </TitleWrapper>
       <TeamList>
         {teams.map((team, index) => (
-          <TeamItem key={index}>
-            <TeamImage src={team.img} alt={team.name} />
-            <TeamName>{team.name}</TeamName>
-          </TeamItem>
+          <Link
+            to={`/teams/${team.teamId}`}
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
+            <TeamItem key={index}>
+              <TeamImage
+                src={`/logos/${team.logo}`}
+                onError={(e) => {
+                  e.target.src = altImage;
+                }}
+              />
+              <TeamName>{team.teamName}</TeamName>
+            </TeamItem>
+          </Link>
         ))}
       </TeamList>
     </SectionWrapper>
