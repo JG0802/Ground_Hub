@@ -30,6 +30,8 @@ public class Community {
     @CreatedDate
     private LocalDateTime createTime;
 
+    private LocalDateTime matchDay;
+
     private int views = 0;
 
     @ManyToOne

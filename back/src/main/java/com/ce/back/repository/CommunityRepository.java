@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -21,6 +22,9 @@ public interface CommunityRepository extends JpaRepository<Community, Long> {
 
     // 카테고리로 게시물 조회
     List<Community> findByCategory(String category);
+
+    // 매칭날짜로 게시물 조회
+    List<Community> findByMatchDay(LocalDateTime matchDay);
 
     // 조회수 증가
     @Modifying
