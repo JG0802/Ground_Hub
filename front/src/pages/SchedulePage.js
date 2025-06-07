@@ -5,7 +5,8 @@ import dayjs from 'dayjs';
 import altImage from '../img/alt_image.png';
 
 const Container = styled.div`
-  padding: 2vh;
+  padding: 8vh 2vh 3vh;
+  background-color: #f9f9f9;
 `;
 
 const TitleRow = styled.div`
@@ -16,12 +17,12 @@ const TitleRow = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 2.2vh;
-  font-weight: bold;
+  font-size: 2.4vh;
+  font-weight: 600;
 `;
 
 const CalendarContainer = styled.div`
-  padding-top: 3vh;
+  padding-top: 2vh;
 `;
 
 const CalendarHeader = styled.div`
@@ -29,7 +30,7 @@ const CalendarHeader = styled.div`
   align-items: center;
   justify-content: space-between;
   font-size: 2vh;
-  font-weight: bold;
+  font-weight: 600;
   margin-bottom: 2vh;
 `;
 
@@ -58,7 +59,11 @@ const DayCell = styled.div`
   height: 5vh;
   text-align: center;
   position: relative;
+  background-color: #fff;
+  border-radius: 0.5vh;
+  transition: background-color 0.2s;
   &:hover {
+    background-color: #f0f0f0;
     cursor: pointer;
   }
 `;
@@ -80,17 +85,18 @@ const Dot = styled.div`
 `;
 
 const MatchContainer = styled.div`
-  padding: 2vh;
-  width: 80%;
+  padding-top: 3vh;
 `;
 
 const MatchCard = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5vh 0;
-  border-bottom: 1px solid #eee;
-  width: 100%;
+  padding: 1.5vh;
+  border-radius: 1vh;
+  margin-bottom: 2vh;
+  background-color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 `;
 
 const TeamCard = styled.div`
@@ -98,19 +104,20 @@ const TeamCard = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 1.5vh 0;
-  margin: 1vh;
 `;
 
 const TeamLogo = styled.img`
-  width: 8vh;
-  height: 8vh;
-  border-radius: 1vh;
+  width: 7vh;
+  height: 7vh;
+  border-radius: 50%;
+  object-fit: cover;
 `;
 
 const TeamName = styled.div`
-  font-size: 2vh;
+  font-size: 1.6vh;
   font-weight: bold;
+  margin-top: 0.5vh;
+  text-align: center;
 `;
 
 const SchedulePage = () => {
@@ -118,18 +125,15 @@ const SchedulePage = () => {
   const [teams, setTeams] = useState([]);
   const [games, setGames] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedDay, setSelectedDay] = useState(null); // 선택된 날짜
+  const [selectedDay, setSelectedDay] = useState(null);
   const userMail = sessionStorage.getItem('userMail');
 
-  // 캘린더 날짜 생성
   const getDaysInMonth = () => {
     const start = currentDate.startOf('month').day();
     const end = currentDate.daysInMonth();
     const days = [];
-
     for (let i = 0; i < start; i++) days.push('');
     for (let i = 1; i <= end; i++) days.push(i);
-
     return days;
   };
 
@@ -142,7 +146,6 @@ const SchedulePage = () => {
     return acc;
   }, {});
 
-  // 팀 목록 불러오기
   useEffect(() => {
     const fetchTeams = async () => {
       try {
@@ -158,32 +161,27 @@ const SchedulePage = () => {
         alert('서버와의 통신 중 오류가 발생했습니다.');
       }
     };
-
     fetchTeams();
   }, [userMail]);
 
-  // 팀별 경기 정보 불러오기
   useEffect(() => {
     const fetchGamesForAllTeams = async () => {
       try {
         const allGames = [];
-
         for (const team of teams) {
           const res = await fetch(`/api/games/team/${team.teamId}`);
           if (res.ok) {
             const data = await res.json();
-            // 💡 현재 달의 경기만 필터링
             const filtered = data.filter((g) =>
               dayjs(g.date).isSame(currentDate, 'month'),
             );
             const gamesWithTeam = filtered.map((game) => ({
               ...game,
-              team, // team 정보 추가
+              team,
             }));
             allGames.push(...gamesWithTeam);
           }
         }
-
         setGames(allGames);
       } catch (error) {
         console.error(error);
@@ -192,25 +190,18 @@ const SchedulePage = () => {
         setIsLoading(false);
       }
     };
-
     if (teams.length > 0) {
       fetchGamesForAllTeams();
     }
   }, [teams, currentDate]);
 
-  const goToPrevMonth = () => {
-    setCurrentDate(currentDate.subtract(1, 'month'));
-  };
-
-  const goToNextMonth = () => {
-    setCurrentDate(currentDate.add(1, 'month'));
-  };
+  const goToPrevMonth = () => setCurrentDate(currentDate.subtract(1, 'month'));
+  const goToNextMonth = () => setCurrentDate(currentDate.add(1, 'month'));
 
   const sortedGames = [...games].sort((a, b) =>
     dayjs(a.date).isAfter(dayjs(b.date)) ? 1 : -1,
   );
 
-  // ✅ 로딩 중일 때 별도 UI 출력
   if (isLoading) {
     return (
       <Container>
@@ -225,8 +216,10 @@ const SchedulePage = () => {
   }
 
   return (
-    <div>
-      <h2>스케줄 전체 보기</h2>
+    <Container>
+      <TitleRow>
+        <Title>📅 전체 스케줄</Title>
+      </TitleRow>
       <CalendarContainer>
         <CalendarHeader>
           <Arrow onClick={goToPrevMonth}>{'<'}</Arrow>
@@ -253,14 +246,12 @@ const SchedulePage = () => {
           ))}
         </DaysRow>
       </CalendarContainer>
+
       <MatchContainer>
         {selectedDay && (
           <div style={{ paddingTop: '2vh', fontSize: '1.8vh' }}>
-            <h3>
-              {currentDate.date(selectedDay).format('YYYY-MM-DD')} 경기 일정
-            </h3>
-            {games.filter((g) => dayjs(g.date).date() === selectedDay).length >
-            0 ? (
+            <h3>{currentDate.date(selectedDay).format('YYYY-MM-DD')} 경기 일정</h3>
+            {games.filter((g) => dayjs(g.date).date() === selectedDay).length > 0 ? (
               sortedGames
                 .filter((g) => dayjs(g.date).date() === selectedDay)
                 .map((game, i) => (
@@ -270,7 +261,7 @@ const SchedulePage = () => {
                     style={{ textDecoration: 'none', color: 'inherit' }}
                   >
                     <MatchCard>
-                      <TeamCard key={i}>
+                      <TeamCard>
                         <TeamLogo
                           src={`/logos/${game.team.logo}`}
                           onError={(e) => {
@@ -279,11 +270,11 @@ const SchedulePage = () => {
                         />
                         <TeamName>{game.team.teamName}</TeamName>
                       </TeamCard>
-                      <TeamCard key={i}>
+                      <TeamCard>
                         <TeamName>{game.date.slice(0, 10)}</TeamName>
                         <TeamName style={{ fontSize: '5vh' }}>VS</TeamName>
                       </TeamCard>
-                      <TeamCard key={i}>
+                      <TeamCard>
                         <TeamLogo
                           src={`/logos/${game.logo}`}
                           onError={(e) => {
@@ -296,12 +287,14 @@ const SchedulePage = () => {
                   </Link>
                 ))
             ) : (
-              <p>해당 날짜에 경기가 없습니다.</p>
+              <p style={{ textAlign: 'center', paddingTop: '1vh' }}>
+                해당 날짜에 경기가 없습니다.
+              </p>
             )}
           </div>
         )}
       </MatchContainer>
-    </div>
+    </Container>
   );
 };
 

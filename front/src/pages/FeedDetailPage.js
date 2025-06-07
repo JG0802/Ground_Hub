@@ -7,7 +7,7 @@ import altImage from '../img/alt_image.png';
 const Container = styled.div`
   max-width: 768px;
   margin: 2vh auto;
-  padding: 2vh;
+  padding-top: 8vh;
 `;
 
 const Card = styled.div`

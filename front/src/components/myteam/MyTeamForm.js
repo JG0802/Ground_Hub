@@ -4,20 +4,25 @@ import styled from 'styled-components';
 import altImage from '../../img/alt_image.png';
 
 const Container = styled.div`
-  padding: 2vh;
+  display: flex;
+  width: 90%;
+  flex-direction: column;
+  gap: 2vh;
 `;
 
 const TeamCard = styled.div`
   display: flex;
   align-items: center;
-  padding: 1.5vh 0;
-  border-bottom: 1px solid #eee;
+  background-color: #fff;
+  padding: 2vh;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 `;
 
 const TeamLogo = styled.img`
   width: 8vh;
   height: 8vh;
-  border-radius: 1vh;
+  border-radius: 50%;
   object-fit: cover;
   margin-right: 2vh;
 `;
@@ -27,18 +32,24 @@ const TeamInfo = styled.div`
 `;
 
 const TeamName = styled.div`
-  font-size: 2vh;
+  font-size: 1.8vh;
   font-weight: bold;
   margin-bottom: 1vh;
 `;
 
-const Tag = styled.span`
-  background-color: #ccc;
-  color: #000;
-  border-radius: 0.5vh;
+const TagRow = styled.div`
   font-size: 1.4vh;
+  color: #444;
+  margin-bottom: 0.5vh;
+`;
+
+const Tag = styled.span`
+  background-color: #ddd;
+  color: #222;
+  border-radius: 1vh;
   padding: 0.2vh 1vh;
-  margin-right: 1vh;
+  font-size: 1.3vh;
+  margin-right: 0.7vh;
 `;
 
 const ColorDots = styled.div`
@@ -52,20 +63,21 @@ const Dot = styled.div`
   height: 2vh;
   border-radius: 50%;
   background-color: ${(props) => props.color};
+  border: ${(props) =>
+    props.color === 'white' ? '1px solid #ccc' : `1px solid ${props.color}`};
 `;
 
 const MyTeamForm = () => {
   const [teams, setTeams] = useState([]);
   const userMail = sessionStorage.getItem('userMail');
 
-  // 데이터 불러오기
   useEffect(() => {
     const fetchTeams = async () => {
       try {
         const response = await fetch(`/api/teams/mail/${userMail}`);
         if (response.ok) {
           const data = await response.json();
-          setTeams(data); // 화면에 보여주기 위해 저장
+          setTeams(data);
         } else {
           alert(await response.text());
         }
@@ -81,14 +93,17 @@ const MyTeamForm = () => {
   return (
     <Container>
       {teams.length === 0 ? (
-        <div>참여 중인 팀이 없습니다.</div>
+        <div style={{ fontSize: '1.6vh', textAlign: 'center' }}>
+          참여 중인 팀이 없습니다.
+        </div>
       ) : (
         teams.map((team, i) => (
           <Link
+            key={i}
             to={`/teams/${team.teamId}`}
             style={{ textDecoration: 'none', color: 'inherit' }}
           >
-            <TeamCard key={i}>
+            <TeamCard>
               <TeamLogo
                 src={`/logos/${team.logo}`}
                 onError={(e) => {
@@ -97,14 +112,14 @@ const MyTeamForm = () => {
               />
               <TeamInfo>
                 <TeamName>{team.teamName}</TeamName>
-                <div>
+                <TagRow>
                   <Tag>회원</Tag>
                   {team.users.length}명
-                </div>
-                <div>
+                </TagRow>
+                <TagRow>
                   <Tag>위치</Tag>
                   {team.location}
-                </div>
+                </TagRow>
               </TeamInfo>
               <ColorDots>
                 <Dot color={team.firstColor} />

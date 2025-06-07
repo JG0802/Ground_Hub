@@ -4,9 +4,11 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 const PositionFormContainer = styled.div`
+  padding: 7vh 2vw 10vh;
   display: flex;
-  align-items: center;
   flex-direction: column;
+  align-items: center;
+  background-color: #f9f9f9;
 `;
 
 const FieldWrapper = styled.div`
@@ -46,11 +48,11 @@ const StyledButton = styled.button`
 const ChangeButton = styled.button`
   background-color: black;
   color: white;
-  width: 40vh;
-  height: 6vh;
-  font-size: 2vh;
-  border-radius: 0.7vh;
-  margin-bottom: 2vh;
+  width: 100%;
+  height: 5.5vh;
+  font-size: 1.8vh;
+  border-radius: 1vh;
+  margin: 0;
   box-sizing: border-box;
   &:hover {
     cursor: pointer;
@@ -121,7 +123,12 @@ const UserNameBox = styled.div`
 
 const ControlButtonBox = styled.div`
   display: flex;
-  gap: 2vh;
+  gap: 1.5vh;
+  flex-wrap: wrap;
+  margin-top: 3vh;
+  justify-content: center;
+  width: 100%;
+  max-width: 60vh;
 `;
 
 const PositionForm = () => {
@@ -508,16 +515,41 @@ const PositionForm = () => {
         </ControlButtonBox>
       ) : (
         <ControlButtonBox>
-          <ChangeButton onClick={handleJoinGame} style={{ width: '15vh' }}>
-            경기 참가
-          </ChangeButton>
-          <ChangeButton onClick={handleRemoveGame} style={{ width: '15vh' }}>
-            경기 참가 취소
-          </ChangeButton>
-          <Link to={`/user/pr/list/${id}`}>
-            <ChangeButton style={{ width: '15vh' }}>포메이션 요청</ChangeButton>
-          </Link>
-        </ControlButtonBox>
+  {hasPermission ? (
+    <>
+      <ChangeButton onClick={handleJoinGame}>경기 참가</ChangeButton>
+      <ChangeButton
+        onClick={async () => {
+          await handleRemovePosition();
+          handleRemoveGame();
+        }}
+      >
+        참가 취소
+      </ChangeButton>
+      <Link to={`/position/update/${id}`} style={{ width: '100%' }}>
+        <ChangeButton>포메이션 수정</ChangeButton>
+      </Link>
+      <ChangeButton
+        onClick={handleDeleteGame}
+        style={{ backgroundColor: '#c0392b' }}
+      >
+        경기 삭제
+      </ChangeButton>
+      <Link to={`/pr/list/${id}`} style={{ width: '100%' }}>
+        <ChangeButton>요청 확인</ChangeButton>
+      </Link>
+    </>
+  ) : (
+    <>
+      <ChangeButton onClick={handleJoinGame}>경기 참가</ChangeButton>
+      <ChangeButton onClick={handleRemoveGame}>참가 취소</ChangeButton>
+      <Link to={`/user/pr/list/${id}`} style={{ width: '100%' }}>
+        <ChangeButton>포메이션 요청</ChangeButton>
+      </Link>
+    </>
+  )}
+</ControlButtonBox>
+
       )}
       <PopupBox $open={isOpen}>
         <PopupButton onClick={togglePopup}>{isOpen ? '▼' : '▲'}</PopupButton>

@@ -3,15 +3,25 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Container = styled.div`
-  padding: 3vh 2vh;
+  padding: 8vh 2vh 3vh;
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
 
+const Card = styled.div`
+  width: 90%;
+  background-color: white;
+  border-radius: 1.5vh;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 4vh 3vh;
+  box-sizing: border-box;
+`;
+
 const Title = styled.h2`
-  font-size: 2.4vh;
-  font-weight: bold;
+  font-size: 2.8vh;
+  font-weight: 600;
+  text-align: center;
   margin-bottom: 4vh;
 `;
 
@@ -23,104 +33,101 @@ const Avatar = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 5vh;
-  margin-bottom: 2vh;
+  font-size: 6vh;
+  margin: 0 auto 2.5vh;
+`;
+
+const Label = styled.div`
+  font-size: 1.6vh;
+  color: #666;
+  margin-top: 2.5vh;
+  margin-bottom: 0.8vh;
 `;
 
 const InfoBox = styled.div`
-  width: 90%;
-  background-color: #eee;
-  height: 5vh;
+  background-color: #f5f5f5;
+  height: 4.5vh;
   border-radius: 1vh;
-  margin-bottom: 1vh;
+  padding: 0 2vh;
   display: flex;
   align-items: center;
-  padding: 0 2vh;
   font-size: 1.8vh;
-`;
-
-const Label = styled.p`
-  align-self: flex-start;
-  font-weight: bold;
-  margin: 1vh 0 0.5vh;
-  width: 90%;
-`;
-
-const StyledButton = styled.button`
-  background-color: black;
-  color: white;
-  width: 20vh;
-  height: 6vh;
-  font-size: 2vh;
-  border-radius: 0.7vh;
-  margin-bottom: 2vh;
-  box-sizing: border-box;
-  &:hover {
-    cursor: pointer;
-  }
-  &:disabled {
-    background-color: #999;
-    cursor: not-allowed;
-  }
 `;
 
 const ButtonBox = styled.div`
   display: flex;
+  justify-content: center;
   gap: 2vh;
-  margin-top: 2vh;
+  margin-top: 4vh;
+  flex-wrap: wrap;
+`;
+
+const StyledButton = styled(Link)`
+  background-color: black;
+  color: white;
+  text-align: center;
+  width: 20vh;
+  height: 5.5vh;
+  font-size: 1.8vh;
+  border-radius: 1vh;
+  line-height: 5.5vh;
+  text-decoration: none;
+  transition: background-color 0.2s;
+  &:hover {
+    background-color: #222;
+  }
 `;
 
 const ProfileForm = () => {
   const [userData, setUserData] = useState(null);
   const userMail = sessionStorage.getItem('userMail');
 
-  // 데이터 불러오기
   useEffect(() => {
-    const fetchTeams = async () => {
+    const fetchUser = async () => {
       try {
-        // api 주소 사용자 정보 조회하는 걸로 바꾸기
-        const response = await fetch(`/api/users/check/${userMail}`);
-        if (response.ok) {
-          const data = await response.json();
-          setUserData(data); // 화면에 보여주기 위해 저장
+        const res = await fetch(`/api/users/check/${userMail}`);
+        if (res.ok) {
+          const data = await res.json();
+          setUserData(data);
         } else {
-          alert(await response.text());
+          alert(await res.text());
         }
       } catch (err) {
         console.error(err);
-        alert('서버와의 통신 중 오류가 발생했습니다.');
+        alert('서버 오류 발생');
       }
     };
-
-    fetchTeams();
+    fetchUser();
   }, [userMail]);
 
-  if (!userData) {
-    return <Container>Loading...</Container>;
-  }
+  if (!userData) return <Container>Loading...</Container>;
 
   return (
     <Container>
-      <Title>User Information</Title>
-      <Avatar>👤</Avatar>
-      <Label>User Name</Label>
-      <InfoBox>{userData.userName}</InfoBox>
-      <Label>User Tel</Label>
-      <InfoBox>{userData.tel}</InfoBox>
-      <Label>Preferred Position 1</Label>
-      <InfoBox>{userData.firstPosition || ''}</InfoBox>
-      <Label>Preferred Position 2</Label>
-      <InfoBox>{userData.secondPosition || ''}</InfoBox>
-      <Label>Preferred Position 3</Label>
-      <InfoBox>{userData.thirdPosition || ''}</InfoBox>
-      <ButtonBox>
-        <Link to="/user/checkpassword">
-          <StyledButton>회원정보 변경</StyledButton>
-        </Link>
-        <Link to="/user/change/password">
-          <StyledButton>비밀번호 변경</StyledButton>
-        </Link>
-      </ButtonBox>
+      <Card>
+        <Title>User Profile</Title>
+        <Avatar>👤</Avatar>
+
+        <Label>User Name</Label>
+        <InfoBox>{userData.userName}</InfoBox>
+
+        <Label>Phone</Label>
+        <InfoBox>{userData.tel}</InfoBox>
+
+        <Label>Preferred Position 1</Label>
+        <InfoBox>{userData.firstPosition || '-'}</InfoBox>
+
+        <Label>Preferred Position 2</Label>
+        <InfoBox>{userData.secondPosition || '-'}</InfoBox>
+
+        <Label>Preferred Position 3</Label>
+        <InfoBox>{userData.thirdPosition || '-'}</InfoBox>
+
+        <ButtonBox>
+          <StyledButton to="/user/checkpassword">회원정보 변경</StyledButton>
+          <StyledButton to="/user/change/password">비밀번호 변경</StyledButton>
+        </ButtonBox>
+      </Card>
     </Container>
   );
 };

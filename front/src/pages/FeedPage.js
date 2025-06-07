@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
+  padding: 8vh 2vw 10vh;
   max-width: 768px;
-  padding: 2vh;
   margin: 0 auto;
-  background-color: #fff;
+  background-color: #f9f9f9;
 `;
 
 const NavTabs = styled.div`
@@ -24,90 +24,130 @@ const Tab = styled.div`
   cursor: pointer;
 `;
 
-const Post = styled.div`
-  margin-bottom: 3vh;
-  padding: 2vh;
-  border-radius: 1vh;
-  background-color: #f7f7f7;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.05);
+const PostCard = styled.div`
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 2vh 2vw;
+  margin-bottom: 2vh;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: 0.2s;
 
   &:hover {
-    background-color: #f0f0f0;
+    background-color: #f3f3f3;
   }
 
   h3 {
+    font-size: 2vh;
     margin-bottom: 1vh;
   }
 
   p {
-    margin: 0.5vh 0;
     font-size: 1.6vh;
+    margin: 0.5vh 0;
+    line-height: 1.5;
   }
 `;
 
 const WriteButton = styled.button`
   position: fixed;
-  bottom: 5vh;
-  right: 5vw;
+  bottom: 7vh;
+  right: calc(clamp(1vh, (100vw - 50vh) / 2 + 1vh, 100vw));
   width: 6vh;
   height: 6vh;
-  border-radius: 50%;
+  font-size: 3vh;
   background-color: black;
   color: white;
-  font-size: 3vh;
+  border-radius: 50%;
   border: none;
   cursor: pointer;
-  z-index: 200;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
 `;
 
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* ✔ 어둡게 */
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 9999; /* ✔ 충분히 큰 값으로 */
 `;
 
 const Modal = styled.div`
   background-color: white;
+  border-radius: 12px;
   padding: 3vh 2vh;
-  border-radius: 1vh;
   width: 90%;
   max-width: 400px;
+  z-index: 10000; /* ✔ 위에 오도록 */
+  position: relative;
 `;
 
-const InputStyle = `
-  width: 90%;
+
+const TitleRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2vh;
+`;
+
+const ModalTitle = styled.h3`
+  font-size: 2vh;
+  margin: 0;
+`;
+
+const CloseButton = styled.button`
+  font-size: 2vh;
+  background: none;
+  border: none;
+  cursor: pointer;
+`;
+
+const sharedInputStyle = `
+  width: 100%;
   font-size: 1.6vh;
   padding: 1vh;
-  margin-top: 1vh;
+  margin: 1vh 0;
   border: 1px solid #ccc;
   border-radius: 0.5vh;
-`;
-
-const TitleInput = styled.textarea`
-  ${InputStyle}
-  height: 5vh;
+  box-sizing: border-box;
 `;
 
 const Input = styled.textarea`
-  ${InputStyle}
-  height: 15vh;
+  ${sharedInputStyle}
+  height: 10vh;
+  resize: none;
 `;
 
+
 const Select = styled.select`
-  ${InputStyle}
+  ${sharedInputStyle}
+  appearance: none;
+  background-color: #fff;
+  z-index: 1002; /* 드롭다운 가림 방지 */
+  position: relative;
 `;
 
 const DateInput = styled.input`
-  ${InputStyle}
+  width: 100%;
+  font-size: 1.6vh;
+  padding: 1vh;
+  margin: 1vh 0;
+  border: 1px solid #ccc;
+  border-radius: 0.5vh;
+  box-sizing: border-box;
+  background-color: #fff;
+  appearance: none;
+
+  &:focus {
+    outline: none;
+    border-color: black;
+  }
 `;
 
 const Submit = styled.button`
@@ -116,24 +156,8 @@ const Submit = styled.button`
   color: white;
   font-size: 1.8vh;
   padding: 1.2vh;
-  border-radius: 0.7vh;
+  border-radius: 1vh;
   border: none;
-  margin-top: 2vh;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #222;
-  }
-`;
-
-const TitleBox = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1vh;
-`;
-
-const CloseButton = styled.h3`
   cursor: pointer;
 `;
 
@@ -155,29 +179,28 @@ const FeedPage = () => {
 
     const fetchTeamData = async () => {
       try {
-        const response = await fetch(`/api/teams/mail/${userMail}`);
-        const data = await response.json();
+        const res = await fetch(`/api/teams/mail/${userMail}`);
+        const data = await res.json();
         const filtered = data.filter(
           (team) => team.teamManager.userMail === userMail,
         );
-
         setTeamData(filtered);
         if (filtered.length > 0) {
           setSelectedTeam(filtered[0]);
           setTeamId(filtered[0].teamId);
         }
       } catch (err) {
-        console.error('API 호출 실패:', err);
+        console.error('팀 정보 오류:', err);
       }
     };
 
     const fetchCommunity = async () => {
       try {
-        const response = await fetch(`/api/community/category/${category}`);
-        const data = await response.json();
+        const res = await fetch(`/api/community/category/${category}`);
+        const data = await res.json();
         setPosts(data);
       } catch (err) {
-        console.error(err);
+        console.error('커뮤니티 불러오기 실패:', err);
       }
     };
 
@@ -186,8 +209,8 @@ const FeedPage = () => {
   }, [userMail, category]);
 
   const handleSubmit = async () => {
-    if (!teamId || !title.trim() || !content.trim()) return alert('입력 확인');
-    if (category === '매칭' && !startDate) return alert('매칭 날짜 필요');
+    if (!teamId || !title.trim() || !content.trim()) return alert('입력 누락');
+    if (category === '매칭' && !startDate) return alert('날짜 필요');
 
     const body = {
       title,
@@ -204,9 +227,7 @@ const FeedPage = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
-
-      if (!res.ok) throw new Error('등록 실패');
-
+      if (!res.ok) throw new Error();
       alert('등록 완료!');
       window.location.reload();
     } catch (err) {
@@ -219,41 +240,24 @@ const FeedPage = () => {
     <Container>
       <NavTabs>
         {['매칭', '팀원 모집'].map((tab) => (
-          <Tab
-            key={tab}
-            active={category === tab}
-            onClick={() => setCategory(tab)}
-          >
+          <Tab key={tab} active={category === tab} onClick={() => setCategory(tab)}>
             {tab}
           </Tab>
         ))}
       </NavTabs>
 
-      {posts.map((post, index) => (
-        <Post key={index} onClick={() => navigate(`/feed/${post.contentId}`)}>
+      {posts.map((post) => (
+        <PostCard key={post.contentId} onClick={() => navigate(`/feed/${post.contentId}`)}>
           <h3>{post.title}</h3>
-          <p>
-            <strong>팀 이름:</strong> {post.team.teamName}
-          </p>
-          <p>
-            <strong>지역:</strong> {post.team.location}
-          </p>
-          <p>
-            <strong>작성일:</strong> {post.createTime.slice(0, 10)}
-          </p>
+          <p><strong>팀 이름:</strong> {post.team.teamName}</p>
+          <p><strong>지역:</strong> {post.team.location}</p>
+          <p><strong>작성일:</strong> {post.createTime.slice(0, 10)}</p>
           {post.category === '매칭' && post.matchDay && (
-            <p>
-              <strong>매칭 날짜:</strong>{' '}
-              {post.matchDay.replace('T', ' ').slice(0, 16)}
-            </p>
+            <p><strong>매칭 날짜:</strong> {post.matchDay.replace('T', ' ').slice(0, 16)}</p>
           )}
-          <p>
-            <strong>내용:</strong> {post.content}
-          </p>
-          <p>
-            <strong>조회수:</strong> {post.views}
-          </p>
-        </Post>
+          <p><strong>내용:</strong> {post.content}</p>
+          <p><strong>조회수:</strong> {post.views}</p>
+        </PostCard>
       ))}
 
       <WriteButton onClick={() => setShowModal(true)}>+</WriteButton>
@@ -261,17 +265,15 @@ const FeedPage = () => {
       {showModal && (
         <ModalOverlay onClick={() => setShowModal(false)}>
           <Modal onClick={(e) => e.stopPropagation()}>
-            <TitleBox>
-              <h3>게시글 작성</h3>
-              <CloseButton onClick={() => setShowModal(false)}>X</CloseButton>
-            </TitleBox>
+            <TitleRow>
+              <ModalTitle>게시글 작성</ModalTitle>
+              <CloseButton onClick={() => setShowModal(false)}>✖</CloseButton>
+            </TitleRow>
 
             <Select
               value={selectedTeam?.teamName || ''}
               onChange={(e) => {
-                const team = teamData.find(
-                  (t) => t.teamName === e.target.value,
-                );
+                const team = teamData.find(t => t.teamName === e.target.value);
                 setSelectedTeam(team);
                 setTeamId(team.teamId);
               }}
@@ -283,10 +285,7 @@ const FeedPage = () => {
               ))}
             </Select>
 
-            <Select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            >
+            <Select value={category} onChange={(e) => setCategory(e.target.value)}>
               <option value="매칭">매칭</option>
               <option value="팀원 모집">팀원 모집</option>
             </Select>
@@ -299,13 +298,14 @@ const FeedPage = () => {
               />
             )}
 
-            <TitleInput
-              placeholder="제목을 입력하세요"
+            <Input
+              as="input"
+              placeholder="제목 입력"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
             <Input
-              placeholder="내용을 입력하세요"
+              placeholder="내용 입력"
               value={content}
               onChange={(e) => setContent(e.target.value)}
             />

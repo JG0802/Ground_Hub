@@ -6,14 +6,30 @@ import styled from 'styled-components';
 import altImage from '../../img/alt_image.png';
 import setting from '../../img/setting.png';
 
-const Title = styled.h1`
-  font-size: 4vh;
+const PageWrapper = styled.div`
+  padding: 8vh 2vh 2vh; /* 헤더 고정 고려 */
+  background-color: #f9f9f9;
+  min-height: 100vh;
 `;
+
+const SectionCard = styled.div`
+  background-color: #ffffff;
+  border-radius: 1.2vh;
+  padding: 2vh;
+  margin-bottom: 3vh;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+`;
+
+const Title = styled.h1`
+  font-size: 3vh;
+  font-weight: bold;
+  margin-bottom: 2vh;
+`;
+
 const TeamCard = styled.div`
   display: flex;
   align-items: center;
-  padding: 1.5vh 0;
-  border-bottom: 1px solid #ddd;
+  gap: 2vh;
 `;
 
 const TeamLogo = styled.img`
@@ -21,7 +37,6 @@ const TeamLogo = styled.img`
   height: 8vh;
   border-radius: 1vh;
   object-fit: cover;
-  margin-right: 2vh;
 `;
 
 const TeamInfoBox = styled.div`
@@ -29,37 +44,26 @@ const TeamInfoBox = styled.div`
 `;
 
 const TeamName = styled.div`
-  font-size: 3vh;
+  font-size: 2.4vh;
   font-weight: bold;
   margin-bottom: 1vh;
 `;
 
-const Tag = styled.span`
-  background-color: #ccc;
-  color: #000;
-  border-radius: 0.5vh;
-  font-size: 1.7vh;
-  padding: 0.2vh 1vh;
-  margin-right: 1vh;
+const Tag = styled.div`
+  font-size: 1.6vh;
+  color: #666;
 `;
 
 const ColorDots = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1vh;
-  margin-right: 2vh;
 `;
 
 const DotBox = styled.div`
   display: flex;
-  align-items: center; /* 수직 가운데 정렬 */
-  gap: 1vh; /* 요소 간 간격 */
-`;
-
-const StyledText = styled.p`
-  font-size: 2vh;
-  margin: 0; /* 여백 제거 */
-  width: 6.5vh;
+  align-items: center;
+  gap: 1vh;
 `;
 
 const Dot = styled.div`
@@ -68,28 +72,39 @@ const Dot = styled.div`
   border-radius: 50%;
   background-color: ${(props) => props.color};
   border: ${(props) =>
-    props.color === 'white' ? '1px solid black' : `1px solid ${props.color}`};
+    props.color === 'white' ? '1px solid #333' : `1px solid ${props.color}`};
 `;
 
-const StyledButton = styled.button`
+const DotLabel = styled.div`
+  font-size: 1.6vh;
+  color: #333;
+`;
+
+const SettingButton = styled(Link)`
+  background-color: #eee;
   width: 5vh;
   height: 5vh;
-  background-color: #ddd;
-  border: none;
   border-radius: 50%;
-  font-size: 3vh;
-  padding: 0.5vh;
-  margin-right: 2vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const SettingImg = styled.img`
-  width: 4vh;
-  height: 4vh;
+  width: 3vh;
+  height: 3vh;
+`;
+
+const MemberToggle = styled.h2`
+  font-size: 2.2vh;
+  cursor: pointer;
+  margin-top: 3vh;
 `;
 
 const MemberList = styled.ul`
   list-style: none;
-  padding-left: 0;
+  padding: 0;
+  margin-top: 1.5vh;
 `;
 
 const MemberItem = styled.li`
@@ -97,151 +112,115 @@ const MemberItem = styled.li`
   margin-bottom: 1vh;
 `;
 
-const TeamDetailPage = () => {
-  const { id } = useParams(); // ← URL에서 ID 추출
+const TeamDetailTemplate = () => {
+  const { id } = useParams();
   const [team, setTeam] = useState({});
   const [teamUser, setTeamUser] = useState([]);
   const [games, setGames] = useState([]);
-  const userMail = sessionStorage.getItem('userMail');
   const [teamManagerMail, setTeamManagerMail] = useState('');
   const [showMembers, setShowMembers] = useState(false);
+  const userMail = sessionStorage.getItem('userMail');
   sessionStorage.setItem('teamId', id);
 
   useEffect(() => {
     const fetchTeam = async () => {
-      try {
-        const response = await fetch(`/api/teams/${id}`);
-        if (response.ok) {
-          const data = await response.json();
-          setTeam(data);
-        } else {
-          alert(await response.text());
-        }
-      } catch (err) {
-        console.error(err);
-        alert('서버와 통신 중 오류가 발생했습니다.');
-      }
+      const res = await fetch(`/api/teams/${id}`);
+      if (res.ok) setTeam(await res.json());
     };
     const fetchTeamUser = async () => {
       const res = await fetch(`/api/teams/${id}/users-in-team`);
-      const data = await res.json();
-      setTeamUser(data);
+      setTeamUser(await res.json());
     };
-
-    const fetchTeamInfo = async () => {
+    const fetchManagerMail = async () => {
       const res = await fetch(`/api/teams/${id}`);
-      const teamRes = await res.json();
-      setTeamManagerMail(teamRes.teamManager.userMail); // 💡 여기!
+      const data = await res.json();
+      setTeamManagerMail(data.teamManager.userMail);
     };
-
-    const fetchGame = async () => {
+    const fetchGames = async () => {
       const res = await fetch(`/api/games/team/${id}`);
-      if (res.ok) {
-        const text = await res.text();
-        const data = text ? JSON.parse(text) : []; // 또는 null
-        setGames(data);
-      } else {
-        console.error('서버 오류:', res.status);
-        setGames([]);
-      }
+      const text = await res.text();
+      setGames(text ? JSON.parse(text) : []);
     };
 
     fetchTeam();
     fetchTeamUser();
-    fetchTeamInfo();
-    fetchGame();
+    fetchManagerMail();
+    fetchGames();
   }, [id]);
 
   if (!team || !games || !teamUser) return <div>로딩 중...</div>;
   const isInTeam = teamUser.some(
-    (user) => user.userMail?.toLowerCase() === userMail?.toLowerCase(),
+    (user) => user.userMail?.toLowerCase() === userMail?.toLowerCase()
   );
 
+  const manager = teamUser.find((u) => u.userMail === teamManagerMail);
+
   return (
-    <div>
-      <Title>팀 상세 정보</Title>
-      <TeamCard>
-        <TeamLogo
-          src={`/logos/${team.logo}`}
-          onError={(e) => {
-            e.target.src = altImage;
-          }}
-        />
-        <TeamInfoBox>
-          <TeamName>{team.teamName}</TeamName>
-          <Tag>📍 위치: {team.location}</Tag>
-        </TeamInfoBox>
-        <ColorDots>
-          <DotBox>
-            <StyledText>HOME</StyledText>
-            <Dot color={team.firstColor} />
-          </DotBox>
-          <DotBox>
-            <StyledText>AWAY</StyledText>
-            <Dot color={team.secondColor} />
-          </DotBox>
-        </ColorDots>
-        {userMail === teamManagerMail ? (
-          <>
-            <Link to={`/team/update/${id}`}>
-              <StyledButton>
-                <SettingImg src={setting} alt="설정" />
-              </StyledButton>
-            </Link>
-          </>
-        ) : (
-          <></>
+    <PageWrapper>
+      <SectionCard>
+        <Title>팀 상세 정보</Title>
+        <TeamCard>
+          <TeamLogo
+            src={`/logos/${team.logo}`}
+            onError={(e) => (e.target.src = altImage)}
+          />
+          <TeamInfoBox>
+            <TeamName>{team.teamName}</TeamName>
+            <Tag>📍 위치: {team.location}</Tag>
+          </TeamInfoBox>
+          <ColorDots>
+            <DotBox>
+              <DotLabel>HOME</DotLabel>
+              <Dot color={team.firstColor} />
+            </DotBox>
+            <DotBox>
+              <DotLabel>AWAY</DotLabel>
+              <Dot color={team.secondColor} />
+            </DotBox>
+          </ColorDots>
+          {userMail === teamManagerMail && (
+            <SettingButton to={`/team/update/${id}`}>
+              <SettingImg src={setting} alt="설정" />
+            </SettingButton>
+          )}
+        </TeamCard>
+      </SectionCard>
+
+      <SectionCard>
+        <MemberToggle onClick={() => setShowMembers(!showMembers)}>
+          {showMembers
+            ? `👥 팀 명단(${teamUser.length}명) ▼`
+            : `👥 팀 명단(${teamUser.length}명) ▲`}
+        </MemberToggle>
+        {showMembers && (
+          <MemberList>
+            {manager && (
+              <MemberItem>
+                👑 {manager.userName} ({manager.firstPosition},{' '}
+                {manager.secondPosition}, {manager.thirdPosition})
+              </MemberItem>
+            )}
+            {teamUser
+              .filter((u) => u.userMail !== teamManagerMail)
+              .map((u) => (
+                <MemberItem key={u.userMail}>
+                  {u.userName} ({u.firstPosition}, {u.secondPosition},{' '}
+                  {u.thirdPosition})
+                </MemberItem>
+              ))}
+          </MemberList>
         )}
-      </TeamCard>
-      <h2
-        style={{
-          cursor: 'pointer',
-        }}
-        onClick={() => setShowMembers((prev) => !prev)}
-      >
-        {showMembers
-          ? `👥 팀 명단(${team.users ? team.users.length : 0}명) ▼`
-          : `👥 팀 명단(${team.users ? team.users.length : 0}명) ▲`}
-      </h2>
-      {showMembers && (
-        <MemberList>
-          {(() => {
-            const items = [];
-            const manager = teamUser.find(
-              (user) => user.userMail === teamManagerMail,
-            );
-            if (manager) {
-              items.push(
-                <MemberItem key={manager.userMail}>
-                  👑 {manager.userName} ({manager.firstPosition},{' '}
-                  {manager.secondPosition}, {manager.thirdPosition})
-                </MemberItem>,
-              );
-            }
-            for (let i = 0; i < teamUser.length; i++) {
-              const user = teamUser[i];
-              if (user.userMail !== teamManagerMail) {
-                items.push(
-                  <MemberItem key={user.userMail}>
-                    {user.userName} ({user.firstPosition}, {user.secondPosition}
-                    , {user.thirdPosition})
-                  </MemberItem>,
-                );
-              }
-            }
-            return items;
-          })()}
-        </MemberList>
-      )}
-      {isInTeam ? (
-        <div>
+      </SectionCard>
+
+      <SectionCard>
+        {isInTeam ? (
           <TeamInfo games={games} teamManagerMail={teamManagerMail} />
-        </div>
-      ) : (
-        <TeamJoin />
-      )}
-    </div>
+        ) : (
+          <TeamJoin />
+        )}
+      </SectionCard>
+    </PageWrapper>
   );
 };
 
-export default TeamDetailPage;
+export default TeamDetailTemplate;
