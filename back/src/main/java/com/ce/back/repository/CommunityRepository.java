@@ -19,6 +19,9 @@ public interface CommunityRepository extends JpaRepository<Community, Long> {
     // 사용자 이메일로 게시물 조회
     List<Community> findByUser_UserMail(String userMail);
 
+    // 카테고리로 게시물 조회
+    List<Community> findByCategory(String category);
+
     // 조회수 증가
     @Modifying
     @Query("UPDATE Community c SET c.views = c.views + 1 WHERE c.contentId = :id")

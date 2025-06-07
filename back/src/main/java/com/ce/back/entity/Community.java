@@ -21,6 +21,7 @@ public class Community {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long contentId; // 경기 고유 ID
 
+    private String category;
     private String title;
 
     @Column(columnDefinition = "TEXT")

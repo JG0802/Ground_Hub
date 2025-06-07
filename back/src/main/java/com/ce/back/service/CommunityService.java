@@ -43,6 +43,11 @@ public class CommunityService {
         return communityRepository.findAll();
     }
 
+    // 카테고리로 조회
+    public List<Community> getPostsByCategory(String category) {
+        return communityRepository.findByCategory(category);
+    }
+
     // 제목 키워드 검색
     public List<Community> searchByTitle(String keyword) {
         return communityRepository.findByTitleContaining(keyword);

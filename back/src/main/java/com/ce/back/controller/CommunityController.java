@@ -39,6 +39,12 @@ public class CommunityController {
         return ResponseEntity.ok(communityService.getAllPosts());
     }
 
+    // 카테고리로 조회
+    @GetMapping("/{category}")
+    public ResponseEntity<List<Community>> getPostsByCategory(@PathVariable String category) {
+        return ResponseEntity.ok(communityService.getPostsByCategory(category));
+    }
+
     // 제목 키워드로 검색
     @GetMapping("/search")
     public ResponseEntity<List<Community>> searchByTitle(@RequestParam String keyword) {
