@@ -9,6 +9,7 @@ const Container = styled.div`
 `;
 
 const Header = styled.h2`
+  padding-top: 4vh; /* ✅ 헤더 고정을 위한 여유 공간 */
   font-size: 2.4vh;
   font-weight: bold;
   margin-bottom: 2vh;

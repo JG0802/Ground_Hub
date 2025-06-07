@@ -5,6 +5,7 @@ import useTeamStore from '../stores/useTeamStore'; // Zustand 연결
 // ✅ styled-components 정의
 const Container = styled.div`
   padding: 2vh;
+  padding-top: 8vh; /* ✅ 헤더 고정을 위한 여유 공간 */
   position: relative;
   margin: 0 auto;
   background-color: white;

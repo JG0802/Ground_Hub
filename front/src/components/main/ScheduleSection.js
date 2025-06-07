@@ -55,6 +55,14 @@ const MatchInfo = styled.div`
 
 const CalendarContainer = styled.div`
   padding-top: 3vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+`;
+
+const CalendarBox = styled.div`
+  width: 100%;
+  max-width: 48vh;
 `;
 
 const CalendarHeader = styled.div`
@@ -67,24 +75,30 @@ const CalendarHeader = styled.div`
 `;
 
 const WeekRow = styled.div`
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
   font-size: 1.6vh;
   color: #888;
   margin-bottom: 1vh;
 `;
 
 const DaysRow = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
   font-size: 1.8vh;
-  gap: 1vh;
+  row-gap: 1.2vh;
+  text-align: center;
+  width: 100%;
 `;
 
 const DayCell = styled.div`
-  width: 12%;
-  height: 5vh;
-  text-align: center;
+  aspect-ratio: 1 / 1;
+  min-height: 4.5vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   position: relative;
 `;
 
@@ -111,15 +125,12 @@ const ScheduleSection = () => {
   const [isLoading, setIsLoading] = useState(true);
   const userMail = sessionStorage.getItem('userMail');
 
-  // 캘린더 날짜 생성
   const getDaysInMonth = () => {
     const start = currentDate.startOf('month').day();
     const end = currentDate.daysInMonth();
     const days = [];
-
     for (let i = 0; i < start; i++) days.push('');
     for (let i = 1; i <= end; i++) days.push(i);
-
     return days;
   };
 
@@ -132,7 +143,6 @@ const ScheduleSection = () => {
     return acc;
   }, {});
 
-  // 팀 목록 불러오기
   useEffect(() => {
     const fetchTeams = async () => {
       try {
@@ -148,44 +158,37 @@ const ScheduleSection = () => {
         alert('서버와의 통신 중 오류가 발생했습니다.');
       }
     };
-
     fetchTeams();
   }, [userMail]);
 
-  // 팀별 경기 정보 불러오기
   useEffect(() => {
     const fetchGamesForAllTeams = async () => {
       try {
         const allGames = [];
-
         for (const team of teams) {
           const res = await fetch(`/api/games/team/${team.teamId}`);
           if (res.ok) {
             const data = await res.json();
-            // 각 game 객체에 team 정보를 주입
             const gamesWithTeam = data.map((game) => ({
               ...game,
-              team, // team 정보 추가
+              team,
             }));
             allGames.push(...gamesWithTeam);
           }
         }
-
         setGames(allGames);
       } catch (error) {
         console.error(error);
         alert('경기 데이터를 불러오는 중 오류 발생');
       } finally {
-        setIsLoading(false); // ✅ 무조건 로딩 끝내기
+        setIsLoading(false);
       }
     };
-
     if (teams.length > 0) {
       fetchGamesForAllTeams();
     }
   }, [teams]);
 
-  // ✅ 로딩 중일 때 별도 UI 출력
   if (isLoading) {
     return (
       <Container>
@@ -203,22 +206,18 @@ const ScheduleSection = () => {
     dayjs(a.date).isAfter(dayjs(b.date)) ? 1 : -1,
   );
 
-  // ✅ 로딩 끝난 후에만 아래 렌더링
   return (
     <Container>
       <TitleRow>
         <Title>Schedule</Title>
         <Link
           to="/my-schedule"
-          style={{
-            fontSize: '2vh',
-            textDecoration: 'none',
-            color: 'inherit',
-          }}
+          style={{ fontSize: '2vh', textDecoration: 'none', color: 'inherit' }}
         >
           <Arrow>{'>'}</Arrow>
         </Link>
       </TitleRow>
+
       <MatchScroll>
         {games.length === 0 ? (
           <div style={{ fontSize: '1.8vh', color: '#888' }}>
@@ -251,39 +250,40 @@ const ScheduleSection = () => {
           ))
         )}
       </MatchScroll>
+
       <CalendarContainer>
-        <CalendarHeader>
-          <span>{currentDate.format('MMMM YYYY')}</span>
-          <Link
-            to="/schedule"
-            style={{
-              fontSize: '2vh',
-              textDecoration: 'none',
-              color: 'inherit',
-            }}
-          >
-            <Arrow>{'>'}</Arrow>
-          </Link>
-        </CalendarHeader>
-        <WeekRow>
-          {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((day) => (
-            <div key={day}>{day}</div>
-          ))}
-        </WeekRow>
-        <DaysRow>
-          {getDaysInMonth().map((d, i) => (
-            <DayCell key={i}>
-              {d}
-              {gamesByDate[d] && (
-                <DotWrapper>
-                  {gamesByDate[d].map((color, idx) => (
-                    <Dot key={idx} style={{ backgroundColor: color }} />
-                  ))}
-                </DotWrapper>
-              )}
-            </DayCell>
-          ))}
-        </DaysRow>
+        <CalendarBox>
+          <CalendarHeader>
+            <span>{currentDate.format('MMMM YYYY')}</span>
+            <Link
+              to="/schedule"
+              style={{ fontSize: '2vh', textDecoration: 'none', color: 'inherit' }}
+            >
+              <Arrow>{'>'}</Arrow>
+            </Link>
+          </CalendarHeader>
+
+          <WeekRow>
+            {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((day) => (
+              <div key={day}>{day}</div>
+            ))}
+          </WeekRow>
+
+          <DaysRow>
+            {getDaysInMonth().map((d, i) => (
+              <DayCell key={i}>
+                {d}
+                {gamesByDate[d] && (
+                  <DotWrapper>
+                    {gamesByDate[d].map((color, idx) => (
+                      <Dot key={idx} style={{ backgroundColor: color }} />
+                    ))}
+                  </DotWrapper>
+                )}
+              </DayCell>
+            ))}
+          </DaysRow>
+        </CalendarBox>
       </CalendarContainer>
     </Container>
   );

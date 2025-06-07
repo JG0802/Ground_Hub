@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 
-const StyledLine = styled.div`
+const Divider = styled.div`
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 2vh 0;
   width: 100%;
-  border: 1px solid #ddd;
 `;
 
-const Line = () => {
-  return <StyledLine />;
-};
+const Line = () => <Divider />;
 
 export default Line;

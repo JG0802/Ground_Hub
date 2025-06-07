@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const HeaderWrapper = styled.header`
+  position: fixed;
   text-align: left;
   font-size: 3vh;
   font-family: 'MarinesBold', sans-serif;
   padding: 2vh 0;
   width: 100%;
-  border-bottom: 1px solid #ddd;
+  z-index: 9999;
+  background-color: #f9f9f9;
   &:hover {
     cursor: pointer;
   }
