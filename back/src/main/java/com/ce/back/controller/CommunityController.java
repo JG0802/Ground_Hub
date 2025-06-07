@@ -41,7 +41,7 @@ public class CommunityController {
     }
 
     // 카테고리로 조회
-    @GetMapping("/{category}")
+    @GetMapping("/category/{category}")
     public ResponseEntity<List<Community>> getPostsByCategory(@PathVariable String category) {
         return ResponseEntity.ok(communityService.getPostsByCategory(category));
     }
