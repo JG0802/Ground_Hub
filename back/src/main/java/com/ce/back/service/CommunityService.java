@@ -18,7 +18,7 @@ public class CommunityService {
     private final CommunityRepository communityRepository;
 
     // 게시글 작성
-    public Community createPost(String title, String content, Long teamId, String userMail) {
+    public Community createPost(String title, String content, Long teamId, String userMail, String category) {
         Community post = Community.builder()
                 .title(title)
                 .content(content)
@@ -26,6 +26,7 @@ public class CommunityService {
                 .views(0)
                 .team(Team.builder().teamId(teamId).build())
                 .user(User.builder().userMail(userMail).build())
+                .category(category)
                 .build();
         return communityRepository.save(post);
     }

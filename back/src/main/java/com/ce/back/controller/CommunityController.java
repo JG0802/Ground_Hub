@@ -22,7 +22,8 @@ public class CommunityController {
         String content = (String) request.get("content");
         Long teamId = ((Number) request.get("teamId")).longValue();
         String userMail = (String) request.get("userMail");
-        Community created = communityService.createPost(title, content, teamId, userMail);
+        String category = (String) request.get("category");
+        Community created = communityService.createPost(title, content, teamId, userMail, category);
         return ResponseEntity.ok(created);
     }
 
