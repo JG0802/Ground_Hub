@@ -67,7 +67,7 @@ const FormationPage = () => {
                 <p>{form.summation}</p>
                 <h3>{form.title}</h3>
                 <img
-                  src={`/library/${form.img}`}
+                  src={form.img}
                   alt={form.title}
                   style={{ width: '100%', borderRadius: '1vh' }}
                 />

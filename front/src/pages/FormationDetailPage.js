@@ -37,7 +37,7 @@ const FormationDetailPage = () => {
     ) {
       return (
         <img
-          src={`/library/${data.img}`}
+          src={data.img}
           alt={data.title}
           style={{ width: '100%', borderRadius: '1vh', marginTop: '2vh' }}
         />
@@ -47,11 +47,11 @@ const FormationDetailPage = () => {
     if (data.img.endsWith('.html')) {
       return (
         <iframe
-          src={`/library/${data.img}`}
+          src={data.img}
           title={data.title}
           style={{
             width: '100%',
-            minHeight: '400px',
+            minHeight: '200px',
             border: 'none',
             borderRadius: '1vh',
             marginTop: '2vh',
