@@ -43,6 +43,7 @@ const SubmitButton = styled.button`
 `;
 
 const CreateGamePage = () => {
+  const [versus, setVersus] = useState('');
   const [gameName, setGameName] = useState('');
   const [startDate, setStartDate] = useState('');
   const [oppoLogo, setOppoLogo] = useState();
@@ -75,10 +76,12 @@ const CreateGamePage = () => {
 
     try {
       const formData = new FormData();
+      formData.append('versus', versus);
       formData.append('gameName', gameName);
       formData.append('startDate', startDate);
       formData.append('teamId', teamId);
       formData.append('oppoLogo', finalLogoFile); // 파일 객체 추가
+      console.log(versus);
 
       const response = await fetch('/api/games/create-game', {
         method: 'POST',
@@ -102,6 +105,16 @@ const CreateGamePage = () => {
     <FormContainer>
       <h2>경기 추가</h2>
       <form onSubmit={handleSubmit}>
+        <InputField>
+          <Label htmlFor="versus">상대팀명</Label>
+          <Input
+            type="text"
+            id="versus"
+            value={versus}
+            onChange={(e) => setVersus(e.target.value)}
+            required
+          />
+        </InputField>
         <InputField>
           <Label htmlFor="gameName">경기 이름</Label>
           <Input

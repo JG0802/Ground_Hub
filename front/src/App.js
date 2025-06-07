@@ -29,6 +29,7 @@ import { useState } from 'react';
 import PRGamesPage from './pages/PRGamesPage';
 import PRGamePage from './pages/PRGamePage';
 import PRGameUpdatePage from './pages/PRGameUpdatePage';
+import FeedDetailPage from './pages/FeedDetailPage';
 
 const App = () => {
   const location = useLocation();
@@ -78,6 +79,7 @@ const App = () => {
         <Route path="/user/pr/list/:prGameId" element={<PRGamesPage />} />
         <Route path="/user/pr/:prGameId" element={<PRGamePage />} />
         <Route path="/pr/update/:prGameId" element={<PRGameUpdatePage />} />
+        <Route path="/feed/:contentId" element={<FeedDetailPage />} />
       </Routes>
       {shouldShowBottomTab && <BottomTab />}
     </>

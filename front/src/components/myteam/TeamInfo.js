@@ -117,6 +117,7 @@ const TeamInfo = ({ games, teamManagerMail }) => {
                 <TeamName>{game.team.teamName}</TeamName>
               </TeamCard>
               <TeamCard key={i}>
+                <TeamName>{game.gameName}</TeamName>
                 <TeamName>{game.date.slice(0, 10)}</TeamName>
                 <TeamName style={{ fontSize: '5vh' }}>VS</TeamName>
               </TeamCard>
@@ -127,7 +128,7 @@ const TeamInfo = ({ games, teamManagerMail }) => {
                     e.target.src = altImage;
                   }}
                 />
-                <TeamName>{game.gameName}</TeamName>
+                <TeamName>{game.versus}</TeamName>
               </TeamCard>
             </MatchCard>
           </Link>
