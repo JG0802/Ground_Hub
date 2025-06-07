@@ -4,9 +4,13 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const PRGameCheckPageContainer = styled.div`
+  padding: 7vh 2vw 10vh;
+  max-width: 768px;
+  margin: 0 auto;
   display: flex;
-  align-items: center;
   flex-direction: column;
+  align-items: center;
+  background-color: #f9f9f9;
 `;
 
 const FieldWrapper = styled.div`
@@ -14,7 +18,7 @@ const FieldWrapper = styled.div`
   width: 49vh;
   height: 42vh;
   background-image: url(${field});
-  background-size: 100% 100%; // ✅ 강제로 꽉 채움 (비율 무시)
+  background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center;
   margin-bottom: 2vh;
@@ -27,20 +31,27 @@ const ButtonBox = styled.div`
 `;
 
 const StyledButton = styled.button`
-  position: absolute; /* 절대 위치 */
-  top: ${(props) => props.$top}; /* 상단 여백 */
-  left: ${(props) => props.$left}; /* 우측 여백 */
-  display: flex; /* 내부 정렬 위해 flex 사용 */
-  justify-content: center; /* 수평 가운데 */
+  position: absolute;
+  top: ${(props) => props.$top};
+  left: ${(props) => props.$left};
+  display: flex;
+  justify-content: center;
   align-items: center;
-  background-color: rgba(240, 228, 57, 0.7); /* 반투명 배경 */
+  background-color: white;
   color: black;
-  border: 2px solid black;
-  border-radius: 20vh;
+  border: 1.5px solid black;
+  border-radius: 3vh;
   cursor: pointer;
-  width: 8.2vh;
-  height: 4vh;
-  font-size: 1.5vh;
+  width: 8vh;
+  height: 3.8vh;
+  font-size: 1.4vh;
+  font-weight: 600;
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.15);
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #f1f1f1;
+  }
 `;
 
 const ChangeButton = styled.button`
@@ -52,9 +63,14 @@ const ChangeButton = styled.button`
   border-radius: 0.7vh;
   margin-bottom: 2vh;
   box-sizing: border-box;
+  cursor: pointer;
+  border: none;
+  font-weight: bold;
+
   &:hover {
-    cursor: pointer;
+    background-color: #222;
   }
+
   &:disabled {
     background-color: #999;
     cursor: not-allowed;
@@ -96,19 +112,27 @@ const PopupTitle = styled.h4`
 
 const UsersBox = styled.div`
   display: flex;
-  flex-wrap: wrap; /* 줄바꿈 허용 */
-  gap: 1.5vh; /* 아이템 간 간격 */
+  flex-wrap: wrap;
+  gap: 1.5vh;
   justify-content: flex-start;
 `;
 
 const UserBox = styled.div`
-  width: calc(33.333% - 1vh); /* 3개씩 한 줄에 정렬 */
-  background-color: rgba(240, 228, 57);
+  width: calc(33.333% - 1vh);
+  background-color: #fffef2;
   border-radius: 6px;
-  border: 2px solid black;
+  border: 1.5px solid #ccc;
   box-sizing: border-box;
   padding: 1vh;
   text-align: center;
+  font-size: 1.4vh;
+  font-weight: 500;
+  transition: 0.2s;
+  cursor: default;
+
+  &:hover {
+    background-color: #f8f8f8;
+  }
 `;
 
 const UserPositionBox = styled.div`
@@ -117,6 +141,7 @@ const UserPositionBox = styled.div`
 
 const UserNameBox = styled.div`
   font-size: 2.3vh;
+  font-weight: 600;
 `;
 
 const PRGameCheckPage = () => {

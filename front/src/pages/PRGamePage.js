@@ -4,9 +4,11 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 const PRGamePageContainer = styled.div`
+  padding: 7vh 2vw 10vh;
   display: flex;
-  align-items: center;
   flex-direction: column;
+  align-items: center;
+  background-color: #f9f9f9;
 `;
 
 const FieldWrapper = styled.div`
@@ -14,7 +16,7 @@ const FieldWrapper = styled.div`
   width: 49vh;
   height: 42vh;
   background-image: url(${field});
-  background-size: 100% 100%; // ✅ 강제로 꽉 채움 (비율 무시)
+  background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center;
   margin-bottom: 2vh;
@@ -27,13 +29,13 @@ const ButtonBox = styled.div`
 `;
 
 const StyledButton = styled.button`
-  position: absolute; /* 절대 위치 */
-  top: ${(props) => props.$top}; /* 상단 여백 */
-  left: ${(props) => props.$left}; /* 우측 여백 */
-  display: flex; /* 내부 정렬 위해 flex 사용 */
-  justify-content: center; /* 수평 가운데 */
+  position: absolute;
+  top: ${(props) => props.$top};
+  left: ${(props) => props.$left};
+  display: flex;
+  justify-content: center;
   align-items: center;
-  background-color: rgba(240, 228, 57, 0.7); /* 반투명 배경 */
+  background-color: rgba(240, 228, 57, 0.7);
   color: black;
   border: 2px solid black;
   border-radius: 20vh;
@@ -46,11 +48,11 @@ const StyledButton = styled.button`
 const ChangeButton = styled.button`
   background-color: black;
   color: white;
-  width: 40vh;
-  height: 6vh;
-  font-size: 2vh;
-  border-radius: 0.7vh;
-  margin-bottom: 2vh;
+  width: 100%;
+  height: 5.5vh;
+  font-size: 1.8vh;
+  border-radius: 1vh;
+  margin-top: 2vh;
   box-sizing: border-box;
   &:hover {
     cursor: pointer;
@@ -74,7 +76,6 @@ const PopupBox = styled.div`
   padding: 2vh;
   max-width: 400px;
   z-index: 1000;
-  margin-bottom: 56px;
   overflow-y: auto;
 `;
 
@@ -84,6 +85,8 @@ const PopupButton = styled.button`
   margin-bottom: 2vh;
   background-color: white;
   border: none;
+  font-size: 1.8vh;
+  font-weight: bold;
   &:hover {
     cursor: pointer;
   }
@@ -92,31 +95,38 @@ const PopupButton = styled.button`
 const PopupTitle = styled.h4`
   margin-top: 0;
   margin-bottom: 2vh;
+  font-size: 2vh;
 `;
 
 const UsersBox = styled.div`
   display: flex;
-  flex-wrap: wrap; /* 줄바꿈 허용 */
-  gap: 1.5vh; /* 아이템 간 간격 */
-  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 1.5vh;
+  justify-content: center;
 `;
 
 const UserBox = styled.div`
-  width: calc(33.333% - 1vh); /* 3개씩 한 줄에 정렬 */
+  width: calc(33.333% - 1vh);
   background-color: rgba(240, 228, 57);
   border-radius: 6px;
   border: 2px solid black;
   box-sizing: border-box;
   padding: 1vh;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const UserPositionBox = styled.div`
-  font-size: 1.5vh;
+  font-size: 1.4vh;
+  margin-bottom: 0.5vh;
 `;
 
 const UserNameBox = styled.div`
-  font-size: 2.3vh;
+  font-size: 2vh;
+  font-weight: 500;
 `;
 
 const PRGamePage = () => {

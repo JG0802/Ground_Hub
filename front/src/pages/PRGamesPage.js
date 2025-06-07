@@ -3,61 +3,76 @@ import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 const PRGamesPageContainer = styled.div`
+  padding: 8vh 2vw 10vh;
+  max-width: 768px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
+  background-color: #f9f9f9;
 `;
 
-const PRGamesBox = styled.div``;
+const PRGamesBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+`;
 
 const PRGameBox = styled(Link)`
-  height: 6vh;
-  width: 90%;
   display: flex;
-  align-items: center;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin: 2vh 5%;
-  background: #eee;
+  padding: 1.5vh 2vh;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
   text-decoration: none;
-  border-radius: 6px;
+  color: black;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #f1f1f1;
+  }
 `;
 
 const PRGameTitle = styled.p`
-  display: flex;
-  align-items: center;
+  font-size: 1.8vh;
   margin: 0;
-  margin-left: 1vh;
-  color: black;
+  font-weight: 500;
 `;
 
 const StyledButton = styled.button`
-  width: 7vh;
-  height: 4vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: red;
+  padding: 0.7vh 1.2vh;
+  font-size: 1.5vh;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
   border-radius: 6px;
-  border: 1px solid black;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
   &:hover {
-    background-color: pink;
+    background-color: #c0392b;
   }
 `;
 
 const StyledLink = styled(Link)`
-  color: black;
-  text-decoration: none;
-  width: 70%;
+  margin-top: 4vh;
+  text-align: center;
+  width: 80%;
   height: 5.5vh;
+  line-height: 5.5vh;
   background-color: black;
   color: white;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 6px;
-  border: 1px solid black;
+  font-size: 1.7vh;
+  font-weight: bold;
+  border-radius: 10px;
+  text-decoration: none;
+  align-self: center;
+
+  &:hover {
+    background-color: #222;
+  }
 `;
 
 const PRGamesPage = () => {
@@ -74,15 +89,11 @@ const PRGamesPage = () => {
           throw new Error('서버 응답 오류');
         }
         const data = await res.json();
-        console.log(data);
-        // 필터링 로직
         const filtered = data.filter((prGame) => {
           const mailInData = prGame.user?.userMail?.toLowerCase();
           return mailInData?.toLowerCase() === userMail?.toLowerCase();
         });
-
         setData(filtered);
-        console.log(filtered);
       } catch (err) {
         console.error('PRGame 불러오기 오류:', err);
       }
@@ -123,9 +134,8 @@ const PRGamesPage = () => {
           >
             <PRGameTitle>{game.prGameName}</PRGameTitle>
             <StyledButton
-              style={{ marginRight: '1vh' }}
               onClick={(e) => {
-                e.preventDefault(); // 링크 이동 방지
+                e.preventDefault();
                 handleDeleteGame(game.prGameId);
               }}
             >

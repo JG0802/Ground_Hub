@@ -1,63 +1,64 @@
+import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import styled from 'styled-components';
 
 const PRGamesListPageContainer = styled.div`
-  display: flex;
-  flex-direction: column;
+  padding: 7vh 2vw 10vh;
+  max-width: 768px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
 `;
 
-const PRGamesListBox = styled.div``;
+const PRGamesListBox = styled.div`
+  margin-bottom: 4vh;
+`;
 
-const PRGameBox = styled(Link)`
-  height: 6vh;
-  width: 90%;
+const PRGameBox = styled.div`
   display: flex;
-  align-items: center;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin: 2vh 5%;
-  background: #eee;
+  padding: 1.5vh 2vh;
+  margin-bottom: 2vh;
+  border-radius: 1vh;
+  background-color: #eee;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+`;
+
+const GameNameLink = styled(Link)`
   text-decoration: none;
-  border-radius: 6px;
-`;
-
-const PRGameTitle = styled.p`
-  display: flex;
-  align-items: center;
-  margin: 0;
-  margin-left: 1vh;
   color: black;
+  font-size: 1.7vh;
+  font-weight: 500;
+  flex: 1;
 `;
 
-const StyledButton = styled.button`
-  width: 7vh;
-  height: 4vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: red;
-  border-radius: 6px;
-  border: 1px solid black;
+const DeleteButton = styled.button`
+  width: 6vh;
+  height: 3.5vh;
+  background-color: #c0392b;
+  color: white;
+  font-size: 1.6vh;
+  border: none;
+  border-radius: 0.7vh;
+  cursor: pointer;
+
   &:hover {
-    background-color: pink;
+    background-color: #e74c3c;
   }
 `;
 
-const StyledLink = styled(Link)`
-  color: black;
-  text-decoration: none;
-  width: 70%;
-  height: 5.5vh;
+const CreateLink = styled(Link)`
+  display: block;
+  width: 100%;
+  padding: 1.8vh 0;
+  text-align: center;
+  font-size: 1.8vh;
   background-color: black;
   color: white;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 6px;
-  border: 1px solid black;
+  border-radius: 1vh;
+  text-decoration: none;
+  font-weight: 600;
+  margin-top: 4vh;
 `;
 
 const PRGamesListPage = () => {
@@ -69,12 +70,8 @@ const PRGamesListPage = () => {
     const fetchGame = async () => {
       try {
         const res = await fetch(`/api/pr-games/findByGameId/${gameId}`);
-
-        if (!res.ok) {
-          throw new Error('서버 응답 오류');
-        }
+        if (!res.ok) throw new Error('서버 응답 오류');
         const data = await res.json();
-
         setData(data);
       } catch (err) {
         console.error('PRGame 불러오기 오류:', err);
@@ -89,7 +86,6 @@ const PRGamesListPage = () => {
       const res = await fetch(`/api/pr-games/remove/${prGameId}`, {
         method: 'DELETE',
       });
-
       if (res.ok) {
         alert('삭제 성공!');
         window.location.reload();
@@ -106,28 +102,18 @@ const PRGamesListPage = () => {
   return (
     <PRGamesListPageContainer>
       <PRGamesListBox>
-        {data.map((game, index) => (
-          <PRGameBox
-            key={index}
-            to={{
-              pathname: `/pr/check/${game.prGameId}`,
-              state: { prGame: game },
-            }}
-          >
-            <PRGameTitle>{game.prGameName}</PRGameTitle>
-            <StyledButton
-              style={{ marginRight: '1vh' }}
-              onClick={(e) => {
-                e.preventDefault(); // 링크 이동 방지
-                handleDeleteGame(game.prGameId);
-              }}
-            >
+        {data.map((game) => (
+          <PRGameBox key={game.prGameId}>
+            <GameNameLink to={`/pr/check/${game.prGameId}`}>
+              {game.prGameName}
+            </GameNameLink>
+            <DeleteButton onClick={() => handleDeleteGame(game.prGameId)}>
               🗑️
-            </StyledButton>
+            </DeleteButton>
           </PRGameBox>
         ))}
       </PRGamesListBox>
-      <StyledLink to={'/pr/create'}>포메이션 생성</StyledLink>
+      <CreateLink to={'/pr/create'}>포메이션 생성</CreateLink>
     </PRGamesListPageContainer>
   );
 };
