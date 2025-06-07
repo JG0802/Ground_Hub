@@ -60,6 +60,7 @@ public class GameController {
     @PostMapping("/create-game")
     public ResponseEntity<?> createGame(@RequestParam("gameName") String gameName,
                                         @RequestParam("startDate") String startDate,
+                                        @RequestParam("versus") String versus,
                                         @RequestParam("teamId") Long teamId,
                                         @RequestParam("oppoLogo") MultipartFile oppoLogo) {
         try {
@@ -73,6 +74,7 @@ public class GameController {
             Game game = Game.builder()
                     .gameName(gameName)
                     .date(LocalDateTime.parse(startDate)) // startDate를 LocalDateTime으로 변환
+                    .versus(versus)
                     .team(team)
                     .oppoLogo(logoFileName) // 상대팀 로고 파일명
                     .build();
