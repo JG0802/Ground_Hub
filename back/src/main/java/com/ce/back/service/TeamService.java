@@ -70,9 +70,7 @@ public class TeamService {
         team.setLogo(logoFileName); // 팀 객체에 로고 파일명 설정
 
         User manager = team.getTeamManager();
-        if (manager != null && !team.getUsers().contains(manager)) {
-            team.getUsers().add(manager);
-        }
+        team.getUsers().add(manager);
         return teamRepository.save(team); // 새로운 팀 저장
     }
 
