@@ -7,6 +7,7 @@ const PRGameCheckPageContainer = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
+  padding-top: 8vh;
 `;
 
 const FieldWrapper = styled.div`

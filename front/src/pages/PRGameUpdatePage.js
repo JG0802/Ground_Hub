@@ -8,6 +8,7 @@ const PRGameUpdatePageContainer = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: center;
+  padding-top: 8vh;
 `;
 
 const FieldWrapper = styled.div`

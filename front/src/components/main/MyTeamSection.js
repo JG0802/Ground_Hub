@@ -49,6 +49,21 @@ const TeamName = styled.p`
   margin-bottom: 0;
 `;
 
+const DotRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1vh;
+`;
+
+const Dot = styled.div`
+  width: 2vh;
+  height: 2vh;
+  border-radius: 50%;
+  background-color: ${(props) => props.color};
+  border: ${(props) =>
+    props.color === 'white' ? '1px solid black' : `1px solid ${props.color}`};
+`;
+
 const MyTeamSection = () => {
   const [teams, setTeams] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -63,7 +78,7 @@ const MyTeamSection = () => {
           const data = await response.json();
           setTeams(data);
         } else {
-          alert(await response.text());
+          console.log(await response.text());
         }
       } catch (err) {
         console.error(err);
@@ -101,24 +116,36 @@ const MyTeamSection = () => {
           {'>'}
         </Link>
       </TitleWrapper>
-      <TeamList>
-        {teams.map((team, index) => (
-          <Link
-            to={`/teams/${team.teamId}`}
-            style={{ textDecoration: 'none', color: 'inherit' }}
-          >
-            <TeamItem key={index}>
-              <TeamImage
-                src={`/logos/${team.logo}`}
-                onError={(e) => {
-                  e.target.src = altImage;
-                }}
-              />
-              <TeamName>{team.teamName}</TeamName>
-            </TeamItem>
-          </Link>
-        ))}
-      </TeamList>
+
+      {teams.length === 0 ? (
+        <div style={{ fontSize: '1.8vh', color: '#888', padding: '1vh' }}>
+          소속된 팀이 없습니다.
+        </div>
+      ) : (
+        <TeamList>
+          {teams.map((team, index) => (
+            <Link
+              key={index}
+              to={`/teams/${team.teamId}`}
+              style={{ textDecoration: 'none', color: 'inherit' }}
+            >
+              <TeamItem>
+                <TeamImage
+                  src={`/logos/${team.logo}`}
+                  onError={(e) => {
+                    e.target.src = altImage;
+                  }}
+                />
+                <DotRow>
+                  <Dot color={team.firstColor} />
+                  <Dot color={team.secondColor} />
+                </DotRow>
+                <TeamName>{team.teamName}</TeamName>
+              </TeamItem>
+            </Link>
+          ))}
+        </TeamList>
+      )}
     </SectionWrapper>
   );
 };

@@ -135,14 +135,20 @@ const ScheduleSection = () => {
   };
 
   const gamesByDate = games.reduce((acc, game) => {
-    const day = dayjs(game.date).date();
-    if (!acc[day]) acc[day] = [];
-    if (!acc[day].includes(game.team.firstColor)) {
-      acc[day].push(game.team.firstColor);
+    const gameDate = dayjs(game.date);
+    // ✅ 현재 렌더링 중인 달과 같은 달의 경기만 표시
+    if (
+      gameDate.month() === currentDate.month() &&
+      gameDate.year() === currentDate.year()
+    ) {
+      const day = gameDate.date();
+      if (!acc[day]) acc[day] = [];
+      if (!acc[day].includes(game.team.firstColor)) {
+        acc[day].push(game.team.firstColor);
+      }
     }
     return acc;
   }, {});
-
   useEffect(() => {
     const fetchTeams = async () => {
       try {
@@ -151,7 +157,7 @@ const ScheduleSection = () => {
           const data = await response.json();
           setTeams(data);
         } else {
-          alert(await response.text());
+          console.log(await response.text());
         }
       } catch (err) {
         console.error(err);
@@ -162,6 +168,11 @@ const ScheduleSection = () => {
   }, [userMail]);
 
   useEffect(() => {
+    if (teams.length === 0) {
+      setIsLoading(false);
+      return;
+    }
+
     const fetchGamesForAllTeams = async () => {
       try {
         const allGames = [];
@@ -179,7 +190,6 @@ const ScheduleSection = () => {
         setGames(allGames);
       } catch (error) {
         console.error(error);
-        alert('경기 데이터를 불러오는 중 오류 발생');
       } finally {
         setIsLoading(false);
       }
@@ -257,7 +267,11 @@ const ScheduleSection = () => {
             <span>{currentDate.format('MMMM YYYY')}</span>
             <Link
               to="/schedule"
-              style={{ fontSize: '2vh', textDecoration: 'none', color: 'inherit' }}
+              style={{
+                fontSize: '2vh',
+                textDecoration: 'none',
+                color: 'inherit',
+              }}
             >
               <Arrow>{'>'}</Arrow>
             </Link>

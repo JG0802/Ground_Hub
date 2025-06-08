@@ -126,7 +126,7 @@ public class DataInitializer implements CommandLineRunner {
                 .build();
 
         User user10 = User.builder()
-                .userMail("PJHONG@dankook.ac.kr")
+                .userMail("PJH@dankook.ac.kr")
                 .password("qwer1234")
                 .userName("박재홍")
                 .tel("010-1234-5678")

@@ -59,10 +59,10 @@ public class GameController {
     // http://localhost:8080/api/games/create-game
     @PostMapping("/create-game")
     public ResponseEntity<?> createGame(@RequestParam("gameName") String gameName,
-            @RequestParam("startDate") String startDate,
-            @RequestParam("versus") String versus,
-            @RequestParam("teamId") Long teamId,
-            @RequestParam("oppoLogo") MultipartFile oppoLogo) {
+                                        @RequestParam("startDate") String startDate,
+                                        @RequestParam("versus") String versus,
+                                        @RequestParam("teamId") Long teamId,
+                                        @RequestParam("oppoLogo") MultipartFile oppoLogo) {
         try {
             // 상대 팀 로고 파일 저장
             String logoFileName = gameService.saveLogoFile(oppoLogo);

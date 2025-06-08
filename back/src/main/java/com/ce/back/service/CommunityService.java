@@ -18,8 +18,7 @@ public class CommunityService {
     private final CommunityRepository communityRepository;
 
     // 게시글 작성
-    public Community createPost(String title, String content, Long teamId, String userMail, String category,
-            LocalDateTime matchDay) {
+    public Community createPost(String title, String content, Long teamId, String userMail, String category, LocalDateTime matchDay) {
         Community post = Community.builder()
                 .title(title)
                 .content(content)
@@ -77,14 +76,12 @@ public class CommunityService {
     }
 
     // 게시글 수정
-    public Community updatePost(Long contentId, String title, String content, String category, LocalDateTime matchDay) {
+    public Community updatePost(Long contentId, String title, String content,String category, LocalDateTime matchDay) {
         Community post = communityRepository.findById(contentId)
                 .orElseThrow(() -> new RuntimeException("해당 게시물이 없습니다."));
 
-        if (title != null)
-            post.setTitle(title);
-        if (content != null)
-            post.setContent(content);
+        if (title != null) post.setTitle(title);
+        if (content != null) post.setContent(content);
 
         post.setCategory(category);
         post.setMatchDay(matchDay);

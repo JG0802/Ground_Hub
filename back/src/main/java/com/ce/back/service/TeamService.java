@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,6 +70,10 @@ public class TeamService {
         String logoFileName = saveLogoFile(logoFile); // 로고 파일을 저장하고 파일명을 반환
         team.setLogo(logoFileName); // 팀 객체에 로고 파일명 설정
 
+        User manager = team.getTeamManager();
+        if (!team.getUsers().contains(manager)) {
+            team.getUsers().add(manager);
+        }
         return teamRepository.save(team); // 새로운 팀 저장
     }
 
@@ -134,7 +139,7 @@ public class TeamService {
         // 파일 복사
         Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
-        return fileName;  // 파일명 반환
+        return fileName; // 파일명 반환
     }
 
     // 팀 매니저 직함 양도

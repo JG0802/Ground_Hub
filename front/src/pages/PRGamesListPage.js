@@ -5,6 +5,7 @@ import styled from 'styled-components';
 const PRGamesListPageContainer = styled.div`
   display: flex;
   flex-direction: column;
+  padding-top: 8vh;
 `;
 
 const PRGamesListBox = styled.div``;

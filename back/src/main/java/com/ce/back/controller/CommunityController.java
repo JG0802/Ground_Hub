@@ -81,8 +81,7 @@ public class CommunityController {
 
     // 게시글 수정
     @PutMapping("/{id}")
-    public ResponseEntity<Community> updatePost(@PathVariable Long id,
-            @RequestBody java.util.Map<String, Object> request) {
+    public ResponseEntity<Community> updatePost(@PathVariable Long id, @RequestBody java.util.Map<String, Object> request) {
         String title = (String) request.get("title");
         String content = (String) request.get("content");
         String category = (String) request.get("category");

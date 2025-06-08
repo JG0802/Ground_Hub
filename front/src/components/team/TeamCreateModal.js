@@ -4,11 +4,11 @@ import altImage from '../../img/alt_image.png';
 
 const Overlay = styled.div`
   position: fixed;
-  bottom: 56px;
+  bottom: 5vh;
   left: 50%;
   transform: translateX(-50%);
-  width: 430px;
-  max-width: 430px;
+  width: 50vh;
+  max-width: 100vw;
   background-color: #f4f4f4;
   border-top-left-radius: 2vh;
   border-top-right-radius: 2vh;
@@ -62,6 +62,7 @@ const ColorButton = styled.button`
   border: none;
   background-color: ${(props) => props.color};
   opacity: ${(props) => (props.selected ? 1 : 0.4)};
+  border: ${(props) => (props.color === 'white' ? '1px solid black' : 'none')};
 `;
 
 const CreateButton = styled.button`
