@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import formations from '../data/formation.json';
 import tactics from '../data/tactic.json';
 import Line from '../components/common/Line.js';
@@ -11,7 +11,21 @@ const TAB_LIST = [
 
 const FormationPage = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('formation');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialTab = searchParams.get('tab') || 'formation';
+  const [activeTab, setActiveTab] = useState(initialTab);
+
+  // 탭 변경 시 쿼리스트링도 변경
+  const handleTabChange = (key) => {
+    setActiveTab(key);
+    setSearchParams({ tab: key });
+  };
+
+  // 뒤로가기 등으로 쿼리스트링이 바뀌면 탭도 바꿔줌
+  useEffect(() => {
+    const tab = searchParams.get('tab') || 'formation';
+    setActiveTab(tab);
+  }, [searchParams]);
 
   return (
     <div>
@@ -21,7 +35,6 @@ const FormationPage = () => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          // background: '#f5f5f5',
           borderRadius: '2vh',
           margin: '2vh 0',
           padding: '2vh 0',
@@ -33,11 +46,10 @@ const FormationPage = () => {
         {TAB_LIST.map((tab) => (
           <span
             key={tab.key}
-            onClick={() => setActiveTab(tab.key)}
+            onClick={() => handleTabChange(tab.key)}
             style={{
               cursor: 'pointer',
               color: activeTab === tab.key ? '#222' : '#aaa',
-              // borderBottom: activeTab === tab.key ? '2px solid #222' : 'none',
               padding: '0 1vh',
               transition: 'color 0.2s, border-bottom 0.2s',
             }}
