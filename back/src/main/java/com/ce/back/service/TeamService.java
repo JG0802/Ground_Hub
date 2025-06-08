@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,7 +71,9 @@ public class TeamService {
         team.setLogo(logoFileName); // 팀 객체에 로고 파일명 설정
 
         User manager = team.getTeamManager();
-        team.getUsers().add(manager);
+        if (!team.getUsers().contains(manager)) {
+            team.getUsers().add(manager);
+        }
         return teamRepository.save(team); // 새로운 팀 저장
     }
 
