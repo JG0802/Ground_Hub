@@ -320,10 +320,7 @@ const PRGameUpdatePage = () => {
 
   return (
     <PRGameUpdatePageContainer>
-      <TitleInput
-        value={`${prGame.prGameName}`}
-        onChange={(e) => setTitle(e.target.value)}
-      />
+      <TitleInput value={title} onChange={(e) => setTitle(e.target.value)} />
       <FieldWrapper>
         <ButtonBox>
           <StyledButton

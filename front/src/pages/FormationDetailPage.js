@@ -4,7 +4,7 @@ import tactics from '../data/tactic.json';
 import styled from 'styled-components';
 
 const Container = styled.div`
-  padding: 7vh 2vw 5vh;
+  margin-top: 8vh;
   background-color: #f9f9f9;
   display: flex;
   justify-content: center;
@@ -15,7 +15,7 @@ const Card = styled.div`
   max-width: 60vh;
   background-color: #fff;
   border-radius: 12px;
-  padding: 3vh 3vw;
+  padding: 3vh;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 `;
 
@@ -124,7 +124,7 @@ const FormationDetailPage = () => {
             title={data.title}
             style={{
               width: '100%',
-              minHeight: '180px',
+              minHeight: 'calc(min(100vw, 50vh) * 0.6)',
               border: 'none',
               borderRadius: '1vh',
               marginTop: '2vh',
