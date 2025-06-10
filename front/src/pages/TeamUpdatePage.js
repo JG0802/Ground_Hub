@@ -5,140 +5,154 @@ import Line from '../components/common/Line.js';
 import altImage from '../img/alt_image.png';
 
 const Container = styled.div`
+  padding: 7vh 2vw 10vh;
+  max-width: 768px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  text-align: center;
+  background-color: #f9f9f9;
 `;
 
 const Title = styled.h2`
-  margin-top: 1.5vh;
-  margin-bottom: 1vh;
+  font-size: 2.4vh;
+  font-weight: 600;
+  margin: 3vh 0 2vh;
+  text-align: center;
 `;
 
 const Row = styled.div`
   display: flex;
-  align-items: center;
-  gap: 1vh;
+  align-items: flex-start;
+  gap: 2vh;
 `;
 
 const InputBox = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 90%;
-  margin-bottom: 1vh;
-  margin-left: 5%;
+  align-items: center;
+  margin: 2vh 0;
 `;
 
 const ImagePreview = styled.img`
-  width: 10vh;
-  height: 10vh;
+  width: 12vh;
+  height: 12vh;
   border-radius: 50%;
-  margin: 2vh;
   object-fit: cover;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 `;
 
 const Box = styled.div`
   display: flex;
-  gap: 2vh;
+  flex-direction: column;
+  gap: 1.5vh;
+  flex: 1;
 `;
 
 const Label = styled.label`
+  font-size: 1.6vh;
   font-weight: bold;
-  margin-bottom: 1vh;
+  margin-bottom: 0.5vh;
 `;
 
 const Input = styled.input`
-  width: 60%;
-  padding: 1vh;
+  width: 100%;
+  padding: 1.2vh;
   border: 1px solid #ccc;
-  border-radius: 0.5vh;
-  margin-bottom: 1vh;
+  border-radius: 0.7vh;
+  font-size: 1.6vh;
 `;
 
 const Button = styled.button`
   background-color: black;
   color: white;
-  padding: 1vh 2vh;
+  padding: 1.2vh 2.4vh;
   border: none;
   border-radius: 0.7vh;
   cursor: pointer;
-  margin-bottom: 1vh;
+  font-size: 1.5vh;
+  transition: background-color 0.2s;
+
   &:hover {
-    background-color: #333;
+    background-color: #222;
   }
 `;
 
 const UsersBox = styled.ul`
   padding: 0;
   margin: 0;
+  list-style: none;
+  border-top: 1px solid #ddd;
 `;
+
 const UserBox = styled.li`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 1.2vh 2vh;
   border-bottom: 1px solid #ddd;
-  padding: 0.5vh 2vh;
+  flex-wrap: nowrap; /* 줄바꿈 방지 */
+  gap: 2vh;
 `;
 
 const ButtonBox = styled.div`
   display: flex;
   gap: 1vh;
+  flex-shrink: 0;
 `;
+
 
 const ColorBox = styled.div`
   display: flex;
-  justify-content: space-between;
-  width: 30vh;
-  align-items: center;
+  flex-direction: column;
+  gap: 1.5vh;
   position: relative;
 `;
 
 const ColorButton = styled.button`
-  margin-left: 2vh;
-  margin-bottom: 2vh;
-  width: 3vh;
-  height: 3vh;
+  width: 3.5vh;
+  height: 3.5vh;
   border-radius: 50%;
-  border: none;
+  border: 2px solid #ccc;
   background-color: ${(props) => props.color};
   opacity: ${(props) => (props.selected ? 1 : 0.4)};
+  cursor: pointer;
 `;
 
 const ColorPalette = styled.div`
   position: absolute;
-  bottom: 5.5vh;
-  left: 0;
+  bottom: 6.5vh;
   display: grid;
-  grid-template-columns: repeat(4, 3vh);
+  grid-template-columns: repeat(5, 3.5vh);
   gap: 1vh;
-  background-color: white;
+  background-color: #fff;
   border: 1px solid #ccc;
-  padding: 1vh;
+  padding: 1.5vh;
   border-radius: 1vh;
-  z-index: 999;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 `;
 
 const ColorOption = styled.div`
-  width: 3vh;
-  height: 3vh;
+  width: 3.5vh;
+  height: 3.5vh;
   border-radius: 50%;
   background-color: ${(props) => props.color};
-  border: ${(props) => (props.color === 'white' ? '1px solid black' : 'none')};
+  border: ${(props) => (props.color === 'white' ? '1px solid #999' : 'none')};
   cursor: pointer;
 `;
 
 const DotBox = styled.div`
   display: flex;
   align-items: center;
-  gap: 1vh; /* 요소 간 간격 */
+  gap: 1vh;
 `;
 
 const StyledText = styled.p`
-  font-size: 2vh;
-  margin: 0; /* 여백 제거 */
-  width: 6.5vh;
-  height: 4vh;
+  font-size: 1.6vh;
+  font-weight: 500;
+  margin: 0;
+  width: 6vh;
 `;
+
 
 const ALL_COLORS = [
   'red',

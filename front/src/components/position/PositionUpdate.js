@@ -3,12 +3,16 @@ import field from '../../img/field.png';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
-const PositionFormContainer = styled.div`
+const PositionContainer = styled.div`
+  padding: 7vh 2vw 10vh;
+  max-width: 768px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
   display: flex;
-  align-items: center;
   flex-direction: column;
-  justify-content: center;
+  align-items: center;
 `;
+
 
 const FieldWrapper = styled.div`
   position: relative;
@@ -270,7 +274,7 @@ const PositionUpdate = () => {
   if (!game) return <div>로딩 중...</div>;
 
   return (
-    <PositionFormContainer>
+    <PositionContainer>
       <h2>
         {game.date.slice(0, 10)} {game.gameName}
       </h2>
@@ -517,7 +521,7 @@ const PositionUpdate = () => {
         )}
       </PopupBox>
       <ChangeButton onClick={handleSubmit}>저장</ChangeButton>
-    </PositionFormContainer>
+    </PositionContainer>
   );
 };
 

@@ -4,42 +4,60 @@ import { useNavigate } from 'react-router-dom';
 import altImage from '../img/alt_image.png';
 
 const FormContainer = styled.div`
-  max-width: 400px;
-  margin: 5vh auto;
-  padding: 3vh;
-  border: 1px solid #ccc;
-  border-radius: 1vh;
-  background-color: #f9f9f9;
+  max-width: 480px;
+  margin: 6vh auto;
+  padding: 7vh 5vh;
+  border-radius: 1.5vh;
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding-top: 7vh
 `;
 
 const InputField = styled.div`
-  margin-bottom: 2vh;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2.5vh;
 `;
 
 const Label = styled.label`
-  display: block;
-  margin-bottom: 0.5vh;
+  font-size: 1.6vh;
+  margin-bottom: 0.8vh;
+  font-weight: bold;
 `;
 
 const Input = styled.input`
   width: 100%;
-  padding: 1vh;
-  font-size: 2vh;
+  padding: 1.2vh;
+  font-size: 1.8vh;
+  border: 1px solid #ccc;
+  border-radius: 0.7vh;
+  &:focus {
+    outline: none;
+    border-color: #888;
+  }
 `;
 
 const SubmitButton = styled.button`
   width: 100%;
-  padding: 1.5vh;
-  font-size: 2vh;
+  padding: 1.6vh;
+  font-size: 1.9vh;
+  font-weight: bold;
   background-color: black;
   color: white;
   border: none;
-  border-radius: 0.5vh;
+  border-radius: 0.7vh;
   cursor: pointer;
+  transition: background-color 0.2s;
 
   &:hover {
-    background-color: #333;
+    background-color: #222;
   }
+`;
+
+const Title = styled.h2`
+  text-align: center;
+  margin-bottom: 4vh;
+  font-size: 2.5vh;
 `;
 
 const CreateGamePage = () => {
@@ -51,7 +69,6 @@ const CreateGamePage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const teamId = sessionStorage.getItem('teamId');
     if (!teamId) {
       alert('팀 ID가 존재하지 않습니다.');
@@ -59,7 +76,6 @@ const CreateGamePage = () => {
     }
 
     let finalLogoFile = oppoLogo;
-
     if (!oppoLogo) {
       try {
         const response = await fetch(altImage);
@@ -80,8 +96,7 @@ const CreateGamePage = () => {
       formData.append('gameName', gameName);
       formData.append('startDate', startDate);
       formData.append('teamId', teamId);
-      formData.append('oppoLogo', finalLogoFile); // 파일 객체 추가
-      console.log(versus);
+      formData.append('oppoLogo', finalLogoFile);
 
       const response = await fetch('/api/games/create-game', {
         method: 'POST',
@@ -103,7 +118,7 @@ const CreateGamePage = () => {
 
   return (
     <FormContainer>
-      <h2>경기 추가</h2>
+      <Title>경기 추가</Title>
       <form onSubmit={handleSubmit}>
         <InputField>
           <Label htmlFor="versus">상대팀명</Label>
@@ -136,7 +151,7 @@ const CreateGamePage = () => {
           />
         </InputField>
         <InputField>
-          <Label htmlFor="img">상대팀 로고(비워둘 시 기본 로고 사용)</Label>
+          <Label htmlFor="img">상대팀 로고 (비워둘 시 기본 로고 사용)</Label>
           <Input
             type="file"
             id="img"
