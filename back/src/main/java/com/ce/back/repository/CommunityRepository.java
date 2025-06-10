@@ -1,6 +1,7 @@
 package com.ce.back.repository;
 
 import com.ce.back.entity.Community;
+import com.ce.back.entity.Team;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -30,4 +31,6 @@ public interface CommunityRepository extends JpaRepository<Community, Long> {
     @Modifying
     @Query("UPDATE Community c SET c.views = c.views + 1 WHERE c.contentId = :id")
     void incrementViews(@Param("id") Long id);
+
+    void deleteByTeam(Team team);
 }

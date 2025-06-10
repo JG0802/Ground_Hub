@@ -47,12 +47,6 @@ const StyledButton = styled.button`
   }
 `;
 
-const KakaoButton = styled(StyledButton)`
-  background-color: #fee500;
-  color: #000;
-  border: 2px solid black;
-`;
-
 const StyledLink = styled.p`
   font-size: 1.6vh;
   color: #8f8f8f;
@@ -115,7 +109,6 @@ const SignUpPassword = () => {
       <StyledLink onClick={() => navigate('/')}>
         로그인 페이지로 이동
       </StyledLink>
-      <KakaoButton>카카오 계정으로 로그인</KakaoButton>
       <StyledLink style={{ width: '90%', textDecoration: 'underline' }}>
         By clicking continue, you agree to our Terms of Service and Privacy
         Policy

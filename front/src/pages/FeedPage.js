@@ -88,7 +88,6 @@ const Modal = styled.div`
   position: relative;
 `;
 
-
 const TitleRow = styled.div`
   display: flex;
   justify-content: space-between;
@@ -123,7 +122,6 @@ const Input = styled.textarea`
   height: 10vh;
   resize: none;
 `;
-
 
 const Select = styled.select`
   ${sharedInputStyle}
@@ -211,6 +209,8 @@ const FeedPage = () => {
   const handleSubmit = async () => {
     if (!teamId || !title.trim() || !content.trim()) return alert('입력 누락');
     if (category === '매칭' && !startDate) return alert('날짜 필요');
+    const date = new Date();
+    const formattedDate = date.toISOString().slice(0, 19);
 
     const body = {
       title,
@@ -218,7 +218,7 @@ const FeedPage = () => {
       teamId: Number(teamId),
       userMail,
       category,
-      matchDay: category === '매칭' ? startDate : null,
+      matchDay: category === '매칭' ? startDate : formattedDate,
     };
 
     try {
@@ -240,23 +240,43 @@ const FeedPage = () => {
     <Container>
       <NavTabs>
         {['매칭', '팀원 모집'].map((tab) => (
-          <Tab key={tab} active={category === tab} onClick={() => setCategory(tab)}>
+          <Tab
+            key={tab}
+            active={category === tab}
+            onClick={() => setCategory(tab)}
+          >
             {tab}
           </Tab>
         ))}
       </NavTabs>
 
       {posts.map((post) => (
-        <PostCard key={post.contentId} onClick={() => navigate(`/feed/${post.contentId}`)}>
+        <PostCard
+          key={post.contentId}
+          onClick={() => navigate(`/feed/${post.contentId}`)}
+        >
           <h3>{post.title}</h3>
-          <p><strong>팀 이름:</strong> {post.team.teamName}</p>
-          <p><strong>지역:</strong> {post.team.location}</p>
-          <p><strong>작성일:</strong> {post.createTime.slice(0, 10)}</p>
+          <p>
+            <strong>팀 이름:</strong> {post.team.teamName}
+          </p>
+          <p>
+            <strong>지역:</strong> {post.team.location}
+          </p>
+          <p>
+            <strong>작성일:</strong> {post.createTime.slice(0, 10)}
+          </p>
           {post.category === '매칭' && post.matchDay && (
-            <p><strong>매칭 날짜:</strong> {post.matchDay.replace('T', ' ').slice(0, 16)}</p>
+            <p>
+              <strong>매칭 날짜:</strong>{' '}
+              {post.matchDay.replace('T', ' ').slice(0, 16)}
+            </p>
           )}
-          <p><strong>내용:</strong> {post.content}</p>
-          <p><strong>조회수:</strong> {post.views}</p>
+          <p>
+            <strong>내용:</strong> {post.content}
+          </p>
+          <p>
+            <strong>조회수:</strong> {post.views}
+          </p>
         </PostCard>
       ))}
 
@@ -273,7 +293,9 @@ const FeedPage = () => {
             <Select
               value={selectedTeam?.teamName || ''}
               onChange={(e) => {
-                const team = teamData.find(t => t.teamName === e.target.value);
+                const team = teamData.find(
+                  (t) => t.teamName === e.target.value,
+                );
                 setSelectedTeam(team);
                 setTeamId(team.teamId);
               }}
@@ -285,7 +307,10 @@ const FeedPage = () => {
               ))}
             </Select>
 
-            <Select value={category} onChange={(e) => setCategory(e.target.value)}>
+            <Select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
               <option value="매칭">매칭</option>
               <option value="팀원 모집">팀원 모집</option>
             </Select>

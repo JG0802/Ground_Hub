@@ -100,6 +100,10 @@ const ProfileForm = () => {
     fetchUser();
   }, [userMail]);
 
+  const handleLogout = () => {
+    sessionStorage.removeItem('userMail');
+  };
+
   if (!userData) return <Container>Loading...</Container>;
 
   return (
@@ -126,6 +130,13 @@ const ProfileForm = () => {
         <ButtonBox>
           <StyledButton to="/user/checkpassword">회원정보 변경</StyledButton>
           <StyledButton to="/user/change/password">비밀번호 변경</StyledButton>
+          <StyledButton
+            style={{ backgroundColor: 'red' }}
+            onClick={handleLogout}
+            to="/"
+          >
+            Logout
+          </StyledButton>
         </ButtonBox>
       </Card>
     </Container>

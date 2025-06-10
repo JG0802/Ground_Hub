@@ -349,7 +349,7 @@ const PRGameCheckPage = () => {
           )}
         </ButtonBox>
       </FieldWrapper>
-      <ChangeButton onClick={() => margeGame()}>포메이션 병합</ChangeButton>
+      <ChangeButton onClick={() => margeGame()}>포메이션 적용</ChangeButton>
       <PopupBox $open={isOpen}>
         <PopupButton onClick={togglePopup}>{isOpen ? '▼' : '▲'}</PopupButton>
         <PopupTitle>참가자 명단</PopupTitle>
