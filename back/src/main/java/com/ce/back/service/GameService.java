@@ -102,7 +102,17 @@ public class GameService {
     // 특정 팀에 속한 모든 게임 삭제
     public void deleteGamesByTeamId(Long teamId) {
         Team team = teamRepository.findTeamByTeamId(teamId)
-                        .orElseThrow(() -> new RuntimeException("팀을 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException("팀을 찾을 수 없습니다."));
+
+        // 1. 팀에 소속된 모든 게임 조회
+        List<Game> games = gameRepository.findAllByTeam(team);
+
+        // 2. 각 게임에 연결된 PRGame 삭제
+        for (Game game : games) {
+            prGameService.deletePRGamesByGame(game);
+        }
+
+        // 3. 게임 삭제
         gameRepository.deleteByTeam(team);
     }
 

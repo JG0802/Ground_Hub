@@ -26,4 +26,6 @@ public interface GameRepository extends JpaRepository<Game, Long> {
 
     // 팀에 속한 경기 삭제
     void deleteByTeam(Team team);
+
+    List<Game> findAllByTeam(Team team);
 }
