@@ -59,7 +59,7 @@ const App = () => {
           element={<FeedPage teamFeedPosts={teamFeedPosts} />}
         />
         <Route path="/formation" element={<FormationPage />} />
-        <Route path="/formation/:id" element={<FormationDetailPage />} />
+        <Route path="/detail/:type/:id" element={<FormationDetailPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/signup" element={<SignUpEmailPage />} />
         <Route path="/myteam" element={<MyTeamPage />} />

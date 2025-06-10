@@ -76,7 +76,7 @@ const FormationCarousel = () => {
   };
 
   const handleMove = () => {
-    navigate(`/formation/${formations[currentIndex].id}`); // id 기준 이동
+    navigate(`/detail/formation/${formations[currentIndex].id}`); // id 기준 이동
   };
 
   const currentFormation = formations[currentIndex];

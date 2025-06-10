@@ -1,5 +1,6 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import formations from '../data/formation.json';
+import tactics from '../data/tactic.json';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -40,33 +41,110 @@ const Description = styled.p`
   margin-bottom: 2vh;
 `;
 
-const Image = styled.img`
+const MediaBox = styled.div`
   width: 100%;
-  border-radius: 1vh;
   margin-bottom: 2vh;
 `;
 
+const BackButton = styled.button`
+  display: block;
+  margin: 0 auto 2vh auto;
+  padding: 0.7vh 2vw;
+  background: #f5f5f5;
+  border: none;
+  border-radius: 1vh;
+  font-size: 1.7vh;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+  &:hover {
+    background: #e0e0e0;
+  }
+`;
+
 const FormationDetailPage = () => {
-  const { id } = useParams();
-  const data = formations[id];
+  const { type, id } = useParams();
+  const navigate = useNavigate();
+  const data =
+    type === 'formation'
+      ? formations.find((f) => String(f.id) === id)
+      : tactics.find((t) => String(t.id) === id);
 
   if (!data) {
     return (
       <Container>
         <Card>
-          <Description>포메이션 정보를 찾을 수 없습니다.</Description>
+          <Description>
+            {type === 'formation'
+              ? '포메이션 정보를 찾을 수 없습니다.'
+              : '전술 정보를 찾을 수 없습니다.'}
+          </Description>
         </Card>
       </Container>
     );
   }
 
+  const renderMedia = () => {
+    if (!data.img) return null;
+    // mp4 동영상
+    if (data.img.endsWith('.mp4')) {
+      return (
+        <MediaBox>
+          <video
+            src={data.img}
+            controls
+            style={{ width: '100%', borderRadius: '1vh', marginTop: '2vh' }}
+          />
+        </MediaBox>
+      );
+    }
+    // 이미지
+    if (
+      data.img.endsWith('.jpg') ||
+      data.img.endsWith('.png') ||
+      data.img.endsWith('.jpeg') ||
+      data.img.endsWith('.gif')
+    ) {
+      return (
+        <MediaBox>
+          <img
+            src={data.img}
+            alt={data.title}
+            style={{ width: '100%', borderRadius: '1vh', marginTop: '2vh' }}
+          />
+        </MediaBox>
+      );
+    }
+    // html 파일
+    if (data.img.endsWith('.html')) {
+      return (
+        <MediaBox>
+          <iframe
+            src={data.img}
+            title={data.title}
+            style={{
+              width: '100%',
+              minHeight: '180px',
+              border: 'none',
+              borderRadius: '1vh',
+              marginTop: '2vh',
+            }}
+          />
+        </MediaBox>
+      );
+    }
+    return null;
+  };
+
   return (
     <Container>
       <Card>
+        {/* 이전으로 버튼 */}
+        <BackButton onClick={() => navigate(-1)}>이전 화면</BackButton>
         <Title>{data.title}</Title>
         <Summary>{data.summation}</Summary>
         <Description>{data.description1}</Description>
-        <Image src={data.img} alt={data.title} />
+        {renderMedia()}
         <Description>{data.description2}</Description>
       </Card>
     </Container>
