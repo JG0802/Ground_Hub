@@ -4,6 +4,7 @@ import com.ce.back.entity.Community;
 import com.ce.back.entity.Team;
 import com.ce.back.entity.User;
 import com.ce.back.repository.CommunityRepository;
+import com.ce.back.repository.TeamRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.List;
 public class CommunityService {
 
     private final CommunityRepository communityRepository;
+    private final TeamRepository teamRepository;
 
     // 게시글 작성
     public Community createPost(String title, String content, Long teamId, String userMail, String category, LocalDateTime matchDay) {
@@ -87,5 +89,12 @@ public class CommunityService {
         post.setMatchDay(matchDay);
 
         return communityRepository.save(post);
+    }
+
+    // 팀이 작성한 게시물들 삭제
+    public void deleteByTeamId(Long teamId) {
+        Team team = teamRepository.findTeamByTeamId(teamId)
+                .orElseThrow(() -> new RuntimeException("팀을 찾을 수 없습니다."));
+        communityRepository.deleteByTeam(team);
     }
 }

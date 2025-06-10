@@ -25,16 +25,18 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
     private final GameService gameService;
+    private final CommunityService communityService;
 
     // 로고 파일을 저장할 경로 (application.properties에서 설정)
     @Value("${team.logo.directory}")
     private String logoDirectory;
 
     @Autowired
-    public TeamService(TeamRepository teamRepository, UserRepository userRepository, GameService gameService) {
+    public TeamService(TeamRepository teamRepository, UserRepository userRepository, GameService gameService, CommunityService communityService) {
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
         this.gameService = gameService;
+        this.communityService = communityService;
     }
 
     // 모든 팀 조회
@@ -97,6 +99,9 @@ public class TeamService {
                 throw new RuntimeException("로고 파일을 삭제할 수 없습니다: " + e.getMessage());
             }
         }
+
+        // 해당 팀이 작성한 게시글 삭제
+        communityService.deleteByTeamId(teamId);
 
         // 해당 팀에 속한 모든 게임 삭제
         gameService.deleteGamesByTeamId(teamId);
