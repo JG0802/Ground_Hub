@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import formations from '../data/formation.json';
 import tactics from '../data/tactic.json';
 import styled from 'styled-components';
+import backImg from '../img/back.png';
 
 const Container = styled.div`
   margin-top: 8vh;
@@ -19,11 +20,30 @@ const Card = styled.div`
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 `;
 
+const BackRow = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 2vh;
+  position: relative;
+`;
+
+const BackIcon = styled.img`
+  width: 2.4vh;
+  height: 2.4vh;
+  cursor: pointer;
+  user-select: none;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+`;
+
 const Title = styled.h2`
   font-size: 2.4vh;
   font-weight: 700;
   margin-bottom: 1.5vh;
   text-align: center;
+  flex: 1;
 `;
 
 const Summary = styled.p`
@@ -44,22 +64,6 @@ const Description = styled.p`
 const MediaBox = styled.div`
   width: 100%;
   margin-bottom: 2vh;
-`;
-
-const BackButton = styled.button`
-  display: block;
-  margin: 0 auto 2vh auto;
-  padding: 0.7vh 2vw;
-  background: #f5f5f5;
-  border: none;
-  border-radius: 1vh;
-  font-size: 1.7vh;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background 0.2s;
-  &:hover {
-    background: #e0e0e0;
-  }
 `;
 
 const FormationDetailPage = () => {
@@ -139,9 +143,10 @@ const FormationDetailPage = () => {
   return (
     <Container>
       <Card>
-        {/* 이전으로 버튼 */}
-        <BackButton onClick={() => navigate(-1)}>이전 화면</BackButton>
-        <Title>{data.title}</Title>
+        <BackRow>
+          <BackIcon src={backImg} alt='◀' onClick={() => navigate(-1)} />
+          <Title style={{ width: '100%' }}>{data.title}</Title>
+        </BackRow>
         <Summary>{data.summation}</Summary>
         <Description>{data.description1}</Description>
         {renderMedia()}

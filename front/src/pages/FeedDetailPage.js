@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import altImage from '../img/alt_image.png';
+import backImg from '../img/back.png';
 
 // ✅ Styled Components
 const Container = styled.div`
@@ -59,14 +60,12 @@ const Button = styled.button`
   }
 `;
 
-const BackButton = styled(Button)`
-  background-color: #ddd;
-  color: black;
+const BackButton = styled.img`
+  width: 2.4vh;
+  height: 2.4vh;
+  cursor: pointer;
   margin-bottom: 2vh;
-
-  &:hover {
-    background-color: #ccc;
-  }
+  display: block;
 `;
 
 const ModalOverlay = styled.div`
@@ -254,7 +253,7 @@ const FeedDetailPage = () => {
 
   return (
     <Container>
-      <BackButton onClick={() => navigate(-1)}>← 뒤로가기</BackButton>
+          <BackButton src={backImg} alt='◀' onClick={() => navigate(-1)} />
 
       <Card>
         <Heading>{post.title}</Heading>
