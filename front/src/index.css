@@ -48,3 +48,37 @@ code {
   src: url('./fonts/MarinesBold.woff2') format('woff2'),
        url('./fonts/MarinesBold.woff') format('woff');
 }
+
+
+/* index.css 또는 global.css에 추가 */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari, Opera */
+}
+
+.custom-bubble {
+  background-color: #f9fafb; /* gray-50 */
+  border: 1px solid #d1d5db; /* gray-300 */
+  border-radius: 1.5vh;
+  padding: 2vh;
+  position: relative;
+}
+
+.custom-bubble::after {
+  content: '';
+  position: absolute;
+  right: 1.5vh;
+  bottom: -1.2vh;
+  width: 1.5vh;
+  height: 1.5vh;
+  background-color: #f9fafb; /* gray-50 */
+  border-left: 1px solid #d1d5db;
+  border-bottom: 1px solid #d1d5db;
+  transform: rotate(45deg);
+  border-bottom-left-radius: 0.3vh;
+}
+ 

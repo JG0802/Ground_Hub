@@ -1,3 +1,4 @@
+// FeedDetailPage.jsx - 테일윈드 스타일 유지 + 로직 완성
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
@@ -76,16 +77,8 @@ const FeedDetailPage = () => {
     };
 
     const games = [
-      {
-        teamId: requesterTeam.teamId,
-        versus: postTeam.teamName,
-        gameName: `${post.matchDay.slice(0, 10)} ${postTeam.teamName} 매칭 신청`,
-      },
-      {
-        teamId: postTeam.teamId,
-        versus: requesterTeam.teamName,
-        gameName: `${post.matchDay.slice(0, 10)} ${requesterTeam.teamName} 매칭 신청`,
-      },
+      { teamId: requesterTeam.teamId, versus: postTeam.teamName, gameName: `${post.matchDay.slice(0, 10)} ${postTeam.teamName} 매칭 신청` },
+      { teamId: postTeam.teamId, versus: requesterTeam.teamName, gameName: `${post.matchDay.slice(0, 10)} ${requesterTeam.teamName} 매칭 신청` },
     ];
 
     for (const game of games) {
@@ -139,26 +132,26 @@ const FeedDetailPage = () => {
       <div className="bg-white rounded-[2vh] shadow p-[3vh]">
         {post.category === '매칭' ? (
           <div className="bg-green-50 p-[2vh] rounded-[1vh] mb-[2vh]">
-            <div className="flex justify-between mb-[1vh]">
+            <div className="flex justify-between mb-[1vh] text-[1.8vh]">
               <span className="text-gray-500">🕒 매칭 날짜</span>
               <span className="text-green-600 font-bold">{post.matchDay.replace('T', ' ').slice(0, 16)}</span>
             </div>
-            <div className="flex justify-between mb-[1vh]">
+            <div className="flex justify-between mb-[1vh] text-[1.8vh]">
               <span className="text-gray-500">팀 이름</span>
               <span className="text-gray-700 font-medium">{post.team.teamName}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between text-[1.8vh]">
               <span className="text-gray-500">지역</span>
               <span className="text-gray-700 font-medium">{post.team.location}</span>
             </div>
           </div>
         ) : (
-          <div className="bg-blue-50 p-[2vh] rounded-[1vh] mb-[2vh]">
-            <div className="flex justify-between mb-[1vh]">
+          <div className="bg-orange-100 p-[2vh] rounded-[1vh] mb-[2vh]">
+            <div className="flex justify-between mb-[1vh] text-[1.8vh]">
               <span className="text-gray-500">팀 이름</span>
               <span className="text-gray-700 font-medium">{post.team.teamName}</span>
             </div>
-            <div className="flex justify-between mb-[1vh]">
+            <div className="flex justify-between text-[1.8vh]">
               <span className="text-gray-500">지역</span>
               <span className="text-gray-700 font-medium">{post.team.location}</span>
             </div>
@@ -178,31 +171,31 @@ const FeedDetailPage = () => {
           <span className="text-gray-700">{post.views}</span>
         </div>
 
-        <div className="bg-gray-100 p-[2vh] rounded-[1vh] mb-[3vh] text-[1.8vh] min-h-[8vh]">
+        <div className="relative bg-gray-100 p-[2vh] rounded-[1vh] mb-[3vh] text-[1.8vh] min-h-[8vh]">
           {post.content}
         </div>
 
-        <div className="flex flex-col divide-y divide-gray-300">
+        <div className="flex flex-col divide-y divide-gray-300 text-[1.8vh]">
           {post.category === '매칭' && (
-            <button onClick={openMatchModal} className="flex justify-between items-center p-[2vh] text-[1.8vh]">
+            <button onClick={openMatchModal} className="flex justify-between items-center p-[2vh]">
               <span>매칭 신청</span>
               <span>➔</span>
             </button>
           )}
 
-          <button onClick={() => navigate(`/teams/${post.team.teamId}`)} className="flex justify-between items-center p-[2vh] text-[1.8vh]">
+          <button onClick={() => navigate(`/teams/${post.team.teamId}`)} className="flex justify-between items-center p-[2vh]">
             <span>팀 상세페이지</span>
             <span>➔</span>
           </button>
 
           {userMail === post.user.userMail && (
             <>
-              <button onClick={() => { setTitle(post.title); setContent(post.content); setShowEditModal(true); }} className="flex justify-between items-center p-[2vh] text-[1.8vh]">
+              <button onClick={() => { setTitle(post.title); setContent(post.content); setShowEditModal(true); }} className="flex justify-between items-center p-[2vh]">
                 <span>수정</span>
                 <span>➔</span>
               </button>
 
-              <button onClick={handleDelete} className="flex justify-between items-center p-[2vh] text-[1.8vh] text-red-500">
+              <button onClick={handleDelete} className="flex justify-between items-center p-[2vh] text-red-500">
                 <span>삭제</span>
                 <span>➔</span>
               </button>
@@ -211,39 +204,64 @@ const FeedDetailPage = () => {
         </div>
       </div>
 
+      {/* 수정 모달 */}
       {showEditModal && (
-        <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 flex justify-center items-center z-[9999]">
-          <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-[2vh] p-[4vh_3vh] w-[90%] max-w-[360px] box-border shadow-lg relative animate-fadeIn">
-            <div className="flex justify-center items-center mb-[4vh] relative">
-              <h3 className="text-[2.4vh] font-bold m-0 break-keep">게시글 수정</h3>
-              <button onClick={() => setShowEditModal(false)} className="text-[2.4vh] bg-none border-none cursor-pointer absolute right-0 top-0">✖</button>
+        <div onClick={() => setShowEditModal(false)} className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 flex justify-center items-center z-[9999]">
+          <div onClick={e => e.stopPropagation()} className="bg-white rounded-[2vh] p-[4vh_3vh] w-[90%] max-w-[360px] box-border shadow-lg">
+            <div className="flex justify-between items-center mb-[2vh]">
+              <h3 className="text-[2.4vh] font-bold">게시글 수정</h3>
+              <button onClick={() => setShowEditModal(false)} className="text-[2.4vh]">✖</button>
             </div>
-            <textarea value={title} onChange={(e) => setTitle(e.target.value)} className="w-full text-[1.7vh] p-[1.5vh] border border-gray-300 rounded-[1vh] bg-[#f9f9f9] focus:outline-green-500 focus:bg-white box-border mb-[3vh]" />
-            <textarea value={content} onChange={(e) => setContent(e.target.value)} className="w-full text-[1.7vh] p-[1.5vh] border border-gray-300 rounded-[1vh] bg-[#f9f9f9] focus:outline-green-500 focus:bg-white box-border resize-none h-[10vh] mb-[3vh]" />
-            <button onClick={handleEdit} className="w-full bg-green-500 text-white text-[2vh] p-[1.8vh] rounded-[2vh] border-none cursor-pointer mt-[2vh] shadow-md transition hover:bg-green-600 box-border">수정</button>
+
+            <input
+              type="text"
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+              className="w-full text-[1.7vh] p-[1.5vh] mb-[2vh] border border-gray-300 rounded-[1vh] bg-[#f9f9f9] focus:outline-green-500 focus:bg-white"
+            />
+
+            <textarea
+              value={content}
+              onChange={e => setContent(e.target.value)}
+              className="w-full text-[1.7vh] p-[1.5vh] mb-[2vh] border border-gray-300 rounded-[1vh] bg-[#f9f9f9] focus:outline-green-500 focus:bg-white h-[12vh]"
+            />
+
+            <button onClick={handleEdit} className="w-full bg-green-500 text-white text-[2vh] p-[1.8vh] rounded-[2vh] shadow-md transition hover:bg-green-600">
+              수정 완료
+            </button>
           </div>
         </div>
       )}
 
+      {/* 매칭 모달 */}
       {showMatchModal && (
-        <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 flex justify-center items-center z-[9999]">
-          <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-[2vh] p-[4vh_3vh] w-[90%] max-w-[360px] box-border shadow-lg relative animate-fadeIn">
-            <div className="flex justify-center items-center mb-[4vh] relative">
-              <h3 className="text-[2.4vh] font-bold m-0 break-keep">매칭 신청</h3>
-              <button onClick={() => setShowMatchModal(false)} className="text-[2.4vh] bg-none border-none cursor-pointer absolute right-0 top-0">✖</button>
+        <div onClick={() => setShowMatchModal(false)} className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 flex justify-center items-center z-[9999]">
+          <div onClick={e => e.stopPropagation()} className="bg-white rounded-[2vh] p-[4vh_3vh] w-[90%] max-w-[360px] box-border shadow-lg">
+            <div className="flex justify-between items-center mb-[2vh]">
+              <h3 className="text-[2.4vh] font-bold">매칭 신청</h3>
+              <button onClick={() => setShowMatchModal(false)} className="text-[2.4vh]">✖</button>
             </div>
+
             {myTeams.length > 0 ? (
               <>
-                <p className="text-[1.7vh] mb-[2vh]">어느 팀으로 신청하시겠습니까?</p>
-                <select value={selectedTeamId} onChange={(e) => setSelectedTeamId(e.target.value)} className="w-full text-[1.7vh] p-[1.5vh] border border-gray-300 rounded-[1vh] bg-[#f9f9f9] focus:outline-green-500 focus:bg-white box-border mb-[3vh]">
-                  {myTeams.map(team => (
-                    <option key={team.teamId} value={team.teamId}>{team.teamName}</option>
-                  ))}
-                </select>
-                <button onClick={handleMatchRequest} className="w-full bg-green-500 text-white text-[2vh] p-[1.8vh] rounded-[2vh] border-none cursor-pointer mt-[2vh] shadow-md transition hover:bg-green-600 box-border">신청</button>
+                <div className="mb-[2vh]">
+                  <span className="text-[1.7vh]">어느 팀으로 신청하시겠습니까?</span>
+                  <select
+                    value={selectedTeamId}
+                    onChange={e => setSelectedTeamId(e.target.value)}
+                    className="w-full text-[1.7vh] p-[1.5vh] mt-[1vh] border border-gray-300 rounded-[1vh] bg-[#f9f9f9] focus:outline-green-500 focus:bg-white"
+                  >
+                    {myTeams.map(team => (
+                      <option key={team.teamId} value={team.teamId}>{team.teamName}</option>
+                    ))}
+                  </select>
+                </div>
+                <button onClick={handleMatchRequest} className="w-full bg-green-500 text-white text-[2vh] p-[1.8vh] rounded-[2vh] shadow-md transition hover:bg-green-600">
+                  신청
+                </button>
               </>
             ) : (
-              <p>매칭 신청 가능한 팀이 없습니다.</p>
+              <p className="text-center">매칭 신청 가능한 팀이 없습니다.</p>
             )}
           </div>
         </div>
