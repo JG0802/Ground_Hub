@@ -4,49 +4,37 @@ import ScheduleSection from '../components/main/ScheduleSection';
 import styled from 'styled-components';
 
 const PageWrapper = styled.div`
-  padding-top: 8vh;
+  padding-top: 8vh; /* ✅ 헤더 고정을 위한 여유 공간 */
+  padding-left: 2vw;
+  padding-right: 2vw;
   padding-bottom: 2vh;
-  background: linear-gradient(to bottom, #f0f4f8, #f9f9f9);
+  background-color: #f9f9f9;
   min-height: 100vh;
   box-sizing: border-box;
 `;
 
-const SectionWrapper = styled.div`
-  padding: 2vh 2vw;
-  margin-bottom: 4vh;
+const SectionCard = styled.div`
   background-color: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s, box-shadow 0.3s;
-
-  &:hover {
-    transform: scale(1.02);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-  }
-
-  @media (max-width: 768px) {
-    padding: 1.5vh 3vw;
-  }
-
-  @media (max-width: 480px) {
-    padding: 1vh 4vw;
-  }
+  border-radius: 12px;
+  padding: 1.5vh 1.5vw;
+  margin-bottom: 2.5vh;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 `;
 
 const MainPage = () => {
   return (
     <PageWrapper>
-      <SectionWrapper>
+      <SectionCard>
         <FormationCarousel />
-      </SectionWrapper>
+      </SectionCard>
 
-      <SectionWrapper>
+      <SectionCard>
         <MyTeamSection />
-      </SectionWrapper>
+      </SectionCard>
 
-      <SectionWrapper>
+      <SectionCard>
         <ScheduleSection />
-      </SectionWrapper>
+      </SectionCard>
     </PageWrapper>
   );
 };

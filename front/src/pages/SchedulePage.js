@@ -3,13 +3,10 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 import altImage from '../img/alt_image.png';
-import 'dayjs/locale/ko';
-
-dayjs.locale('ko');
 
 const Container = styled.div`
   padding: 8vh 2vh 3vh;
-  background-color: #fafafa;
+  background-color: #f9f9f9;
 `;
 
 const TitleRow = styled.div`
@@ -22,9 +19,6 @@ const TitleRow = styled.div`
 const Title = styled.h2`
   font-size: 2.4vh;
   font-weight: 600;
-  padding-bottom: 0.7vh;
-  border-bottom: 2px solid #ddd;
-  display: inline-block;
 `;
 
 const CalendarContainer = styled.div`
@@ -41,7 +35,7 @@ const CalendarHeader = styled.div`
 `;
 
 const Arrow = styled.span`
-  font-size: 3vh;
+  font-size: 2vh;
   cursor: pointer;
 `;
 
@@ -65,10 +59,9 @@ const DayCell = styled.div`
   height: 5vh;
   text-align: center;
   position: relative;
-  background-color: ${({ isSelected }) => (isSelected ? '#d5f5e3' : '#fff')};
-  border-radius: 0.7vh;
+  background-color: #fff;
+  border-radius: 0.5vh;
   transition: background-color 0.2s;
-
   &:hover {
     background-color: #f0f0f0;
     cursor: pointer;
@@ -99,17 +92,11 @@ const MatchCard = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2vh;
-  border-radius: 1.5vh;
-  margin-bottom: 3vh;
-  background-color: #fff;
+  padding: 1.5vh;
+  border-radius: 1vh;
+  margin-bottom: 2vh;
+  background-color: #ffffff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  border: 1.5px solid transparent;
-  transition: border 0.2s ease;
-
-  &:hover {
-    border: 1.5px solid #00c264;
-  }
 `;
 
 const TeamCard = styled.div`
@@ -131,27 +118,6 @@ const TeamName = styled.div`
   font-weight: bold;
   margin-top: 0.5vh;
   text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 12vh;
-`;
-
-const VsSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-weight: bold;
-  gap: 1vh;
-`;
-
-const VsText = styled.div`
-  font-size: 3vh;
-`;
-
-const VsDate = styled.div`
-  font-size: 1.4vh;
-  color: #666;
 `;
 
 const SchedulePage = () => {
@@ -159,7 +125,7 @@ const SchedulePage = () => {
   const [teams, setTeams] = useState([]);
   const [games, setGames] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedDay, setSelectedDay] = useState({ year: null, month: null, date: null });
+  const [selectedDay, setSelectedDay] = useState(null);
   const userMail = sessionStorage.getItem('userMail');
 
   const getDaysInMonth = () => {
@@ -240,7 +206,7 @@ const SchedulePage = () => {
     return (
       <Container>
         <TitleRow>
-          <Title>전체 일정</Title>
+          <Title>Schedule</Title>
         </TitleRow>
         <div style={{ textAlign: 'center', padding: '2vh', fontSize: '1.8vh' }}>
           불러오는 중...
@@ -252,7 +218,7 @@ const SchedulePage = () => {
   return (
     <Container>
       <TitleRow>
-        <Title>전체 일정</Title>
+        <Title>📅 전체 스케줄</Title>
       </TitleRow>
       <CalendarContainer>
         <CalendarHeader>
@@ -261,27 +227,13 @@ const SchedulePage = () => {
           <Arrow onClick={goToNextMonth}>{'>'}</Arrow>
         </CalendarHeader>
         <WeekRow>
-          {['일', '월', '화', '수', '목', '금', '토'].map((day) => (
-            <div key={day} style={{ width: '12.3%', textAlign: 'center' }}>{day}</div>
+          {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((day) => (
+            <div key={day}>{day}</div>
           ))}
         </WeekRow>
         <DaysRow>
           {getDaysInMonth().map((d, i) => (
-            <DayCell
-              key={i}
-              onClick={() =>
-                setSelectedDay({
-                  year: currentDate.year(),
-                  month: currentDate.month(),
-                  date: d,
-                })
-              }
-              isSelected={
-                selectedDay.year === currentDate.year() &&
-                selectedDay.month === currentDate.month() &&
-                selectedDay.date === d
-              }
-            >
+            <DayCell key={i} onClick={() => setSelectedDay(d)}>
               {d}
               {gamesByDate[d] && (
                 <DotWrapper>
@@ -296,23 +248,13 @@ const SchedulePage = () => {
       </CalendarContainer>
 
       <MatchContainer>
-        {selectedDay.date && (
-          <div style={{ paddingTop: '3vh', fontSize: '1.8vh' }}>
-            <h3>{dayjs(`${selectedDay.year}-${selectedDay.month + 1}-${selectedDay.date}`).format('YYYY-MM-DD')} 경기 일정</h3>
-            {games.filter((g) =>
-              dayjs(g.date).isSame(
-                dayjs(`${selectedDay.year}-${selectedDay.month + 1}-${selectedDay.date}`),
-                'day'
-              )
-            ).length > 0 ? (
+        {selectedDay && (
+          <div style={{ paddingTop: '2vh', fontSize: '1.8vh' }}>
+            <h3>{currentDate.date(selectedDay).format('YYYY-MM-DD')} 경기 일정</h3>
+            {games.filter((g) => dayjs(g.date).date() === selectedDay).length > 0 ? (
               sortedGames
-                .filter((g) =>
-                  dayjs(g.date).isSame(
-                    dayjs(`${selectedDay.year}-${selectedDay.month + 1}-${selectedDay.date}`),
-                    'day'
-                  )
-                )
-                .map((game) => (
+                .filter((g) => dayjs(g.date).date() === selectedDay)
+                .map((game, i) => (
                   <Link
                     key={game.gameId}
                     to={`/position/view/${game.gameId}`}
@@ -328,12 +270,10 @@ const SchedulePage = () => {
                         />
                         <TeamName>{game.team.teamName}</TeamName>
                       </TeamCard>
-
-                      <VsSection>
-                        <VsText>VS</VsText>
-                        <VsDate>{game.date.slice(0, 10)}</VsDate>
-                      </VsSection>
-
+                      <TeamCard>
+                        <TeamName>{game.date.slice(0, 10)}</TeamName>
+                        <TeamName style={{ fontSize: '5vh' }}>VS</TeamName>
+                      </TeamCard>
                       <TeamCard>
                         <TeamLogo
                           src={`/logos/${game.logo}`}

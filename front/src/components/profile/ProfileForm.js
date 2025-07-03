@@ -1,90 +1,145 @@
-
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+
+const Container = styled.div`
+  padding: 8vh 2vh 3vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const Card = styled.div`
+  width: 90%;
+  background-color: white;
+  border-radius: 1.5vh;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 4vh 3vh;
+  box-sizing: border-box;
+`;
+
+const Title = styled.h2`
+  font-size: 2.8vh;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 4vh;
+`;
+
+const Avatar = styled.div`
+  width: 14vh;
+  height: 14vh;
+  border-radius: 50%;
+  background-color: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 6vh;
+  margin: 0 auto 2.5vh;
+`;
+
+const Label = styled.div`
+  font-size: 1.6vh;
+  color: #666;
+  margin-top: 2.5vh;
+  margin-bottom: 0.8vh;
+`;
+
+const InfoBox = styled.div`
+  background-color: #f5f5f5;
+  height: 4.5vh;
+  border-radius: 1vh;
+  padding: 0 2vh;
+  display: flex;
+  align-items: center;
+  font-size: 1.8vh;
+`;
+
+const ButtonBox = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 2vh;
+  margin-top: 4vh;
+  flex-wrap: wrap;
+`;
+
+const StyledButton = styled(Link)`
+  background-color: black;
+  color: white;
+  text-align: center;
+  width: 20vh;
+  height: 5.5vh;
+  font-size: 1.8vh;
+  border-radius: 1vh;
+  line-height: 5.5vh;
+  text-decoration: none;
+  transition: background-color 0.2s;
+  &:hover {
+    background-color: #222;
+  }
+`;
 
 const ProfileForm = () => {
   const [userData, setUserData] = useState(null);
   const userMail = sessionStorage.getItem('userMail');
-  const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`/api/users/check/${userMail}`)
-      .then(res => res.ok ? res.json() : Promise.reject(res))
-      .then(setUserData)
-      .catch(err => console.error(err));
+    const fetchUser = async () => {
+      try {
+        const res = await fetch(`/api/users/check/${userMail}`);
+        if (res.ok) {
+          const data = await res.json();
+          setUserData(data);
+        } else {
+          alert(await res.text());
+        }
+      } catch (err) {
+        console.error(err);
+        alert('서버 오류 발생');
+      }
+    };
+    fetchUser();
   }, [userMail]);
 
-  if (!userData) return (<div className="text-center py-8">Loading...</div>);
+  const handleLogout = () => {
+    sessionStorage.removeItem('userMail');
+  };
+
+  if (!userData) return <Container>Loading...</Container>;
 
   return (
-    <div className="pt-[12vh] px-4 pb-[10vh] flex flex-col items-center">
+    <Container>
+      <Card>
+        <Title>User Profile</Title>
+        <Avatar>👤</Avatar>
 
-      {/* 프로필 카드 */}
-      <div className="bg-white w-full max-w-lg rounded-2xl shadow-lg p-6 text-center">
+        <Label>User Name</Label>
+        <InfoBox>{userData.userName}</InfoBox>
 
-        {/* 프로필 이미지 */}
-        <div className="relative mx-auto w-28 h-28 md:w-24 md:h-24 sm:w-20 sm:h-20 rounded-full border-4 border-gray-300 shadow-md overflow-hidden mb-3">
-          {userData.profileImage ? (
-            <img src={userData.profileImage} alt="profile" className="w-full h-full object-cover" />
-          ) : (
-            <span className="text-5xl md:text-4xl sm:text-3xl flex items-center justify-center h-full">👤</span>
-          )}
-        </div>
+        <Label>Phone</Label>
+        <InfoBox>{userData.tel}</InfoBox>
 
-        {/* 닉네임 */}
-        <h2 className="text-[2.6vh] md:text-[2.2vh] sm:text-[2vh] font-bold text-gray-800 tracking-tight mb-1">{userData.userName}</h2>
+        <Label>Preferred Position 1</Label>
+        <InfoBox>{userData.firstPosition || '-'}</InfoBox>
 
-        {/* 포지션 뱃지 */}
-        <div className="flex justify-center gap-2 flex-wrap mb-4">
-          {[userData.firstPosition, userData.secondPosition, userData.thirdPosition]
-            .filter(Boolean)
-            .map(pos => (
-              <span key={pos} className="bg-gray-100 px-3 py-1 rounded-full text-sm border border-gray-300 text-[1.6vh] md:text-[1.4vh] sm:text-[1.2vh]">{pos}</span>
-            ))
-          }
-        </div>
+        <Label>Preferred Position 2</Label>
+        <InfoBox>{userData.secondPosition || '-'}</InfoBox>
 
-        {/* 전화번호 */}
-        <div className="bg-gray-100 px-4 py-2 rounded-lg text-left mb-4 text-base md:text-sm sm:text-xs text-gray-600">{userData.tel}</div>
+        <Label>Preferred Position 3</Label>
+        <InfoBox>{userData.thirdPosition || '-'}</InfoBox>
 
-        {/* 설정 리스트 */}
-        <ul className="divide-y divide-gray-300">
-          <li
-            onClick={() => navigate('/user/checkpassword')}
-            className="flex items-center justify-between py-5 px-2 cursor-pointer hover:bg-gray-50 transition group"
+        <ButtonBox>
+          <StyledButton to="/user/checkpassword">회원정보 변경</StyledButton>
+          <StyledButton to="/user/change/password">비밀번호 변경</StyledButton>
+          <StyledButton
+            style={{ backgroundColor: 'red' }}
+            onClick={handleLogout}
+            to="/"
           >
-            <span className="text-gray-600 text-[1.8vh] md:text-[1.6vh] sm:text-[1.4vh]">회원정보 편집</span>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"
-              className="h-5 w-5 text-gray-400 group-hover:text-gray-800 group-hover:translate-x-1 transition">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-            </svg>
-          </li>
-          <li
-            onClick={() => navigate('/user/change/password')}
-            className="flex items-center justify-between py-5 px-2 cursor-pointer hover:bg-gray-50 transition group"
-          >
-            <span className="text-gray-600 text-[1.8vh] md:text-[1.6vh] sm:text-[1.4vh]">비밀번호 변경</span>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"
-              className="h-5 w-5 text-gray-400 group-hover:text-gray-800 group-hover:translate-x-1 transition">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-            </svg>
-          </li>
-          <li
-            onClick={() => {
-              sessionStorage.removeItem('userMail');
-              navigate('/');
-            }}
-            className="flex items-center justify-between py-5 px-2 cursor-pointer text-red-500 hover:bg-red-50 transition group"
-          >
-            <span className="group-hover:font-bold text-[1.8vh] md:text-[1.6vh] sm:text-[1.4vh]">로그아웃</span>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"
-              className="h-5 w-5 text-red-400 group-hover:text-red-500 group-hover:translate-x-1 transition">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-            </svg>
-          </li>
-        </ul>
-      </div>
-    </div>
+            Logout
+          </StyledButton>
+        </ButtonBox>
+      </Card>
+    </Container>
   );
 };
 

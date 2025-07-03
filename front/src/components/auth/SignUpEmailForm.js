@@ -90,19 +90,20 @@ const SignUpEmail = () => {
   return (
     <Container>
       <StyledLogo>Ground Hub</StyledLogo>
-      <StyledTitle>회원가입</StyledTitle>
+      <StyledTitle>Sign Up</StyledTitle>
       <StyledInput
         type="email"
-        placeholder="Email@domain.com"
+        placeholder="email@domain.com"
         value={userMail}
         onChange={(e) => setUserMail(e.target.value)}
       />
-      <StyledButton onClick={handleContinue}>계속</StyledButton>
+      <StyledButton onClick={handleContinue}>Continue</StyledButton>
       <StyledLink onClick={() => navigate('/')}>
         로그인 페이지로 이동
       </StyledLink>
       <StyledLink style={{ width: '90%', textDecoration: 'underline' }}>
-        계속 버튼 클릭 시 당사 서비스 약관 및 개인정보 보호정책에 동의합니다.
+        By clicking continue, you agree to our Terms of Service and Privacy
+        Policy
       </StyledLink>
     </Container>
   );

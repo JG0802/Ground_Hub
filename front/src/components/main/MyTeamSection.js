@@ -1,13 +1,75 @@
+// src/components/home/MyTeamSection.js
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 import altImage from '../../img/alt_image.png';
-import ScrollContainer from 'react-indiana-drag-scroll';
+
+const SectionWrapper = styled.div`
+  padding: 0.5vh 2vh;
+  padding-bottom: 2vh;
+`;
+
+const TitleWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const Title = styled.h2`
+  font-size: 2.2vh;
+  font-weight: bold;
+`;
+
+const TeamList = styled.div`
+  display: flex;
+  gap: 2vh;
+  overflow-x: auto;
+`;
+
+const TeamItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #eee;
+  padding: 1vh;
+  border-radius: 6px;
+`;
+
+const TeamImage = styled.img`
+  width: 8vh;
+  height: 8vh;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1vh;
+`;
+
+const TeamName = styled.p`
+  font-size: 1.6vh;
+  text-align: center;
+  margin-bottom: 0;
+`;
+
+const DotRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1vh;
+`;
+
+const Dot = styled.div`
+  width: 2vh;
+  height: 2vh;
+  border-radius: 50%;
+  background-color: ${(props) => props.color};
+  border: ${(props) =>
+    props.color === 'white' ? '1px solid black' : `1px solid ${props.color}`};
+`;
 
 const MyTeamSection = () => {
   const [teams, setTeams] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const userMail = sessionStorage.getItem('userMail');
 
+  // 데이터 불러오기
   useEffect(() => {
     const fetchTeams = async () => {
       try {
@@ -22,64 +84,69 @@ const MyTeamSection = () => {
         console.error(err);
         alert('서버와의 통신 중 오류가 발생했습니다.');
       } finally {
-        setIsLoading(false);
+        setIsLoading(false); // ✅ 무조건 로딩 끝내기
       }
     };
 
     fetchTeams();
   }, [userMail]);
 
+  // ✅ 로딩 중일 때 별도 UI 출력
   if (isLoading) {
     return (
-      <div className="py-[0.5vh]">
-        <div className="flex justify-between items-center mb-[1.5vh] mt-[1vh]">
-          <h2 className="text-[2.2vh] font-bold pl-[1vh] border-l-4 border-green-500 pb-[0.7vh] inline-block">
-            My Team
-          </h2>
+      <SectionWrapper>
+        <TitleWrapper>
+          <Title>Schedule</Title>
+        </TitleWrapper>
+        <div style={{ textAlign: 'center', padding: '2vh', fontSize: '1.8vh' }}>
+          불러오는 중...
         </div>
-        <div className="text-center py-[2vh] text-[1.8vh]">불러오는 중...</div>
-      </div>
+      </SectionWrapper>
     );
   }
 
   return (
-    <div className="py-[1.5vh]">
-      <div className="flex justify-between items-center mb-[1.5vh] mt-[1vh]">
-        <h2 className="text-[2.2vh] font-bold pl-[1vh] border-l-4 border-green-500 pb-[0.7vh] inline-block">
-          My Team
-        </h2>
-        <Link to="/myteam" className="text-[1.5vh] text-gray-400 no-underline">
-          더보기
+    <SectionWrapper>
+      <TitleWrapper>
+        <Title>My Team</Title>
+        <Link
+          to="/myteam"
+          style={{ fontSize: '2vh', textDecoration: 'none', color: 'inherit' }}
+        >
+          {'>'}
         </Link>
-      </div>
+      </TitleWrapper>
 
       {teams.length === 0 ? (
-        <div className="text-[1.8vh] text-gray-500 py-[1vh]">소속된 팀이 없습니다.</div>
+        <div style={{ fontSize: '1.8vh', color: '#888', padding: '1vh' }}>
+          소속된 팀이 없습니다.
+        </div>
       ) : (
-        <ScrollContainer
-          className="flex gap-[0.5vh] overflow-x-auto pb-[1vh] cursor-grab active:cursor-grabbing scrollbar-hide"
-          horizontal
-        >
-          {teams.map((team) => (
+        <TeamList>
+          {teams.map((team, index) => (
             <Link
-              key={team.teamId}
+              key={index}
               to={`/teams/${team.teamId}`}
-              className="flex-shrink-0 bg-white border border-gray-300 p-[0.6vh] no-underline text-black flex flex-col items-center hover:border-green-500 transition box-border rounded-[1.2vh] w-[12vh] min-w-[12vh]"
+              style={{ textDecoration: 'none', color: 'inherit' }}
             >
-              <img
-                src={`/logos/${team.logo}`}
-                onError={(e) => { e.target.src = altImage; }}
-                className="w-[7vh] h-[7vh] rounded-full object-cover mb-[0.5vh]"
-                alt="team logo"
-              />
-              <div className="text-[1.6vh] font-semibold text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-[12vh]">
-                {team.teamName}
-              </div>
+              <TeamItem>
+                <TeamImage
+                  src={`/logos/${team.logo}`}
+                  onError={(e) => {
+                    e.target.src = altImage;
+                  }}
+                />
+                <DotRow>
+                  <Dot color={team.firstColor} />
+                  <Dot color={team.secondColor} />
+                </DotRow>
+                <TeamName>{team.teamName}</TeamName>
+              </TeamItem>
             </Link>
           ))}
-        </ScrollContainer>
+        </TeamList>
       )}
-    </div>
+    </SectionWrapper>
   );
 };
 
