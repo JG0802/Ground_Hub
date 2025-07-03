@@ -1,69 +1,10 @@
 import { useState } from 'react';
-import styled from 'styled-components';
 import formations from '../../data/formation.json';
 import { useNavigate } from 'react-router-dom';
 
-const CarouselWrapper = styled.div`
-  width: 100%;
-  overflow: hidden;
-  margin-bottom: 2vh;
-  position: relative;
-  text-align: center;
-`;
-
-const CarouselItem = styled.div`
-  background-color: #eee;
-  border-radius: 6px;
-  padding: 2vh;
-  width: 90%;
-  margin: auto;
-  cursor: pointer;
-`;
-
-const FormationImage = styled.img`
-  width: 100%;
-  border-radius: 6px;
-`;
-
-const FormationText = styled.div`
-  font-size: 1.5vh;
-  font-weight: bold;
-  margin-top: 1vh;
-`;
-
-const FormationTitle = styled.div`
-  font-size: 3vh;
-  font-weight: bold;
-  margin-top: 1vh;
-  margin-bottom: 1vh;
-`;
-
-const ArrowButton = styled.div`
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  color: rgba(0, 0, 0, 0.7);
-  border: none;
-  font-size: 5vh;
-  cursor: pointer;
-  z-index: 1;
-  background-color: none;
-  &:hover {
-    color: rgba(150, 150, 150, 0.7);
-  }
-`;
-
-const LeftArrow = styled(ArrowButton)`
-  left: 1vh;
-`;
-
-const RightArrow = styled(ArrowButton)`
-  right: 1vh;
-`;
-
 const FormationCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(
-    Math.floor(Math.random() * formations.length),
+    Math.floor(Math.random() * formations.length)
   );
   const navigate = useNavigate();
 
@@ -76,24 +17,45 @@ const FormationCarousel = () => {
   };
 
   const handleMove = () => {
-    navigate(`/detail/formation/${formations[currentIndex].id}`); // id 기준 이동
+    navigate(`/detail/formation/${formations[currentIndex].id}`);
   };
 
   const currentFormation = formations[currentIndex];
 
   return (
-    <CarouselWrapper>
-      <LeftArrow onClick={handlePrev}>«</LeftArrow>
-      <CarouselItem key={currentFormation.id} onClick={handleMove}>
-        <FormationText>{currentFormation.summation}</FormationText>
-        <FormationTitle>{currentFormation.title}</FormationTitle>
-        <FormationImage
+    <div className="w-full overflow-hidden mb-[2vh] relative text-center">
+      <div
+        className="absolute top-1/2 left-[1vh] transform -translate-y-1/2 text-[5vh] cursor-pointer z-10 hover:text-gray-500"
+        onClick={handlePrev}
+      >
+        «
+      </div>
+
+      <div
+        key={currentFormation.id}
+        onClick={handleMove}
+        className="flex flex-col items-center bg-gray-100 p-[1vh] md:p-[2vh] sm:p-[1.5vh] rounded-[16px] shadow-md min-w-[calc((100%-4vh)/2.5)] flex-none mx-[1vh] cursor-pointer transition hover:shadow-lg border border-transparent hover:border-green-500 box-border"
+      >
+        <div className="text-[1.5vh] font-bold mt-[1vh] truncate w-full">
+          {currentFormation.summation}
+        </div>
+        <div className="text-[3vh] font-bold my-[1vh] truncate w-full">
+          {currentFormation.title}
+        </div>
+        <img
           src={currentFormation.img}
           alt={currentFormation.title}
+          className="w-full rounded-[6px]"
         />
-      </CarouselItem>
-      <RightArrow onClick={handleNext}>»</RightArrow>
-    </CarouselWrapper>
+      </div>
+
+      <div
+        className="absolute top-1/2 right-[1vh] transform -translate-y-1/2 text-[5vh] cursor-pointer z-10 hover:text-gray-500"
+        onClick={handleNext}
+      >
+        »
+      </div>
+    </div>
   );
 };
 

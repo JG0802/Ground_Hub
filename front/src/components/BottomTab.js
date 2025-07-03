@@ -1,10 +1,9 @@
-// src/components/BottomTab.js
 import { Link, useLocation } from 'react-router-dom';
 import {
-  MdStars,
-  MdGroups,
-  MdList,
-  MdInbox,
+  MdHome,
+  MdGroup,
+  MdSportsSoccer,
+  MdMap,
   MdAccountCircle,
 } from 'react-icons/md';
 import styled from 'styled-components';
@@ -15,23 +14,28 @@ const TabBar = styled.nav`
   width: 50vh;
   max-width: 100vw;
   background-color: #ffffff;
-  height: 5vh;
+  height: 7vh;
   display: flex;
   justify-content: space-around;
   align-items: center;
   border-top: 1px solid #ddd;
   left: 50%;
-  transform: translateX(-50%); /* 화면 가운데 고정 */
+  transform: translateX(-50%);
   z-index: 1001;
 `;
 
 const TabItem = styled(Link)`
-  color: ${(props) => (props.$active === 'true' ? '#000' : '#ccc')};
+  color: ${(props) => (props.$active === 'true' ? '#00C851' : '#ccc')};
   font-size: 2.5vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-decoration: none;
+  gap: 0.5vh;
+`;
+
+const Label = styled.span`
+  font-size: 1.2vh;
 `;
 
 const BottomTab = () => {
@@ -40,28 +44,24 @@ const BottomTab = () => {
   return (
     <TabBar>
       <TabItem to="/main" $active={(location.pathname === '/main').toString()}>
-        <MdStars />
+        <MdHome />
+        <Label>홈</Label>
       </TabItem>
-      <TabItem
-        to="/teams"
-        $active={(location.pathname === '/teams').toString()}
-      >
-        <MdGroups />
+      <TabItem to="/teams" $active={(location.pathname === '/teams').toString()}>
+        <MdGroup />
+        <Label>팀 목록</Label>
       </TabItem>
       <TabItem to="/feed" $active={(location.pathname === '/feed').toString()}>
-        <MdList />
+        <MdSportsSoccer />
+        <Label>경기 모집</Label>
       </TabItem>
-      <TabItem
-        to="/formation"
-        $active={(location.pathname === '/formation').toString()}
-      >
-        <MdInbox />
+      <TabItem to="/formation" $active={(location.pathname === '/formation').toString()}>
+        <MdMap />
+        <Label>전술</Label>
       </TabItem>
-      <TabItem
-        to="/profile"
-        $active={(location.pathname === '/profile').toString()}
-      >
+      <TabItem to="/profile" $active={(location.pathname === '/profile').toString()}>
         <MdAccountCircle />
+        <Label>프로필</Label>
       </TabItem>
     </TabBar>
   );

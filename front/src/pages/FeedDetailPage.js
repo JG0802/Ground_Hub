@@ -1,119 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import altImage from '../img/alt_image.png';
-import backImg from '../img/back.png';
 
-// ✅ Styled Components
-const Container = styled.div`
-  max-width: 768px;
-  margin: 2vh auto;
-  padding-top: 8vh;
-`;
-
-const Card = styled.div`
-  background: #fff;
-  padding: 3vh;
-  border-radius: 1vh;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-`;
-
-const Heading = styled.h2`
-  font-size: 3vh;
-  margin-bottom: 2vh;
-`;
-
-const InfoText = styled.p`
-  font-size: 1.8vh;
-  margin: 1vh 0;
-`;
-
-const Divider = styled.hr`
-  margin: 2vh 0;
-  border: none;
-  border-top: 1px solid #ccc;
-`;
-
-const Content = styled.p`
-  font-size: 2vh;
-  line-height: 1.6;
-`;
-
-const ButtonGroup = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1vh;
-  margin-top: 3vh;
-`;
-
-const Button = styled.button`
-  background-color: black;
-  color: white;
-  padding: 1vh 2vh;
-  font-size: 1.8vh;
-  border: none;
-  border-radius: 0.7vh;
-  cursor: pointer;
-
-  &:hover {
-    opacity: 0.85;
-  }
-`;
-
-const BackButton = styled.img`
-  width: 2.4vh;
-  height: 2.4vh;
-  cursor: pointer;
-  margin-bottom: 2vh;
-  display: block;
-`;
-
-const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Modal = styled.div`
-  background-color: white;
-  padding: 3vh;
-  border-radius: 1vh;
-  width: 100%;
-  max-width: 380px;
-`;
-
-const TitleInput = styled.textarea`
-  width: 100%;
-  height: 5vh;
-  font-size: 2.5vh;
-  margin-bottom: 1.5vh;
-  padding: 1vh;
-`;
-
-const Input = styled.textarea`
-  width: 100%;
-  height: 15vh;
-  font-size: 1.6vh;
-  margin-bottom: 1.5vh;
-  padding: 1vh;
-`;
-
-const TitleBox = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
-const CloseButton = styled.h3`
-  cursor: pointer;
-`;
-
-// ✅ Main Component
 const FeedDetailPage = () => {
   const { contentId } = useParams();
   const navigate = useNavigate();
@@ -142,9 +29,7 @@ const FeedDetailPage = () => {
 
   const handleDelete = async () => {
     if (!window.confirm('정말로 삭제하시겠습니까?')) return;
-    const res = await fetch(`/api/community/${contentId}`, {
-      method: 'DELETE',
-    });
+    const res = await fetch(`/api/community/${contentId}`, { method: 'DELETE' });
     if (res.status === 204) {
       alert('삭제 완료');
       navigate('/feed');
@@ -173,25 +58,19 @@ const FeedDetailPage = () => {
     const res = await fetch(`/api/teams/mail/${userMail}`);
     if (!res.ok) return alert('팀 목록 불러오기 실패');
     const data = await res.json();
-    const filtered = data.filter(
-      (t) =>
-        t.teamManager.userMail === userMail && t.teamId !== post.team.teamId,
-    );
+    const filtered = data.filter(t => t.teamManager.userMail === userMail && t.teamId !== post.team.teamId);
     setMyTeams(filtered);
     if (filtered.length > 0) setSelectedTeamId(filtered[0].teamId);
     setShowMatchModal(true);
   };
 
   const handleMatchRequest = async () => {
-    const requesterTeam = myTeams.find(
-      (t) => t.teamId === Number(selectedTeamId),
-    );
+    const requesterTeam = myTeams.find(t => t.teamId === Number(selectedTeamId));
     const postTeam = post.team;
-    const startDate =
-      new Date(post.matchDay).toISOString().slice(0, 16) + ':00';
+    const startDate = new Date(post.matchDay).toISOString().slice(0, 16) + ':00';
 
     const fetchLogo = async () => {
-      const res = await fetch(altImage);
+      const res = await fetch('/img/alt_image.png');
       const blob = await res.blob();
       return new File([blob], 'default-logo.png', { type: blob.type });
     };
@@ -200,22 +79,17 @@ const FeedDetailPage = () => {
       {
         teamId: requesterTeam.teamId,
         versus: postTeam.teamName,
-        gameName: `${post.matchDay.slice(0, 10)} ${
-          postTeam.teamName
-        } 매칭 신청`,
+        gameName: `${post.matchDay.slice(0, 10)} ${postTeam.teamName} 매칭 신청`,
       },
       {
         teamId: postTeam.teamId,
         versus: requesterTeam.teamName,
-        gameName: `${post.matchDay.slice(0, 10)} ${
-          requesterTeam.teamName
-        } 매칭 신청`,
+        gameName: `${post.matchDay.slice(0, 10)} ${requesterTeam.teamName} 매칭 신청`,
       },
     ];
 
     for (const game of games) {
       const logoFile = await fetchLogo();
-
       const formData = new FormData();
       formData.append('teamId', String(game.teamId));
       formData.append('versus', game.versus);
@@ -235,9 +109,7 @@ const FeedDetailPage = () => {
       }
     }
 
-    const res = await fetch(`/api/community/${contentId}`, {
-      method: 'DELETE',
-    });
+    const res = await fetch(`/api/community/${contentId}`, { method: 'DELETE' });
     if (!res.ok) {
       const errText = await res.text();
       alert(`매치 실패 ${errText}`);
@@ -252,119 +124,131 @@ const FeedDetailPage = () => {
   if (!post) return <div>로딩 중...</div>;
 
   return (
-    <Container>
-          <BackButton src={backImg} alt='◀' onClick={() => navigate(-1)} />
+    <div className="p-[9vh_2vw_10vh] max-w-[768px] mx-auto bg-[#f9f9f9] min-h-[100vh]">
+      <div className="relative mb-[3vh] flex items-center justify-center h-[6vh]">
+        <button onClick={() => navigate(-1)} className="absolute left-0 text-[3vh] ml-[1vh]">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-[3vh] h-[3vh]">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
+        </button>
+        <h2 className="text-[2.4vh] font-bold text-center whitespace-nowrap overflow-hidden text-ellipsis">
+          {post.category === '매칭' ? '매칭' : '팀원 모집'}
+        </h2>
+      </div>
 
-      <Card>
-        <Heading>{post.title}</Heading>
-        <InfoText>
-          <strong>작성자:</strong> {post.user.userName}
-        </InfoText>
-        <InfoText>
-          <strong>팀 이름:</strong> {post.team.teamName}
-        </InfoText>
-        <InfoText>
-          <strong>지역:</strong> {post.team.location}
-        </InfoText>
-        <InfoText>
-          <strong>작성일:</strong> {post.createTime.slice(0, 10)}
-        </InfoText>
-        <Content>
-          {post.category === '매칭' && post.matchDay && (
-            <>
-              <strong>🕒 매칭 날짜:</strong>{' '}
-              {post.matchDay.replace('T', ' ').slice(0, 16)}
-            </>
-          )}
-        </Content>
-        <InfoText>
-          <strong>조회수:</strong> {post.views}
-        </InfoText>
-        <Divider />
+      <div className="bg-white rounded-[2vh] shadow p-[3vh]">
+        {post.category === '매칭' ? (
+          <div className="bg-green-50 p-[2vh] rounded-[1vh] mb-[2vh]">
+            <div className="flex justify-between mb-[1vh]">
+              <span className="text-gray-500">🕒 매칭 날짜</span>
+              <span className="text-green-600 font-bold">{post.matchDay.replace('T', ' ').slice(0, 16)}</span>
+            </div>
+            <div className="flex justify-between mb-[1vh]">
+              <span className="text-gray-500">팀 이름</span>
+              <span className="text-gray-700 font-medium">{post.team.teamName}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-500">지역</span>
+              <span className="text-gray-700 font-medium">{post.team.location}</span>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-blue-50 p-[2vh] rounded-[1vh] mb-[2vh]">
+            <div className="flex justify-between mb-[1vh]">
+              <span className="text-gray-500">팀 이름</span>
+              <span className="text-gray-700 font-medium">{post.team.teamName}</span>
+            </div>
+            <div className="flex justify-between mb-[1vh]">
+              <span className="text-gray-500">지역</span>
+              <span className="text-gray-700 font-medium">{post.team.location}</span>
+            </div>
+          </div>
+        )}
 
-        <Content>{post.content}</Content>
+        <div className="flex justify-between mb-[1.5vh] text-[1.7vh]">
+          <span className="text-gray-500">작성자</span>
+          <span className="text-gray-700">{post.user.userName}</span>
+        </div>
+        <div className="flex justify-between mb-[1.5vh] text-[1.7vh]">
+          <span className="text-gray-500">작성일</span>
+          <span className="text-gray-700">{post.createTime.slice(0, 10)}</span>
+        </div>
+        <div className="flex justify-between mb-[1.5vh] text-[1.7vh]">
+          <span className="text-gray-500">조회수</span>
+          <span className="text-gray-700">{post.views}</span>
+        </div>
 
-        <ButtonGroup>
+        <div className="bg-gray-100 p-[2vh] rounded-[1vh] mb-[3vh] text-[1.8vh] min-h-[8vh]">
+          {post.content}
+        </div>
+
+        <div className="flex flex-col divide-y divide-gray-300">
           {post.category === '매칭' && (
-            <Button onClick={openMatchModal}>매칭 신청</Button>
+            <button onClick={openMatchModal} className="flex justify-between items-center p-[2vh] text-[1.8vh]">
+              <span>매칭 신청</span>
+              <span>➔</span>
+            </button>
           )}
-          <Button onClick={() => navigate(`/teams/${post.team.teamId}`)}>
-            팀 상세페이지로 이동
-          </Button>
+
+          <button onClick={() => navigate(`/teams/${post.team.teamId}`)} className="flex justify-between items-center p-[2vh] text-[1.8vh]">
+            <span>팀 상세페이지</span>
+            <span>➔</span>
+          </button>
+
           {userMail === post.user.userMail && (
             <>
-              <Button
-                onClick={() => {
-                  setTitle(post.title);
-                  setContent(post.content);
-                  setShowEditModal(true);
-                }}
-              >
-                수정
-              </Button>
-              <Button style={{ backgroundColor: 'red' }} onClick={handleDelete}>
-                삭제
-              </Button>
+              <button onClick={() => { setTitle(post.title); setContent(post.content); setShowEditModal(true); }} className="flex justify-between items-center p-[2vh] text-[1.8vh]">
+                <span>수정</span>
+                <span>➔</span>
+              </button>
+
+              <button onClick={handleDelete} className="flex justify-between items-center p-[2vh] text-[1.8vh] text-red-500">
+                <span>삭제</span>
+                <span>➔</span>
+              </button>
             </>
           )}
-        </ButtonGroup>
-      </Card>
+        </div>
+      </div>
 
-      {/* 수정 모달 */}
       {showEditModal && (
-        <ModalOverlay onClick={() => setShowEditModal(false)}>
-          <Modal onClick={(e) => e.stopPropagation()}>
-            <TitleBox>
-              <h3>게시글 수정</h3>
-              <CloseButton onClick={() => setShowEditModal(false)}>
-                X
-              </CloseButton>
-            </TitleBox>
-            <TitleInput
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-            <Input
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-            />
-            <Button onClick={handleEdit}>수정</Button>
-          </Modal>
-        </ModalOverlay>
+        <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 flex justify-center items-center z-[9999]">
+          <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-[2vh] p-[4vh_3vh] w-[90%] max-w-[360px] box-border shadow-lg relative animate-fadeIn">
+            <div className="flex justify-center items-center mb-[4vh] relative">
+              <h3 className="text-[2.4vh] font-bold m-0 break-keep">게시글 수정</h3>
+              <button onClick={() => setShowEditModal(false)} className="text-[2.4vh] bg-none border-none cursor-pointer absolute right-0 top-0">✖</button>
+            </div>
+            <textarea value={title} onChange={(e) => setTitle(e.target.value)} className="w-full text-[1.7vh] p-[1.5vh] border border-gray-300 rounded-[1vh] bg-[#f9f9f9] focus:outline-green-500 focus:bg-white box-border mb-[3vh]" />
+            <textarea value={content} onChange={(e) => setContent(e.target.value)} className="w-full text-[1.7vh] p-[1.5vh] border border-gray-300 rounded-[1vh] bg-[#f9f9f9] focus:outline-green-500 focus:bg-white box-border resize-none h-[10vh] mb-[3vh]" />
+            <button onClick={handleEdit} className="w-full bg-green-500 text-white text-[2vh] p-[1.8vh] rounded-[2vh] border-none cursor-pointer mt-[2vh] shadow-md transition hover:bg-green-600 box-border">수정</button>
+          </div>
+        </div>
       )}
 
-      {/* 매칭 모달 */}
       {showMatchModal && (
-        <ModalOverlay onClick={() => setShowMatchModal(false)}>
-          <Modal onClick={(e) => e.stopPropagation()}>
-            <TitleBox>
-              <h3>매칭 신청</h3>
-              <CloseButton onClick={() => setShowMatchModal(false)}>
-                X
-              </CloseButton>
-            </TitleBox>
+        <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 flex justify-center items-center z-[9999]">
+          <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-[2vh] p-[4vh_3vh] w-[90%] max-w-[360px] box-border shadow-lg relative animate-fadeIn">
+            <div className="flex justify-center items-center mb-[4vh] relative">
+              <h3 className="text-[2.4vh] font-bold m-0 break-keep">매칭 신청</h3>
+              <button onClick={() => setShowMatchModal(false)} className="text-[2.4vh] bg-none border-none cursor-pointer absolute right-0 top-0">✖</button>
+            </div>
             {myTeams.length > 0 ? (
               <>
-                <p>어느 팀으로 신청하시겠습니까?</p>
-                <select
-                  value={selectedTeamId}
-                  onChange={(e) => setSelectedTeamId(e.target.value)}
-                >
-                  {myTeams.map((team) => (
-                    <option key={team.teamId} value={team.teamId}>
-                      {team.teamName}
-                    </option>
+                <p className="text-[1.7vh] mb-[2vh]">어느 팀으로 신청하시겠습니까?</p>
+                <select value={selectedTeamId} onChange={(e) => setSelectedTeamId(e.target.value)} className="w-full text-[1.7vh] p-[1.5vh] border border-gray-300 rounded-[1vh] bg-[#f9f9f9] focus:outline-green-500 focus:bg-white box-border mb-[3vh]">
+                  {myTeams.map(team => (
+                    <option key={team.teamId} value={team.teamId}>{team.teamName}</option>
                   ))}
                 </select>
-                <Button onClick={handleMatchRequest}>신청</Button>
+                <button onClick={handleMatchRequest} className="w-full bg-green-500 text-white text-[2vh] p-[1.8vh] rounded-[2vh] border-none cursor-pointer mt-[2vh] shadow-md transition hover:bg-green-600 box-border">신청</button>
               </>
             ) : (
               <p>매칭 신청 가능한 팀이 없습니다.</p>
             )}
-          </Modal>
-        </ModalOverlay>
+          </div>
+        </div>
       )}
-    </Container>
+    </div>
   );
 };
 

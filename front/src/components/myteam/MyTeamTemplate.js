@@ -1,35 +1,13 @@
-import styled from 'styled-components';
 import MyTeamForm from './MyTeamForm';
-
-const Container = styled.div`
-  width: 100%;
-  padding: 7vh 2vw 3vh;
-  background-color: #f9f9f9;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const ContentBox = styled.div`
-  width: 100%;
-  max-width: 50vh;
-`;
-
-const Title = styled.h1`
-  font-size: 2.4vh;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 3vh;
-`;
 
 const MyTeamTemplate = () => {
   return (
-    <Container>
-      <ContentBox>
-        <Title>My Teams</Title>
+    <div className="w-full max-w-[768px] mx-auto min-h-[calc(100vh-12vh)] bg-[#f9f9f9] p-[7vh_2vw_10vh]">
+      <div className="w-full max-w-[50vh]">
+        <h1 className="text-[2.4vh] font-bold text-center mb-[3vh] mt-[2vh]">My Teams</h1>
         <MyTeamForm />
-      </ContentBox>
-    </Container>
+      </div>
+    </div>
   );
 };
 

@@ -85,7 +85,7 @@ const SignUpPassword = () => {
   return (
     <Container>
       <StyledLogo>Ground Hub</StyledLogo>
-      <StyledTitle>Sign Up</StyledTitle>
+      <StyledTitle>회원가입</StyledTitle>
       <StyledInput
         type="password"
         placeholder="비밀번호 입력"
@@ -105,13 +105,12 @@ const SignUpPassword = () => {
         placeholder="010-1234-5678"
         onChange={(e) => setTel(e.target.value)}
       />
-      <StyledButton onClick={handleContinue}>Continue</StyledButton>
+      <StyledButton onClick={handleContinue}>계속</StyledButton>
       <StyledLink onClick={() => navigate('/')}>
         로그인 페이지로 이동
       </StyledLink>
       <StyledLink style={{ width: '90%', textDecoration: 'underline' }}>
-        By clicking continue, you agree to our Terms of Service and Privacy
-        Policy
+      계속 버튼 클릭 시 당사 서비스 약관 및 개인정보 보호정책에 동의합니다.
       </StyledLink>
     </Container>
   );

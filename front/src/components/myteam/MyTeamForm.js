@@ -1,71 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
 import altImage from '../../img/alt_image.png';
-
-const Container = styled.div`
-  display: flex;
-  width: 90%;
-  flex-direction: column;
-  gap: 2vh;
-`;
-
-const TeamCard = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: #fff;
-  padding: 2vh;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-`;
-
-const TeamLogo = styled.img`
-  width: 8vh;
-  height: 8vh;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 2vh;
-`;
-
-const TeamInfo = styled.div`
-  flex: 1;
-`;
-
-const TeamName = styled.div`
-  font-size: 1.8vh;
-  font-weight: bold;
-  margin-bottom: 1vh;
-`;
-
-const TagRow = styled.div`
-  font-size: 1.4vh;
-  color: #444;
-  margin-bottom: 0.5vh;
-`;
-
-const Tag = styled.span`
-  background-color: #ddd;
-  color: #222;
-  border-radius: 1vh;
-  padding: 0.2vh 1vh;
-  font-size: 1.3vh;
-  margin-right: 0.7vh;
-`;
-
-const ColorDots = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1vh;
-`;
-
-const Dot = styled.div`
-  width: 2vh;
-  height: 2vh;
-  border-radius: 50%;
-  background-color: ${(props) => props.color};
-  border: ${(props) =>
-    props.color === 'white' ? '1px solid #ccc' : `1px solid ${props.color}`};
-`;
+import UniformIcon from '../team/UniformIcon';
 
 const MyTeamForm = () => {
   const [teams, setTeams] = useState([]);
@@ -91,45 +27,43 @@ const MyTeamForm = () => {
   }, [userMail]);
 
   return (
-    <Container>
+    <div className="w-full max-w-[768px] mx-auto min-h-[calc(100vh-12vh)] bg-[#f9f9f9] p-[7vh_2vw_10vh]">
       {teams.length === 0 ? (
-        <div style={{ fontSize: '1.6vh', textAlign: 'center' }}>
-          참여 중인 팀이 없습니다.
-        </div>
+        <div className="text-[1.6vh] text-center">참여 중인 팀이 없습니다.</div>
       ) : (
         teams.map((team, i) => (
           <Link
             key={i}
             to={`/teams/${team.teamId}`}
-            style={{ textDecoration: 'none', color: 'inherit' }}
+            className="no-underline text-inherit"
           >
-            <TeamCard>
-              <TeamLogo
+            <div className="flex items-center justify-between bg-white p-[2vh] rounded-[1.2vh] shadow-md transition hover:scale-[1.02] hover:shadow-lg">
+              <img
                 src={`/logos/${team.logo}`}
-                onError={(e) => {
-                  e.target.src = altImage;
-                }}
+                onError={(e) => { e.target.src = altImage; }}
+                className="w-[8vh] h-[8vh] rounded-full object-cover"
+                alt="team logo"
               />
-              <TeamInfo>
-                <TeamName>{team.teamName}</TeamName>
-                <TagRow>
-                  <Tag>회원</Tag>
+              <div className="flex-1 ml-[2vh]">
+                <div className="text-[1.8vh] font-bold mb-[1vh]">{team.teamName}</div>
+                <div className="flex items-center gap-[0.7vh] text-[1.4vh] text-gray-700 mb-[0.5vh]">
+                  <span className="bg-gray-300 text-gray-800 rounded-[1vh] px-[1vh] text-[1.3vh]">회원</span>
                   {team.users.length}명
-                </TagRow>
-                <TagRow>
-                  <Tag>위치</Tag>
+                </div>
+                <div className="flex items-center gap-[0.7vh] text-[1.4vh] text-gray-700 mb-[0.5vh]">
+                  <span className="bg-gray-300 text-gray-800 rounded-[1vh] px-[1vh] text-[1.3vh]">위치</span>
                   {team.location}
-                </TagRow>
-              </TeamInfo>
-              <ColorDots>
-                <Dot color={team.firstColor} />
-                <Dot color={team.secondColor} />
-              </ColorDots>
-            </TeamCard>
+                </div>
+              </div>
+              <div className="flex gap-[1vh]">
+                <UniformIcon color={team.firstColor} type="home" />
+                <UniformIcon color={team.secondColor} type="away" />
+              </div>
+            </div>
           </Link>
         ))
       )}
-    </Container>
+    </div>
   );
 };
 

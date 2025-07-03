@@ -1,163 +1,5 @@
 import { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-
-const Container = styled.div`
-  padding: 8vh 2vw 10vh;
-  max-width: 768px;
-  margin: 0 auto;
-  background-color: #f9f9f9;
-`;
-
-const NavTabs = styled.div`
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 2vh;
-  border-bottom: 1px solid #ccc;
-`;
-
-const Tab = styled.div`
-  font-size: 2vh;
-  font-weight: ${({ active }) => (active ? 'bold' : 'normal')};
-  padding: 1vh 2vh;
-  border-bottom: ${({ active }) => (active ? '3px solid black' : 'none')};
-  cursor: pointer;
-`;
-
-const PostCard = styled.div`
-  background-color: #ffffff;
-  border-radius: 12px;
-  padding: 2vh 2vw;
-  margin-bottom: 2vh;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  cursor: pointer;
-  transition: 0.2s;
-
-  &:hover {
-    background-color: #f3f3f3;
-  }
-
-  h3 {
-    font-size: 2vh;
-    margin-bottom: 1vh;
-  }
-
-  p {
-    font-size: 1.6vh;
-    margin: 0.5vh 0;
-    line-height: 1.5;
-  }
-`;
-
-const WriteButton = styled.button`
-  position: fixed;
-  bottom: 7vh;
-  right: calc(clamp(1vh, (100vw - 50vh) / 2 + 1vh, 100vw));
-  width: 6vh;
-  height: 6vh;
-  font-size: 3vh;
-  background-color: black;
-  color: white;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  z-index: 1000;
-`;
-
-const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5); /* ✔ 어둡게 */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999; /* ✔ 충분히 큰 값으로 */
-`;
-
-const Modal = styled.div`
-  background-color: white;
-  border-radius: 12px;
-  padding: 3vh 2vh;
-  width: 90%;
-  max-width: 400px;
-  z-index: 10000; /* ✔ 위에 오도록 */
-  position: relative;
-`;
-
-const TitleRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2vh;
-`;
-
-const ModalTitle = styled.h3`
-  font-size: 2vh;
-  margin: 0;
-`;
-
-const CloseButton = styled.button`
-  font-size: 2vh;
-  background: none;
-  border: none;
-  cursor: pointer;
-`;
-
-const sharedInputStyle = `
-  width: 100%;
-  font-size: 1.6vh;
-  padding: 1vh;
-  margin: 1vh 0;
-  border: 1px solid #ccc;
-  border-radius: 0.5vh;
-  box-sizing: border-box;
-`;
-
-const Input = styled.textarea`
-  ${sharedInputStyle}
-  height: 10vh;
-  resize: none;
-`;
-
-const Select = styled.select`
-  ${sharedInputStyle}
-  appearance: none;
-  background-color: #fff;
-  z-index: 1002; /* 드롭다운 가림 방지 */
-  position: relative;
-`;
-
-const DateInput = styled.input`
-  width: 100%;
-  font-size: 1.6vh;
-  padding: 1vh;
-  margin: 1vh 0;
-  border: 1px solid #ccc;
-  border-radius: 0.5vh;
-  box-sizing: border-box;
-  background-color: #fff;
-  appearance: none;
-
-  &:focus {
-    outline: none;
-    border-color: black;
-  }
-`;
-
-const Submit = styled.button`
-  width: 100%;
-  background-color: black;
-  color: white;
-  font-size: 1.8vh;
-  padding: 1.2vh;
-  border-radius: 1vh;
-  border: none;
-  cursor: pointer;
-`;
 
 const FeedPage = () => {
   const [showModal, setShowModal] = useState(false);
@@ -179,9 +21,7 @@ const FeedPage = () => {
       try {
         const res = await fetch(`/api/teams/mail/${userMail}`);
         const data = await res.json();
-        const filtered = data.filter(
-          (team) => team.teamManager.userMail === userMail,
-        );
+        const filtered = data.filter(team => team.teamManager.userMail === userMail);
         setTeamData(filtered);
         if (filtered.length > 0) {
           setSelectedTeam(filtered[0]);
@@ -237,108 +77,144 @@ const FeedPage = () => {
   };
 
   return (
-    <Container>
-      <NavTabs>
-        {['매칭', '팀원 모집'].map((tab) => (
-          <Tab
+    <div className="p-[8vh_2vw_10vh] max-w-[768px] mx-auto bg-[#f9f9f9]">
+      <div className="flex justify-around mb-[2vh] border-b border-gray-300">
+        {['매칭', '팀원 모집'].map(tab => (
+          <div
             key={tab}
-            active={category === tab}
+            className={`text-[2vh] p-[1vh_2vh] cursor-pointer ${category === tab ? 'font-bold border-b-[3px] border-black' : 'font-normal'}`}
             onClick={() => setCategory(tab)}
           >
             {tab}
-          </Tab>
+          </div>
         ))}
-      </NavTabs>
+      </div>
 
-      {posts.map((post) => (
-        <PostCard
+      {posts.map(post => (
+        <div
           key={post.contentId}
           onClick={() => navigate(`/feed/${post.contentId}`)}
+          className="bg-white rounded-[12px] p-[2vh_1vw] mb-[2vh] shadow-md flex justify-between items-center cursor-pointer transition hover:bg-gray-200"
         >
-          <h3>{post.title}</h3>
-          <p>
-            <strong>팀 이름:</strong> {post.team.teamName}
-          </p>
-          <p>
-            <strong>지역:</strong> {post.team.location}
-          </p>
-          <p>
-            <strong>작성일:</strong> {post.createTime.slice(0, 10)}
-          </p>
-          {post.category === '매칭' && post.matchDay && (
-            <p>
-              <strong>매칭 날짜:</strong>{' '}
-              {post.matchDay.replace('T', ' ').slice(0, 16)}
-            </p>
-          )}
-          <p>
-            <strong>내용:</strong> {post.content}
-          </p>
-          <p>
-            <strong>조회수:</strong> {post.views}
-          </p>
-        </PostCard>
+          <div className="flex items-center">
+            <img
+              src={`/logos/${post.team.logo}`}
+              onError={e => { e.target.src = '/img/alt_image.png'; }}
+              className="w-[6vh] h-[6vh] rounded-full object-cover mr-[2vh]"
+              alt="team logo"
+            />
+            <div className="flex flex-col">
+              <h3 className="text-[1.8vh] text-blue-500 m-0">{post.team.teamName}</h3>
+              {post.category === '매칭' && post.matchDay && (
+                <div className="text-[1.7vh] font-bold mt-[0.5vh] text-gray-800">
+                  {new Date(post.matchDay).toLocaleString('ko-KR', {
+                    month: 'long',
+                    day: 'numeric',
+                    weekday: 'short',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false,
+                  })}
+                </div>
+              )}
+              <div className="flex items-center text-[1.5vh] mt-[1vh] text-gray-600 gap-[0.5vh]">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-[1.8vh] h-[1.8vh]">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 2.25c-4.97 0-9 4.03-9 9 0 7.12 9 10.5 9 10.5s9-3.38 9-10.5c0-4.97-4.03-9-9-9z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 12.75a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" />
+                </svg>
+                <span>{post.team.location}</span>
+              </div>
+            </div>
+          </div>
+          <div className={`text-[1.6vh] font-bold ${post.category === '매칭' ? 'text-green-500' : 'text-orange-500'}`}>
+            {post.category === '매칭' ? '매칭 대기' : '모집 중'}
+          </div>
+        </div>
       ))}
 
-      <WriteButton onClick={() => setShowModal(true)}>+</WriteButton>
+      <button
+        onClick={() => setShowModal(true)}
+        className="fixed bottom-[10vh] right-[calc(clamp(1vh,(100vw-50vh)/2+1vh,100vw))] w-[6.5vh] h-[6.5vh] bg-gradient-to-br from-green-400 to-green-600 text-white rounded-full border-none cursor-pointer shadow-lg z-[1000] flex items-center justify-center hover:scale-110 active:scale-95 transition-transform"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-[3vh] h-[3vh]">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 3.487a2.32 2.32 0 113.281 3.281L7.5 19.41l-4.245 1.06 1.06-4.244L16.862 3.487z" />
+        </svg>
+      </button>
 
       {showModal && (
-        <ModalOverlay onClick={() => setShowModal(false)}>
-          <Modal onClick={(e) => e.stopPropagation()}>
-            <TitleRow>
-              <ModalTitle>게시글 작성</ModalTitle>
-              <CloseButton onClick={() => setShowModal(false)}>✖</CloseButton>
-            </TitleRow>
+        <div onClick={() => setShowModal(false)} className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 flex justify-center items-center z-[9999]">
+          <div onClick={e => e.stopPropagation()} className="bg-white rounded-[2vh] p-[4vh_3vh] w-[90%] max-w-[360px] box-border shadow-lg relative animate-fadeIn">
+            <div className="flex justify-center items-center mb-[4vh] relative">
+              <h3 className="text-[2.4vh] font-bold m-0 break-keep">게시글 작성</h3>
+              <button onClick={() => setShowModal(false)} className="text-[2.4vh] bg-none border-none cursor-pointer absolute right-0 top-0">✖</button>
+            </div>
 
-            <Select
-              value={selectedTeam?.teamName || ''}
-              onChange={(e) => {
-                const team = teamData.find(
-                  (t) => t.teamName === e.target.value,
-                );
-                setSelectedTeam(team);
-                setTeamId(team.teamId);
-              }}
-            >
-              {teamData.map((team) => (
-                <option key={team.teamId} value={team.teamName}>
-                  {team.teamName}
-                </option>
-              ))}
-            </Select>
+            <div className="mb-[3vh]">
+              <div className="text-[1.7vh] font-semibold mb-[1vh]">팀 선택 <span className="text-green-500 ml-[0.3vh]">⚽</span></div>
+              <select
+                value={selectedTeam?.teamName || ''}
+                onChange={e => {
+                  const team = teamData.find(t => t.teamName === e.target.value);
+                  setSelectedTeam(team);
+                  setTeamId(team.teamId);
+                }}
+                className="w-full text-[1.7vh] p-[1.5vh] border border-gray-300 rounded-[1vh] bg-[#f9f9f9] focus:outline-green-500 focus:bg-white box-border"
+              >
+                {teamData.map(team => (
+                  <option key={team.teamId} value={team.teamName}>{team.teamName}</option>
+                ))}
+              </select>
+            </div>
 
-            <Select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              <option value="매칭">매칭</option>
-              <option value="팀원 모집">팀원 모집</option>
-            </Select>
+            <div className="mb-[3vh]">
+              <div className="text-[1.7vh] font-semibold mb-[1vh]">카테고리 선택 <span className="text-green-500 ml-[0.3vh]">⚽</span></div>
+              <div className="flex gap-[2vh]">
+                <button onClick={() => setCategory('매칭')} className={`flex-1 text-[1.7vh] p-[1.5vh_0] border ${category === '매칭' ? 'border-green-500 bg-green-500 text-white' : 'border-gray-300 bg-[#f9f9f9] text-gray-800'} rounded-[1vh] cursor-pointer transition hover:border-green-500`}>매칭</button>
+                <button onClick={() => setCategory('팀원 모집')} className={`flex-1 text-[1.7vh] p-[1.5vh_0] border ${category === '팀원 모집' ? 'border-green-500 bg-green-500 text-white' : 'border-gray-300 bg-[#f9f9f9] text-gray-800'} rounded-[1vh] cursor-pointer transition hover:border-green-500`}>팀원 모집</button>
+              </div>
+            </div>
 
             {category === '매칭' && (
-              <DateInput
-                type="datetime-local"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
+              <div className="mb-[3vh]">
+                <div className="text-[1.7vh] font-semibold mb-[1vh]">매칭 날짜 <span className="text-green-500 ml-[0.3vh]">⚽</span></div>
+                <input
+                  type="datetime-local"
+                  placeholder="날짜 선택"
+                  value={startDate}
+                  onChange={e => setStartDate(e.target.value)}
+                  className="w-full text-[1.7vh] p-[1.5vh] border border-gray-300 rounded-[1vh] bg-[#f9f9f9] focus:outline-green-500 focus:bg-white box-border"
+                />
+              </div>
             )}
 
-            <Input
-              as="input"
-              placeholder="제목 입력"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-            <Input
-              placeholder="내용 입력"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-            />
-            <Submit onClick={handleSubmit}>등록</Submit>
-          </Modal>
-        </ModalOverlay>
+            <div className="mb-[3vh]">
+              <div className="text-[1.7vh] font-semibold mb-[1vh]">제목 <span className="text-green-500 ml-[0.3vh]">⚽</span></div>
+              <input
+                type="text"
+                placeholder="제목 입력"
+                value={title}
+                onChange={e => setTitle(e.target.value)}
+                className="w-full text-[1.7vh] p-[1.5vh] border border-gray-300 rounded-[1vh] bg-[#f9f9f9] focus:outline-green-500 focus:bg-white box-border"
+              />
+            </div>
+
+            <div className="mb-[3vh]">
+              <div className="text-[1.7vh] font-semibold mb-[1vh]">내용 <span className="text-green-500 ml-[0.3vh]">⚽</span></div>
+              <textarea
+                placeholder="내용 입력"
+                value={content}
+                onChange={e => setContent(e.target.value)}
+                className="w-full text-[1.7vh] p-[1.5vh] border border-gray-300 rounded-[1vh] bg-[#f9f9f9] focus:outline-green-500 focus:bg-white box-border resize-none h-[10vh]"
+              />
+            </div>
+
+            <button onClick={handleSubmit} className="w-full bg-green-500 text-white text-[2vh] p-[1.8vh] rounded-[2vh] border-none cursor-pointer mt-[2vh] shadow-md transition hover:bg-green-600 box-border">
+              등록
+            </button>
+          </div>
+        </div>
       )}
-    </Container>
+    </div>
   );
 };
 

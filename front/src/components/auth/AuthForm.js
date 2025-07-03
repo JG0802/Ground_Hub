@@ -97,10 +97,10 @@ const AuthForm = () => {
 
   return (
     <AuthFormContainer onSubmit={handleLogin}>
-      <StyledTitle>Sign In</StyledTitle>
+      <StyledTitle>로그인</StyledTitle>
       <StyledInput
         type="email"
-        placeholder="email@domain.com"
+        placeholder="Email@domain.com"
         onChange={(e) => setUserMail(e.target.value)}
       />
       <StyledInput
@@ -114,7 +114,7 @@ const AuthForm = () => {
 
       <LinkContainer>
         <StyledLink to="/signup">회원가입</StyledLink>
-        <StyledLink to="/">아이디 비밀번호 찾기</StyledLink>
+        <StyledLink to="/">아이디 비밀번호 찾기</StyledLink> 
       </LinkContainer>
     </AuthFormContainer>
   );
