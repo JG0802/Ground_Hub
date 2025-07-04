@@ -4,7 +4,7 @@ import altImage from '../../img/alt_image.png';
 const MySchedule = ({ game }) => {
   return (
     <Link
-      to={`/position/view/${game.gameId}`}
+      to={`/game/${game.gameId}`}
       className="no-underline text-inherit"
     >
       <div className="bg-white rounded-2xl shadow-md px-[2vh] py-[2vh] transition hover:shadow-lg">

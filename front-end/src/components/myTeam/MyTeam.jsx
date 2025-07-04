@@ -5,21 +5,21 @@ import UniformIcon from '../common/UniformIcon';
 const MyTeam = ({ team }) => {
   return (
     <Link to={`/teams/${team.teamId}`} className="no-underline text-inherit">
-      <div className="flex items-center justify-between bg-white p-[2vh] rounded-[1.2vh] shadow-md transition hover:scale-[1.02] hover:shadow-lg">
+      <div className="flex items-center justify-between bg-white p-[2vh] rounded-[1.2vh] shadow-md transition hover:scale-[1.02] hover:shadow-lg mb-[2vh]">
         <img
-          src={`http://52.78.12.127:8080/logos/${team.logo}`}
+          src={`/logos/${team.logo}`}
           onError={(e) => { e.target.src = altImage; }}
-          className="w-[8vh] h-[8vh] rounded-full object-cover"
+          className="w-[8vh] h-[8vh] md:w-[7vh] md:h-[7vh] sm:w-[6vh] sm:h-[6vh] rounded-full object-cover"
           alt="team logo"
         />
         <div className="flex-1 ml-[2vh]">
-          <div className="text-[1.8vh] font-bold mb-[1vh]">{team.teamName}</div>
-          <div className="flex items-center gap-[0.7vh] text-[1.4vh] text-gray-700 mb-[0.5vh]">
-            <span className="bg-gray-300 text-gray-800 rounded-[1vh] px-[1vh] text-[1.3vh]">회원</span>
+          <div className="text-[1.8vh] md:text-[1.6vh] sm:text-[1.4vh] font-bold mb-[1vh]">{team.teamName}</div>
+          <div className="flex items-center gap-[0.7vh] text-[1.4vh] md:text-[1.2vh] sm:text-[1vh] text-gray-700 mb-[0.5vh]">
+            <span className="bg-gray-300 text-gray-800 rounded-[1vh] px-[1vh] text-[1.3vh] md:text-[1.1vh] sm:text-[0.9vh]">회원</span>
             {team.users.length}명
           </div>
-          <div className="flex items-center gap-[0.7vh] text-[1.4vh] text-gray-700 mb-[0.5vh]">
-            <span className="bg-gray-300 text-gray-800 rounded-[1vh] px-[1vh] text-[1.3vh]">위치</span>
+          <div className="flex items-center gap-[0.7vh] text-[1.4vh] md:text-[1.2vh] sm:text-[1vh] text-gray-700 mb-[0.5vh]">
+            <span className="bg-gray-300 text-gray-800 rounded-[1vh] px-[1vh] text-[1.3vh] md:text-[1.1vh] sm:text-[0.9vh]">위치</span>
             {team.location}
           </div>
         </div>

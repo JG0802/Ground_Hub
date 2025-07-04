@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 import { Link } from 'react-router-dom';
 import altImage from '../../img/alt_image.png';
+import ScrollContainer from 'react-indiana-drag-scroll';
 
 dayjs.locale('ko');
 
@@ -87,7 +88,7 @@ const ScheduleSection = () => {
   if (isLoading) {
     return (
       <div className="py-[0.5vh]">
-        <div className="flex justify-between items-center mb-[1.5vh]">
+        <div className="flex justify-between items-center mb-[1.5vh] mt-[1vh]">
           <h2 className="text-[2.2vh] font-bold pl-[1vh] border-l-4 border-green-500 pb-[0.7vh]">
             Schedule
           </h2>
@@ -103,34 +104,35 @@ const ScheduleSection = () => {
 
   return (
     <div className="py-[0.5vh]">
-      <div className="flex justify-between items-center mb-[1.5vh]">
+      <div className="flex justify-between items-center mb-[1.5vh] mt-[1vh]">
         <h2 className="text-[2.2vh] font-bold pl-[1vh] border-l-4 border-green-500 pb-[0.7vh]">
           Schedule
         </h2>
-        <Link to="/my-schedule" className="text-[1.7vh] text-gray-500 no-underline">
+        <Link to="/my-schedule" className="text-[1.5vh] text-gray-400 no-underline">
           더보기
         </Link>
       </div>
 
-      <div className="flex gap-[2vh] overflow-x-auto pb-[1vh] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent">
+      <ScrollContainer
+        className="flex gap-[1.1vh] overflow-x-auto pb-[1vh] cursor-grab active:cursor-grabbing scrollbar-hide"
+        horizontal
+      >
         {games.length === 0 ? (
           <div className="text-[1.8vh] text-gray-500">예정된 경기가 없습니다.</div>
         ) : (
           sortedGames.map((game) => (
             <Link
               key={game.gameId}
-              to={`/position/view/${game.gameId}`}
-              className="no-underline text-black"
+              to={`/game/${game.gameId}`}
+              className="no-underline text-black flex-shrink-0"
             >
-              <div className="flex flex-col items-center w-[16vh] min-w-[16vh] bg-white border border-gray-200 rounded-[1.2vh] shadow-md p-[1.5vh] text-center cursor-pointer transition hover:border-green-500 hover:shadow-lg">
+              <div className="flex flex-col items-center w-[16vh] min-w-[16vh] bg-white border border-gray-200 rounded-[1.2vh] p-[1.5vh] text-center cursor-pointer transition hover:border-green-500 hover:shadow-lg">
                 <div className="text-[1.6vh] font-bold mb-[0.5vh] truncate w-full min-w-0">
                   {dayjs(game.date).format('MM/DD (ddd)')}
                 </div>
                 <img
                   src={`/logos/${game.oppoLogo}`}
-                  onError={(e) => {
-                    e.target.src = altImage;
-                  }}
+                  onError={(e) => { e.target.src = altImage; }}
                   className="w-[7vh] h-[7vh] rounded-full object-cover mb-[1vh]"
                   alt="match logo"
                 />
@@ -141,23 +143,24 @@ const ScheduleSection = () => {
                   {game.gameName}
                 </div>
               </div>
-
             </Link>
           ))
         )}
-      </div>
+      </ScrollContainer>
 
       <div className="mt-[3vh]">
         <div className="flex justify-between items-center mb-[1.5vh]">
-          <h3 className="text-[2vh] font-bold mt-[2vh]">{currentDate.format('YYYY년 M월')}</h3>
-          <Link to="/calender" className="text-[1.7vh] text-gray-500 no-underline">
+          <h3 className="text-[2vh] font-bold">{currentDate.format('YYYY년 M월')}</h3>
+          <Link to="/calender" className="text-[1.5vh] text-gray-400 no-underline">
             더보기
           </Link>
         </div>
 
-        <div className="grid grid-cols-7 text-center text-[1.6vh] text-gray-500 mb-[1vh]">
+        <div className="grid grid-cols-7 text-center text-[1.6vh] text-gray-500 mb-[1vh] border-b border-gray-300 pb-[1vh]">
           {['일', '월', '화', '수', '목', '금', '토'].map((day) => (
-            <div key={day}>{day}</div>
+            <div key={day} className={day === '일' ? 'text-red-400' : day === '토' ? 'text-blue-400' : ''}>
+              {day}
+            </div>
           ))}
         </div>
 
@@ -170,11 +173,11 @@ const ScheduleSection = () => {
             return (
               <div
                 key={i}
-                className={`aspect-square min-h-[4.5vh] flex flex-col items-center justify-center relative rounded-[0.7vh] ${
-                  isToday ? 'bg-green-100 font-bold' : 'bg-gray-100 font-normal'
-                }`}
+                className={`aspect-square min-h-[6vh] flex flex-col items-center justify-center relative ${isToday ? 'text-green-500 font-bold' : 'text-black font-normal'}`}
               >
-                {d}
+                <div className="text-[1.7vh]">
+                  {d}
+                </div>
                 {gamesByDate[d] && (
                   <div className="flex justify-center gap-[0.3vh] absolute bottom-[0.5vh] left-1/2 transform -translate-x-1/2">
                     {gamesByDate[d].map((color, idx) => (

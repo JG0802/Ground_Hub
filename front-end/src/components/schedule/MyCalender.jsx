@@ -52,7 +52,7 @@ const Middle = styled.div`
 
 const MyCalender = ({ game }) => {
   return (
-    <Link to={`/position/view/${game.gameId}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+    <Link to={`/game/${game.gameId}`} style={{ textDecoration: 'none', color: 'inherit' }}>
       <Card>
         <Team>
           <Logo src={`http://52.78.12.127:8080/logos/${game.team.logo}`} onError={(e) => { e.target.src = altImage; }} />

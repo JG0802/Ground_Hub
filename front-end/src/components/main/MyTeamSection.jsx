@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import altImage from '../../img/alt_image.png';
+import ScrollContainer from 'react-indiana-drag-scroll';
 
 const MyTeamSection = () => {
   const [teams, setTeams] = useState([]);
@@ -30,8 +31,8 @@ const MyTeamSection = () => {
 
   if (isLoading) {
     return (
-      <div className="py-[1.5vh]">
-        <div className="flex justify-between items-center mb-[1.5vh]">
+      <div className="py-[0.5vh]">
+        <div className="flex justify-between items-center mb-[1.5vh] mt-[1vh]">
           <h2 className="text-[2.2vh] font-bold pl-[1vh] border-l-4 border-green-500 pb-[0.7vh] inline-block">
             My Team
           </h2>
@@ -43,11 +44,11 @@ const MyTeamSection = () => {
 
   return (
     <div className="py-[1.5vh]">
-      <div className="flex justify-between items-center mb-[1.5vh]">
+      <div className="flex justify-between items-center mb-[1.5vh] mt-[1vh]">
         <h2 className="text-[2.2vh] font-bold pl-[1vh] border-l-4 border-green-500 pb-[0.7vh] inline-block">
           My Team
         </h2>
-        <Link to="/my-team" className="text-[1.7vh] text-gray-500 no-underline">
+        <Link to="/my-team" className="text-[1.5vh] text-gray-400 no-underline">
           더보기
         </Link>
       </div>
@@ -55,19 +56,22 @@ const MyTeamSection = () => {
       {teams.length === 0 ? (
         <div className="text-[1.8vh] text-gray-500 py-[1vh]">소속된 팀이 없습니다.</div>
       ) : (
-        <div className="flex gap-[1.5vh] overflow-x-auto pb-[1vh] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent">
+        <ScrollContainer
+          className="flex gap-[0.5vh] overflow-x-auto pb-[1vh] cursor-grab active:cursor-grabbing scrollbar-hide"
+          horizontal
+        >
           {teams.map((team) => (
             <Link
               key={team.teamId}
               to={`/team/${team.teamId}`}
-              className="bg-white border border-transparent rounded-[1.2vh] shadow-md p-[1vh] no-underline text-black flex flex-col items-center hover:border-green-500 hover:shadow-lg transition box-border w-[12vh] min-w-[12vh]"
+              className="flex-shrink-0 bg-white border border-gray-300 p-[0.6vh] no-underline text-black flex flex-col items-center hover:border-green-500 transition box-border rounded-[1.2vh] w-[12vh] min-w-[12vh]"
             >
               <img
                 src={`http://52.78.12.127:8080/logos/${team.logo}`}
                 onError={(e) => {
                   e.target.src = altImage;
                 }}
-                className="w-[7vh] h-[7vh] rounded-full object-cover mb-[1vh]"
+                className="w-[7vh] h-[7vh] rounded-full object-cover mb-[0.5vh]"
                 alt="team logo"
               />
               <div className="text-[1.6vh] font-semibold text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-[12vh]">
@@ -75,7 +79,7 @@ const MyTeamSection = () => {
               </div>
             </Link>
           ))}
-        </div>
+        </ScrollContainer>
       )}
     </div>
   );

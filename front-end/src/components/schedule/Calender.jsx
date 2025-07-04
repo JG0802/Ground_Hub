@@ -1,71 +1,9 @@
 import dayjs from 'dayjs';
-import styled from 'styled-components';
-
-const CalendarWrapper = styled.div`
-  padding: 2vh 0;
-`;
-
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 2vh;
-  font-weight: bold;
-  margin-bottom: 2vh;
-`;
-
-const Arrow = styled.span`
-  font-size: 3vh;
-  cursor: pointer;
-`;
-
-const WeekDays = styled.div`
-  display: flex;
-  justify-content: space-between;
-  font-size: 1.6vh;
-  color: #888;
-  margin-bottom: 1vh;
-`;
-
-const DaysGrid = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1vh;
-  font-size: 1.8vh;
-`;
-
-const DayBox = styled.div`
-  width: 12.3%;
-  height: 5vh;
-  text-align: center;
-  position: relative;
-  background-color: ${({ isSelected }) => (isSelected ? '#d5f5e3' : '#fff')};
-  border-radius: 0.7vh;
-
-  &:hover {
-    background-color: #f0f0f0;
-    cursor: pointer;
-  }
-`;
-
-const DotGroup = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 0.3vh;
-  position: absolute;
-  bottom: 0.5vh;
-  left: 50%;
-  transform: translateX(-50%);
-`;
-
-const Dot = styled.div`
-  width: 0.8vh;
-  height: 0.8vh;
-  border-radius: 50%;
-`;
 
 const Calender = ({ currentDate, setCurrentDate, games, selectedDay, setSelectedDay }) => {
-  const daysInMonth = () => {
+
+  // 이번 달 날짜 배열 생성
+  const getDaysInMonth = () => {
     const start = currentDate.startOf('month').day();
     const end = currentDate.daysInMonth();
     const days = [];
@@ -74,52 +12,79 @@ const Calender = ({ currentDate, setCurrentDate, games, selectedDay, setSelected
     return days;
   };
 
+  // 날짜별 경기 색상 저장
   const gamesByDate = games.reduce((acc, game) => {
-    const day = dayjs(game.date).date();
-    if (!acc[day]) acc[day] = [];
-    if (!acc[day].includes(game.team.firstColor)) {
-      acc[day].push(game.team.firstColor);
+    const gameDate = dayjs(game.date);
+    if (gameDate.month() === currentDate.month() && gameDate.year() === currentDate.year()) {
+      const day = gameDate.date();
+      if (!acc[day]) acc[day] = [];
+      if (!acc[day].includes(game.team.firstColor)) {
+        acc[day].push(game.team.firstColor);
+      }
     }
     return acc;
   }, {});
 
   return (
-    <CalendarWrapper>
-      <Header>
-        <Arrow onClick={() => setCurrentDate(currentDate.subtract(1, 'month'))}>{'<'}</Arrow>
-        <span>{currentDate.format('MMMM YYYY')}</span>
-        <Arrow onClick={() => setCurrentDate(currentDate.add(1, 'month'))}>{'>'}</Arrow>
-      </Header>
+    <div className="mt-[3vh]">
+      {/* 달력 헤더 */}
+      <div className="flex justify-between items-center mb-[1.5vh]">
+        <button onClick={() => setCurrentDate(currentDate.subtract(1, 'month'))} className="text-[2vh]">◀</button>
+        <h3 className="text-[2vh] font-bold">{currentDate.format('YYYY년 M월')}</h3>
+        <button onClick={() => setCurrentDate(currentDate.add(1, 'month'))} className="text-[2vh]">▶</button>
+      </div>
 
-      <WeekDays>
-        {['일', '월', '화', '수', '목', '금', '토'].map((d) => (
-          <div key={d} style={{ width: '12.3%', textAlign: 'center' }}>{d}</div>
+      {/* 요일 헤더 */}
+      <div className="grid grid-cols-7 text-center text-[1.6vh] text-gray-500 mb-[1vh] border-b border-gray-300 pb-[1vh]">
+        {['일', '월', '화', '수', '목', '금', '토'].map((day) => (
+          <div key={day} className={day === '일' ? 'text-red-400' : day === '토' ? 'text-blue-400' : ''}>
+            {day}
+          </div>
         ))}
-      </WeekDays>
+      </div>
 
-      <DaysGrid>
-        {daysInMonth().map((d, i) => (
-          <DayBox
-            key={i}
-            onClick={() => d && setSelectedDay({ year: currentDate.year(), month: currentDate.month(), date: d })}
-            isSelected={
-              selectedDay.year === currentDate.year() &&
-              selectedDay.month === currentDate.month() &&
-              selectedDay.date === d
-            }
-          >
-            {d}
-            {gamesByDate[d] && (
-              <DotGroup>
-                {gamesByDate[d].map((color, idx) => (
-                  <Dot key={idx} style={{ backgroundColor: color }} />
-                ))}
-              </DotGroup>
-            )}
-          </DayBox>
-        ))}
-      </DaysGrid>
-    </CalendarWrapper>
+      {/* 날짜 그리드 */}
+      <div className="grid grid-cols-7 gap-y-[1.2vh] text-center w-full">
+        {getDaysInMonth().map((d, i) => {
+          if (d === '') return <div key={i}></div>;
+
+          const isToday = d === dayjs().date() && currentDate.isSame(dayjs(), 'month') && currentDate.isSame(dayjs(), 'year');
+          const isSelected = d === selectedDay.date && currentDate.month() === selectedDay.month && currentDate.year() === selectedDay.year;
+
+          return (
+            <div
+              key={i}
+              onClick={() => setSelectedDay({ year: currentDate.year(), month: currentDate.month(), date: d })}
+              className={`
+                aspect-square min-h-[6vh] flex flex-col items-center justify-center relative cursor-pointer
+                ${isSelected ? 'text-green-500 font-bold' : isToday ? 'text-black font-bold' : 'text-black font-normal'}
+              `}
+            >
+              {/* 오늘 날짜 표시 */}
+              {isToday && (
+                <div className="absolute -top-[0vh] text-[1.2vh] text-gray-500 leading-none">today</div>
+              )}
+
+              {/* 날짜 숫자 */}
+              <div className="text-[1.7vh]">{d}</div>
+
+              {/* 경기 점 표시 */}
+              {gamesByDate[d] && (
+                <div className="flex justify-center gap-[0.3vh] absolute bottom-[0.5vh] left-1/2 transform -translate-x-1/2">
+                  {gamesByDate[d].map((color, idx) => (
+                    <div
+                      key={idx}
+                      className="w-[0.8vh] h-[0.8vh] rounded-full"
+                      style={{ backgroundColor: color }}
+                    ></div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 };
 

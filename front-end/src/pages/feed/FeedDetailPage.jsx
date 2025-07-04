@@ -37,29 +37,77 @@ const FeedDetailPage = () => {
       {/* 게시글 본문 */}
       <Feed onLoaded={setPost} />
 
-      {/* 버튼 */}
       {post && (
         <div className="bg-white rounded-[2vh] shadow p-[3vh] mt-[2vh]">
-          <div className="flex flex-col divide-y divide-gray-300">
+          {/* 매칭 or 팀원 모집 정보 */}
+          {post.category === '매칭' ? (
+            <div className="bg-green-50 p-[2vh] rounded-[1vh] mb-[2vh]">
+              <div className="flex justify-between mb-[1vh] text-[1.8vh]">
+                <span className="text-gray-500">🕒 매칭 날짜</span>
+                <span className="text-green-600 font-bold">{post.matchDay.replace('T', ' ').slice(0, 16)}</span>
+              </div>
+              <div className="flex justify-between mb-[1vh] text-[1.8vh]">
+                <span className="text-gray-500">팀 이름</span>
+                <span className="text-gray-700 font-medium">{post.team.teamName}</span>
+              </div>
+              <div className="flex justify-between text-[1.8vh]">
+                <span className="text-gray-500">지역</span>
+                <span className="text-gray-700 font-medium">{post.team.location}</span>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-orange-100 p-[2vh] rounded-[1vh] mb-[2vh]">
+              <div className="flex justify-between mb-[1vh] text-[1.8vh]">
+                <span className="text-gray-500">팀 이름</span>
+                <span className="text-gray-700 font-medium">{post.team.teamName}</span>
+              </div>
+              <div className="flex justify-between text-[1.8vh]">
+                <span className="text-gray-500">지역</span>
+                <span className="text-gray-700 font-medium">{post.team.location}</span>
+              </div>
+            </div>
+          )}
+
+          {/* 기본 정보 */}
+          <div className="flex justify-between mb-[1.5vh] text-[1.7vh]">
+            <span className="text-gray-500">작성자</span>
+            <span className="text-gray-700">{post.user.userName}</span>
+          </div>
+          <div className="flex justify-between mb-[1.5vh] text-[1.7vh]">
+            <span className="text-gray-500">작성일</span>
+            <span className="text-gray-700">{post.createTime.slice(0, 10)}</span>
+          </div>
+          <div className="flex justify-between mb-[1.5vh] text-[1.7vh]">
+            <span className="text-gray-500">조회수</span>
+            <span className="text-gray-700">{post.views}</span>
+          </div>
+
+          {/* 게시글 내용 */}
+          <div className="relative bg-gray-100 p-[2vh] rounded-[1vh] mb-[3vh] text-[1.8vh] min-h-[8vh]">
+            {post.content}
+          </div>
+
+          {/* 버튼 */}
+          <div className="flex flex-col divide-y divide-gray-300 text-[1.8vh]">
             {post.category === '매칭' && (
-              <button onClick={() => setShowMatchModal(true)} className="flex justify-between items-center p-[2vh] text-[1.8vh]">
+              <button onClick={() => setShowMatchModal(true)} className="flex justify-between items-center p-[2vh]">
                 <span>매칭 신청</span>
                 <span>➔</span>
               </button>
             )}
 
-            <button onClick={() => navigate(`/teams/${post.team.teamId}`)} className="flex justify-between items-center p-[2vh] text-[1.8vh]">
+            <button onClick={() => navigate(`/team/${post.team.teamId}`)} className="flex justify-between items-center p-[2vh]">
               <span>팀 상세페이지</span>
               <span>➔</span>
             </button>
 
             {userMail === post.user.userMail && (
               <>
-                <button onClick={() => setShowEditModal(true)} className="flex justify-between items-center p-[2vh] text-[1.8vh]">
+                <button onClick={() => setShowEditModal(true)} className="flex justify-between items-center p-[2vh]">
                   <span>수정</span>
                   <span>➔</span>
                 </button>
-                <button onClick={handleDelete} className="flex justify-between items-center p-[2vh] text-[1.8vh] text-red-500">
+                <button onClick={handleDelete} className="flex justify-between items-center p-[2vh] text-red-500">
                   <span>삭제</span>
                   <span>➔</span>
                 </button>

@@ -1,48 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-
-const Container = styled.form`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  padding-top: 8vh;
-`;
-
-const StyledTitle = styled.p`
-  font-size: 2.4vh;
-  font-weight: bold;
-  margin-bottom: 4vh;
-`;
-
-const StyledInput = styled.input`
-  width: 40vh;
-  height: 6vh;
-  font-size: 2vh;
-  border-radius: 0.7vh;
-  border: 1px solid #b9b9b9;
-  padding: 1vh;
-  margin-bottom: 2vh;
-  box-sizing: border-box;
-`;
-
-const StyledButton = styled.button`
-  background-color: black;
-  color: white;
-  width: 40vh;
-  height: 6vh;
-  font-size: 2vh;
-  border-radius: 0.7vh;
-  margin-bottom: 2vh;
-  box-sizing: border-box;
-  &:hover {
-    cursor: pointer;
-  }
-  &:disabled {
-    background-color: #999;
-    cursor: not-allowed;
-  }
-`;
 
 const CheckPassword = ({ onSuccess, mode }) => {
   const userMail = sessionStorage.getItem('userMail');
@@ -78,8 +35,6 @@ const CheckPassword = ({ onSuccess, mode }) => {
         sessionStorage.setItem('userData', JSON.stringify(data));
         sessionStorage.setItem('userMail', userMail);
         sessionStorage.setItem('password', password);
-
-        // mode는 'edit' 또는 'changePassword'
         onSuccess(mode);
       } else {
         alert('잘못된 비밀번호입니다.');
@@ -93,17 +48,54 @@ const CheckPassword = ({ onSuccess, mode }) => {
   };
 
   return (
-    <Container onSubmit={handleCheckPassword}>
-      <StyledTitle>비밀번호를 입력하세요.</StyledTitle>
-      <StyledInput
-        type="password"
-        placeholder="Password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <StyledButton type="submit" disabled={isLoading}>
-        {isLoading ? '확인 중...' : '확인'}
-      </StyledButton>
-    </Container>
+    <div className="flex justify-center items-center min-h-[100vh] bg-[#f9f9f9] px-[2vh]">
+      <form
+        onSubmit={handleCheckPassword}
+        className="w-full max-w-[400px] bg-white p-[4vh] rounded-2xl shadow flex flex-col items-center"
+      >
+        <h2 className="text-[2.4vh] font-bold mb-[4vh]">비밀번호 확인</h2>
+
+        <div className="relative w-full mb-[2vh]">
+          <input
+            type="password"
+            placeholder="비밀번호 입력"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full border border-gray-300 rounded-[0.7vh] p-[1.5vh] pr-[4.5vh] text-[1.8vh] focus:outline-green-500 transition-colors"
+          />
+          {password && (
+            <button
+              type="button"
+              onClick={() => setPassword('')}
+              className="absolute right-[1.5vh] top-1/2 transform -translate-y-1/2 p-[0.8vh] rounded-full hover:bg-gray-100 transition"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.8}
+                stroke="currentColor"
+                className="w-[2vh] h-[2vh] text-gray-400"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          )}
+        </div>
+
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="w-full h-[5.5vh] bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isLoading ? '확인 중...' : '확인'}
+        </button>
+      </form>
+    </div>
   );
 };
 
