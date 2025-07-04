@@ -6,7 +6,7 @@ const SignUpPage = () => {
 
   return (
     <div className="min-h-screen bg-white flex flex-col justify-center items-center px-6 relative">
-      <h1 className="text-green-600 text-[45px] font-extrabold font-['Poppins']">Ground Hub</h1>
+      <h1 className="text-green-600 text-[45px] font-extrabold font-['Poppins']">OVERLAB</h1>
       <h2 className="mt-[3vh] text-[26px] font-semibold text-black">회원가입</h2>
 
       <SignUp />

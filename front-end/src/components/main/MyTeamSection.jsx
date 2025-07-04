@@ -43,7 +43,7 @@ const MyTeamSection = () => {
   }
 
   return (
-    <div className="py-[1.5vh]">
+    <div className="py-[0vh]">
       <div className="flex justify-between items-center mb-[1.5vh] mt-[1vh]">
         <h2 className="text-[2.2vh] font-bold pl-[1vh] border-l-4 border-green-500 pb-[0.7vh] inline-block">
           My Team

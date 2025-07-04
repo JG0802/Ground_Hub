@@ -23,7 +23,7 @@ const FormationCarousel = () => {
   const currentFormation = formations[currentIndex];
 
   return (
-    <div className="w-full overflow-hidden mb-[2vh] relative text-center">
+    <div className="w-full overflow-hidden mb-[0vh] relative text-center">
       {/* 이전 버튼 */}
       <button
         onClick={handlePrev}
@@ -36,7 +36,7 @@ const FormationCarousel = () => {
       <div
         key={currentFormation.id}
         onClick={handleMove}
-        className="flex flex-col items-center bg-white p-[2.5vh] md:p-[2vh] sm:p-[1.5vh] rounded-[16px] shadow-md min-w-[calc((100%-4vh)/2.5)] flex-none mx-[1vh] cursor-pointer transition-transform hover:scale-[1.03] hover:shadow-lg border border-gray-200 hover:border-green-500"
+        className="flex flex-col items-center bg-white p-[1.5vh] md:p-[2vh] sm:p-[1.5vh] rounded-[16px] shadow-md min-w-[calc((100%-4vh)/2.5)] flex-none mx-[1vh] cursor-pointer transition-transform hover:scale-[1.03] hover:shadow-lg border border-gray-200 hover:border-green-500"
       >
         <div className="text-[1.7vh] md:text-[1.5vh] sm:text-[1.3vh] font-bold mt-[1vh] truncate w-full">
           {currentFormation.summation}

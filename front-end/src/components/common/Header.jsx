@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import OverlabLogo from '../../img/overlab_logo.png';
 
 const HeaderWrapper = styled.header`
   position: fixed;
@@ -22,7 +23,11 @@ const Header = () => {
     navigate("/main");
   };
 
-  return <HeaderWrapper onClick={hanbleMove}>Ground Hub</HeaderWrapper>;
+  return (
+    <HeaderWrapper onClick={hanbleMove}>
+      <img src={OverlabLogo} alt="OVERLAB 로고" style={{ height: '4vh' }} />
+    </HeaderWrapper>
+  );
 };
 
 export default Header;

@@ -25,11 +25,11 @@ const MyTeamList = () => {
   }, [userMail]);
 
   if (teams.length === 0) {
-    return <div className="text-[1.6vh] text-center">참여 중인 팀이 없습니다.</div>;
+    return <div className="text-[1.6vh] text-center mt-[4vh]">참여 중인 팀이 없습니다.</div>;
   }
 
   return (
-    <div className="flex flex-col gap-[2vh]">
+    <div className="grid grid-cols-3 gap-[2.5vh] justify-items-center p-[2vh] pb-[15vh]">
       {teams.map((team, index) => (
         <MyTeam key={index} team={team} />
       ))}

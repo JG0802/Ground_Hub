@@ -41,7 +41,7 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen bg-white flex flex-col justify-center items-center px-6 relative">
-      <h1 className="text-green-600 text-[45px] font-extrabold font-['Poppins']">Ground Hub</h1>
+      <h1 className="text-green-600 text-[45px] font-extrabold font-['Poppins']">OVERLAB</h1>
       <h2 className="mt-[3vh] text-[26px] font-semibold text-black">계정에 로그인하세요</h2>
 
       <form onSubmit={handleLogin} className="mx-auto w-full max-w-[288px] mt-[4vh] flex flex-col gap-[20px]">

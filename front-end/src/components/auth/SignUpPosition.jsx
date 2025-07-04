@@ -1,91 +1,4 @@
-import styled from 'styled-components';
 import field from '../../img/field.png';
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const SelectedPositionText = styled.p`
-  margin-bottom: 2vh;
-  font-size: 1.7vh;
-  font-weight: bold;
-  color: #00B140;
-`;
-
-const FieldWrapper = styled.div`
-  position: relative;
-  width: 49vh;
-  height: 42vh;
-  background-image: url(${field});
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  background-position: center;
-  margin-bottom: 2vh;
-`;
-
-const ButtonBox = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-`;
-
-const StyledButton = styled.button`
-  position: absolute;
-  top: ${(props) => props.$top};
-  left: ${(props) => props.$left};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: ${(props) => (props.$selected ? '#00B140' : 'rgba(240, 228, 57, 0.7)')};
-  color: ${(props) => (props.$selected ? 'white' : 'black')};
-  border: 2px solid black;
-  border-radius: 20vh;
-  cursor: pointer;
-  width: 8.2vh;
-  height: 4vh;
-  font-size: 1.5vh;
-  transition: all 0.3s ease;
-
-  &:hover {
-    transform: scale(1.05);
-  }
-`;
-
-const CheckBadge = styled.span`
-  position: absolute;
-  top: -1vh;
-  right: -1vh;
-  background-color: white;
-  color: #00B140;
-  font-size: 1.4vh;
-  border-radius: 50%;
-  width: 2vh;
-  height: 2vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid #00B140;
-`;
-
-const SubmitButton = styled.button`
-  background-color: ${(props) => (props.disabled ? '#ccc' : 'black')};
-  color: white;
-  width: 90%;
-  height: 6vh;
-  font-size: 2vh;
-  border-radius: 6px;
-  margin-bottom: 2vh;
-  box-sizing: border-box;
-  border: none;
-  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    opacity: ${(props) => (props.disabled ? 1 : 0.9)};
-  }
-`;
 
 const SignUpPosition = ({ value, onChange, onSubmit }) => {
   const togglePosition = (position) => {
@@ -99,25 +12,33 @@ const SignUpPosition = ({ value, onChange, onSubmit }) => {
   };
 
   const renderButton = (top, left, position) => (
-    <StyledButton
-      $top={top}
-      $left={left}
-      $selected={value.includes(position)}
+    <button
+      className={`absolute flex justify-center items-center border-2 border-black rounded-full w-[8.2vh] h-[4vh] text-[1.5vh] transition-all duration-300 hover:scale-105 ${
+        value.includes(position) ? 'bg-[#00B140] text-white' : 'bg-[rgba(240,228,57,0.7)] text-black'
+      }`}
+      style={{ top, left }}
       onClick={() => togglePosition(position)}
     >
       {value.includes(position) && (
-        <CheckBadge>✔</CheckBadge>
+        <span className="absolute -top-[1vh] -right-[1vh] w-[2vh] h-[2vh] flex justify-center items-center rounded-full bg-white text-[#00B140] text-[1.4vh] border border-[#00B140]">
+          ✔
+        </span>
       )}
       {position}
-    </StyledButton>
+    </button>
   );
 
   return (
-    <Container>
-      <SelectedPositionText>선택한 포지션: {value.join(', ')}</SelectedPositionText>
+    <div className="flex flex-col items-center">
+      <p className="mb-[2vh] text-[1.7vh] font-bold text-[#00B140]">
+        선택한 포지션: {value.join(', ')}
+      </p>
 
-      <FieldWrapper>
-        <ButtonBox>
+      <div
+        className="relative w-[49vh] h-[42vh] mb-[2vh] bg-center bg-no-repeat bg-cover"
+        style={{ backgroundImage: `url(${field})` }}
+      >
+        <div className="absolute w-full h-full">
           {renderButton('1vh', '20.3vh', 'ST')}
           {renderButton('4vh', '11.6vh', 'LS')}
           {renderButton('4vh', '29vh', 'RS')}
@@ -143,16 +64,19 @@ const SignUpPosition = ({ value, onChange, onSubmit }) => {
           {renderButton('31vh', '29vh', 'RCB')}
           {renderButton('31vh', '37.6vh', 'RB')}
           {renderButton('37vh', '20.3vh', 'GK')}
-        </ButtonBox>
-      </FieldWrapper>
+        </div>
+      </div>
 
-      <SubmitButton
+      <button
         onClick={onSubmit}
         disabled={value.length !== 3}
+        className={`w-[90%] h-[6vh] text-white text-[2vh] rounded-[6px] mb-[2vh] transition-colors duration-300 ${
+          value.length === 3 ? 'bg-black cursor-pointer hover:opacity-90' : 'bg-gray-300 cursor-not-allowed'
+        }`}
       >
         회원가입 완료
-      </SubmitButton>
-    </Container>
+      </button>
+    </div>
   );
 };
 

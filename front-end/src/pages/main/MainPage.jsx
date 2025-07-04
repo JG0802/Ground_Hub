@@ -1,29 +1,17 @@
-// src/pages/main/MainPage.jsx
 import FormationCarousel from '../../components/main/FormationCarousel';
 import MyTeamSection from '../../components/main/MyTeamSection';
 import ScheduleSection from '../../components/main/ScheduleSection';
 import styled from 'styled-components';
 
 const PageWrapper = styled.div`
-  padding-top: 8vh; /* ✅ 헤더 고정 여유 공간 */
+  padding-top: 8vh;
   padding-bottom: 2vh;
-  background: linear-gradient(to bottom, #f0f4f8, #f9f9f9);
+  background-color: #ffffff;
   min-height: 100vh;
-  box-sizing: border-box;
 `;
 
 const SectionWrapper = styled.div`
   padding: 2vh 2vw;
-  margin-bottom: 4vh;
-  background-color: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s, box-shadow 0.3s;
-
-  &:hover {
-    transform: scale(1.02);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-  }
 
   @media (max-width: 768px) {
     padding: 1.5vh 3vw;
@@ -34,6 +22,12 @@ const SectionWrapper = styled.div`
   }
 `;
 
+const Divider = styled.div`
+  height: 2vh;
+  background-color: #f2f2f2;
+  margin: 2vh 0;
+`;
+
 const MainPage = () => {
   return (
     <PageWrapper>
@@ -41,9 +35,13 @@ const MainPage = () => {
         <FormationCarousel />
       </SectionWrapper>
 
+      <Divider />
+
       <SectionWrapper>
         <MyTeamSection />
       </SectionWrapper>
+
+      <Divider />
 
       <SectionWrapper>
         <ScheduleSection />
