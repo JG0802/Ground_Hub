@@ -1,0 +1,50 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* 전체 앱 공통 스타일 */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  background-color: #f9f9f9;
+  color: #222;
+  display: flex;
+  justify-content: center;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 앱처럼 좁은 뷰포트 영역 중앙 배치 */
+#root {
+  overflow-x: hidden;
+  width: 50vh;
+  max-width: 100vw;
+  min-height: 100vh;
+  background-color: #f9f9f9;
+  box-sizing: border-box;
+  position: relative;
+  padding-bottom: 5vh; /* 하단 탭 여백 확보 */
+}
+
+/* 코드 글꼴 */
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* (선택) Marines 폰트도 사용 가능하도록 유지 */
+@font-face {
+  font-family: "MarinesRegular";
+  src: url('./fonts/MarinesRegular.woff2') format('woff2'),
+       url('./fonts/MarinesRegular.woff') format('woff');
+}
+
+@font-face {
+  font-family: "MarinesBold";
+  src: url('./fonts/MarinesBold.woff2') format('woff2'),
+       url('./fonts/MarinesBold.woff') format('woff');
+}
